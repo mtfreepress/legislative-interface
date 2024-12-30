@@ -1,60 +1,47 @@
-import os
+import requests
 import json
+import os
 from datetime import datetime
 
 # 2023
 # session = 20231
-# 2025 for some reason is not 20251
+
+# 20251 is apparently `2` now
 session = 2
 
-# load json file
-json_file = f"../interface/downloads/raw-{session}-bills.json"
-with open(json_file, "r") as f:
-    json_data = json.load(f)
-
-# reusable date formatting
+# TODO: Make sure this works still, looks like it will. 
+# date formatting function
 def formatted_date(date_string, default="undefined"):
     if not date_string: 
         return default
     try:
-        # split to get just the date part and format it
         return datetime.strptime(date_string.split("T")[0], "%Y-%m-%d").strftime("%m/%d/%Y")
     except (ValueError, AttributeError):
-        # handle invalid date strings
         return default
 
-
+# generate sponsor district from "House"/"Senate" + district number
 def format_sponsor_district(bill_type, district_number):
     if not district_number or district_number == "undefined":
         return "undefined"
-
-    # map bill types to "HD" or "SD"
     if bill_type in ["HB", "HJ", "HR"]:
         prefix = "HD"
     elif bill_type in ["SB", "SJ", "SR"]:
         prefix = "SD"
     else:
         prefix = ""
-
     return f"{prefix}{district_number}" if prefix else "undefined"
 
-
-# map fiscal code based on subject description
+# TODO: Fix this, may have the data we need in the new format
+# fiscal code based on subject description
 def map_fiscal_code(subject_description):
     if subject_description == "Appropriations  (see also: State Finance)":
         return "Appropriation"
     elif subject_description in ["Revenue, Local", "Revenue, State"]:
         return "Revenue"
-    return ""  # Default to empty string if no match
+    return ""  # empty string if no match
 
-
-# sanitize filenames (removing spaces and special characters)
-def sanitize_filename(key):
-    return key.replace(" ", "").replace("/", "-").replace(".", "")
-
-
+# safe get function for nested data
 def safe_get(d, keys, default="undefined"):
-    """Safely get a nested dictionary value."""
     for key in keys:
         if isinstance(d, dict) and key in d:
             d = d[key]
@@ -62,17 +49,29 @@ def safe_get(d, keys, default="undefined"):
             return default
     return d
 
+def sanitize_filename(key):
+    return key.replace(" ", "").replace("/", "-").replace(".", "")
+
+# load legislator json
+with open("../inputs/legislators/legislators.json", "r") as f:
+    legislators_data = json.load(f)
+    
+# create map for lookup by legislatorId
+legislator_map = {legislator["id"]: legislator for legislator in legislators_data}
+
+# load bill json
+json_file = f"../interface/downloads/raw-{session}-bills.json"
+with open(json_file, "r") as f:
+    json_data = json.load(f)
 
 processed_bills = []
-bills = json_data.get("content", [])
-print(f"Bills found: {len(bills)}")  
+bills = json_data.get("content", []) 
 
-# create cleaned/bills directory if it doesn't exist
 cleaned_dir = os.path.join(os.getcwd(), "cleaned", f"bills-{session}")
 os.makedirs(cleaned_dir, exist_ok=True)
 
 for bill in bills:
-    # get data
+    # get bill data
     draft = safe_get(bill, ["id"], {})
     session_id = str(safe_get(bill, ["sessionId"]))
     bill_type_data = bill.get("billType", {})
@@ -82,23 +81,31 @@ for bill in bills:
     bill_number = bill.get("billNumber", "undefined")
     bill_actions = bill.get("billActions", [])
     
-    # filter out bills that don't have both bill_type and bill_number
     if not bill_type or not bill_number:
         continue
 
+    # TODO: Fix this
+    # most recent action
     most_recent_action = bill_actions[0] if bill_actions else {}
     action_type = safe_get(most_recent_action, ["actionType"], {})
     sponsor_roles = bill.get("primarySponsorBillRoles", [])
     sponsor_data = safe_get(sponsor_roles[0], ["legislator"], {}) if sponsor_roles else {}
 
-    sponsor = safe_get(sponsor_data, ["lawEntity"], {})
-    party = safe_get(sponsor_data, ["politicalParty"], {})
-    sponsor_district = format_sponsor_district(bill_type, safe_get(sponsor_data, ["districtNumber"]))
+    # get sponsor information via sponsorId 
+    sponsor_id = bill.get("sponsorId", None)
+    sponsor = legislator_map.get(sponsor_id, {})
+    party = safe_get(sponsor, ["politicalParty", "name"])
+    sponsor_district = format_sponsor_district(bill_type, safe_get(sponsor, ["district", "number"]))
 
+    # bill details
     chamber = "house" if bill_type == "HB" else "senate" if bill_type == "SB" else "undefined"
-    requestors = bill.get("requesters", [])
-    requestor = safe_get(requestors[0], ["lawEntity", "lastName"]) if requestors else "undefined"
+    requester_id = draft_data.get("requesterId", [])
+    requester = legislator_map.get(requester_id)
+    requester_first_name = requester.get("firstName")
+    requester_last_name = requester.get("lastName")
+    bill_requester = f"{requester_first_name} {requester_last_name}"
 
+    # TODO: fix this: 
     subjects = [
         {
             "subject": safe_get(subject, ["subject", "description"]),
@@ -109,14 +116,12 @@ for bill in bills:
     ]
     vote_requirements = list({subject.get("voteReq", "undefined") for subject in subjects})
     
-    # handle dates gracefully
+    # handle dates
     most_recent_date_raw = safe_get(most_recent_action, ["date"])
     most_recent_date_formatted = formatted_date(most_recent_date_raw)
 
-    # determine the bill key
-    bill_key = f"{bill_type} {bill_number}" if bill_type and bill_number else f"{draft_number}"
-
     # build bill json
+    bill_key = f"{bill_type} {bill_number}" if bill_type and bill_number else f"{draft_number}"
     processed_bill = {
         "key": bill_key,
         "session": session_id,
@@ -126,7 +131,7 @@ for bill in bills:
         "lc": draft_number,
         "title": draft_data.get("shortTitle", "undefined"),
         "sponsor": f"{safe_get(sponsor, ['firstName'])} {safe_get(sponsor, ['lastName'])}",
-        "sponsorParty": safe_get(party, ["partyName"]),
+        "sponsorParty": party,
         "sponsorDistrict": sponsor_district,
         "statusDate": formatted_date(safe_get(most_recent_action, ["date"])),
         "lastAction": safe_get(action_type, ["description"]),
@@ -135,7 +140,7 @@ for bill in bills:
         "legalNoteUrl": "undefined",
         "amendmentListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=amend",
         "draftRequestor": None,
-        "billRequestor": requestor,
+        "billRequestor": bill_requester,
         "primarySponsor": f"{safe_get(sponsor, ['firstName'])} {safe_get(sponsor, ['lastName'])}",
         "subjects": subjects,
         "voteRequirements": vote_requirements,
@@ -144,11 +149,11 @@ for bill in bills:
         "amendedReturnDeadline": formatted_date(safe_get(bill, ["deadlineCategory", "returnDate"])),
     }
 
-    # save each bill as json file
     sanitized_key = sanitize_filename(processed_bill["key"])
     bill_file_path = os.path.join(cleaned_dir, f"{sanitized_key}-data.json")
     with open(bill_file_path, "w") as bill_file:
         json.dump(processed_bill, bill_file, indent=2)
-    print(f"Saved bill '{processed_bill['key']}' to '{bill_file_path}'.")
+    # verbose output - not needed in production but handy for debugging
+    # print(f"Saved bill '{processed_bill['key']}' to '{bill_file_path}'.")
 
 print(f"All processed bills saved to '{cleaned_dir}'.")
