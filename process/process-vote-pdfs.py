@@ -8,7 +8,8 @@ class PDFVoteParser:
         """
         Initialize the parser with a hardcoded base directory path.
         """
-        self.base_path = "../interface/"
+        self.base_path = "../inputs/"
+
 
     def parse_pdf_vote(self, bill_type, bill_number, session_id):
         """
@@ -16,7 +17,7 @@ class PDFVoteParser:
         Outputs the parsed data in JSON format for each PDF.
         """
         bill_dir = f"{bill_type}{bill_number}"
-        pdf_dir = os.path.join(self.base_path, 'vote_pdfs_fast', bill_dir)
+        pdf_dir = os.path.join(self.base_path, 'vote_pdfs', bill_dir)
 
         if not os.path.exists(pdf_dir):
             return {"error": f"Directory not found: {pdf_dir}"}
@@ -281,20 +282,20 @@ def load_bill_list(file_path):
         print(f"Error loading bill list: {e}")
         return []
 
-# standalone usage for testing:
 if __name__ == "__main__":
-    SESSION_ID = 20231
-    BILL_LIST_FILE = "../interface/fast-list-bills-20231.json"
+    SESSION_ID = 2
+    BILL_LIST_FILE = f"../interface/list-bills-{SESSION_ID}.json"
 
     parser = PDFVoteParser()
 
-    result = parser.parse_pdf_vote("HB", 1, SESSION_ID)
+# standalone usage for testing:
+    # result = parser.parse_pdf_vote("HB", 1, SESSION_ID)
 
-    # Load bills
-    # bills = load_bill_list(BILL_LIST_FILE)
-    # for bill in bills:
-    #     bill_type = bill.get("billType")
-    #     bill_number = bill.get("billNumber")
-    #     if bill_type and bill_number:
-    #         result = parser.parse_pdf_vote(bill_type, bill_number, SESSION_ID)
-    #         print(json.dumps(result, indent=4))
+# loading the file in: 
+    bills = load_bill_list(BILL_LIST_FILE)
+    for bill in bills:
+        bill_type = bill.get("billType")
+        bill_number = bill.get("billNumber")
+        if bill_type and bill_number:
+            result = parser.parse_pdf_vote(bill_type, bill_number, SESSION_ID)
+            print(json.dumps(result, indent=4))
