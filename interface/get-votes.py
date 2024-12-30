@@ -5,10 +5,12 @@ import json
 import urllib.parse
 from datetime import datetime
 
-# Base URL of the API
+session = 2
+
+# base URL
 BASE_URL = 'https://api.legmt.gov'
 OUTPUT_DIR = 'downloads'
-BILLS_JSON_PATH = './fast-list-bills-20231.json'
+BILLS_JSON_PATH = f'./list-bills-{session}.json'
 
 # load bill list from json to loop through
 
@@ -84,8 +86,8 @@ def fetch_bill_vote_sheets(legislature_ordinal, session_ordinal, bill_type, bill
     try:
         response = requests.get(url, params=params)
         response.raise_for_status()
-        print(f"Fetched vote sheets: {response.json()}")  # Debug log
-        return response.json()  # Returns the list of vote sheets
+        print(f"Fetched vote sheets: {response.json()}")
+        return response.json()
     except requests.RequestException as e:
         print(f"Error fetching bill vote sheets: {e}")
         return []
@@ -178,12 +180,14 @@ def download_pdf(pdf_url, file_name, subdir):
     """
     Download the PDF using the URL and save it in the specified subdirectory.
     """
-    # create path if doesn't exist
-    output_dir = os.path.join('vote_pdfs_fast', subdir)
-    os.makedirs(output_dir, exist_ok=True)
 
-    # full path
-    output_path = os.path.join(output_dir, file_name)
+    # define path/output file
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "inputs"))
+    vote_pdfs_dir = os.path.join(base_dir, "vote_pdfs")
+    os.makedirs(vote_pdfs_dir, exist_ok=True)
+    output_path = os.path.join(vote_pdfs_dir, subdir, file_name)
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
 
     try:
         response = requests.get(pdf_url, stream=True)

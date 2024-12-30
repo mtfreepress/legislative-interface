@@ -18,8 +18,7 @@ import requests
 # 2023 - Changed for 2025
 # payload = {"sessionId": session_id, "sortBy": "billNumber"}
 
-
-# bills_url = "https://api.legmt.gov/archive/v1/bills/search?includeCounts=true&sort=billType.code,desc&sort=billNumber,asc&sort=draft.draftNumber,asc&limit=500&offset=0"
+# --- 2025 API is different --- 
 bills_url = "https://api.legmt.gov/bills/v1/bills/search?includeCounts=true&sort=billType.code,desc&sort=billNumber,asc&sort=draft.draftNumber,asc&limit=9999&offset=0"
 headers = {
     "Accept": "application/json, text/plain, */*",
@@ -34,7 +33,7 @@ session_id = 2
 # wrap session_id in a list, use format that for some reason changed
 payload = {"sessionIds": [session_id]}
 
-# function to fetch bills data
+# fetch bills data
 def fetch_bills():
     response = requests.post(bills_url, json=payload, headers=headers)
     if response.status_code == 200:
