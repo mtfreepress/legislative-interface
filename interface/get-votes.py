@@ -31,14 +31,21 @@ def load_bills():
 
 
 def list_files_in_directory(subdir):
-    output_dir = os.path.join('vote_pdfs_fast', subdir)
-    if os.path.exists(output_dir):
-        # ignore hidden files (start with `.` on Unix like OSes, including MacOS and Linux)
-        files = [f for f in os.listdir(output_dir) if not f.startswith('.')]
-        print(f"Visible files in directory '{subdir}': {files}")
+    """
+    List files in the directory for the given subdirectory under the centralized base directory.
+    """
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "inputs"))
+    vote_pdfs_dir = os.path.join(base_dir, "vote_pdfs", subdir)
+    
+    if os.path.exists(vote_pdfs_dir):
+        # Ignore hidden files
+        files = [f for f in os.listdir(vote_pdfs_dir) if not f.startswith('.')]
+        print(f"Visible files in directory '{vote_pdfs_dir}': {files}")
         return set(files)
-    print(f"Directory '{subdir}' does not exist.")
+    
+    print(f"Directory '{vote_pdfs_dir}' does not exist.")
     return set()
+
 
 
 def cache_and_download(all_votes, subdir):
@@ -49,7 +56,6 @@ def cache_and_download(all_votes, subdir):
     expected_files = {vote['fileName']
                       for vote in all_votes if 'fileName' in vote}
 
-    # Find files that need to be downloaded
     missing_files = expected_files - existing_files
     print(f"Missing files to download: {missing_files}")
 
@@ -62,7 +68,6 @@ def cache_and_download(all_votes, subdir):
                 print(f"Downloading missing file: {file_name}")
                 download_pdf(pdf_url, file_name, subdir)
 
-    # Verify the directory contains all expected files
     updated_files = list_files_in_directory(subdir)
     if expected_files == updated_files:
         print(f"All files are up-to-date in {subdir}.")
@@ -180,14 +185,12 @@ def download_pdf(pdf_url, file_name, subdir):
     """
     Download the PDF using the URL and save it in the specified subdirectory.
     """
-
-    # define path/output file
-    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "inputs"))
-    vote_pdfs_dir = os.path.join(base_dir, "vote_pdfs")
+    base_dir = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), "..", "inputs"))
+    vote_pdfs_dir = os.path.join(base_dir, "vote_pdfs", subdir)
     os.makedirs(vote_pdfs_dir, exist_ok=True)
-    output_path = os.path.join(vote_pdfs_dir, subdir, file_name)
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
+    output_path = os.path.join(vote_pdfs_dir, file_name)
 
     try:
         response = requests.get(pdf_url, stream=True)
@@ -335,7 +338,8 @@ def main():
 
         subdir = f"{bill_type}{bill_number}"
 
-        print(f"Processing Bill: LC={lc_number}, Type={bill_type}, Number={bill_number}")
+        print(f"Processing Bill: LC={lc_number}, Type={
+              bill_type}, Number={bill_number}")
 
         # Fetch vote sheets and simplified docs
         vote_sheets = fetch_bill_vote_sheets(
