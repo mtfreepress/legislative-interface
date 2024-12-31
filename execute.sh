@@ -9,6 +9,9 @@
 # generate list of bills for input into other scripts
 /interface/generate-bill-list.py
 
+# May or may not be needed, currently it has data that the get-bill-data doesn't
+interface/get-expanded-bill-data.py
+
 # download PDFs:
 /interface/get-pdf-votesheets.py
 

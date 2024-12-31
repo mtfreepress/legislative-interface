@@ -102,7 +102,7 @@ def process_bill_actions(session_ordinal, lc_number):
     Fetches the bill's actions and processes the voteSeq and status item date to generate filenames.
     Returns a list of simplified documents.
     """
-    url = f"{BASE_URL}/archive/v1/bills/{session_ordinal}/{lc_number}"
+    url = f"{BASE_URL}/v1/bills/{session_ordinal}/{lc_number}"
 
     filenames = []
     simplified_docs = []
@@ -247,7 +247,7 @@ def fetch_legislative_calendar_day(date_lookup):
     formatted_date = datetime.strptime(
         date_lookup, '%Y-%m-%d').strftime('%m/%d/%Y')
 
-    url = f"{BASE_URL}/archive/v1/legislativeCalendars/byDate"
+    url = f"{BASE_URL}/v1/legislativeCalendars/byDate"
     payload = {"date": formatted_date}
 
     try:
@@ -322,8 +322,8 @@ def fetch_document_id_by_folder_id(folder_id, file_name):
 
 
 def main():
-    legislature_ordinal = 68
-    session_ordinal = 20231
+    legislature_ordinal = 69
+    session_ordinal = 20251
 
     bills = load_bills()
     if not bills:
@@ -340,15 +340,12 @@ def main():
         print(f"Processing Bill: LC={lc_number}, Type={
               bill_type}, Number={bill_number}")
 
-        # Fetch vote sheets and simplified docs
         vote_sheets = fetch_bill_vote_sheets(
             legislature_ordinal, session_ordinal, bill_type, bill_number)
         simplified_docs = process_bill_actions(session_ordinal, lc_number)
 
-        # Combine all votes into a single list
         all_votes = vote_sheets + simplified_docs
 
-        # Cache and download missing files
         cache_and_download(all_votes, subdir)
 
 
