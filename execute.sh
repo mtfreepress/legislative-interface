@@ -17,3 +17,6 @@
 
 # process bill json into format we need
 /process/process-bills.py
+
+# process bill actions
+/process/process-actions.py
