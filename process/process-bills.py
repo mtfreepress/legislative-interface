@@ -9,7 +9,6 @@ from datetime import datetime
 # 20251 is apparently `2` now
 session = 2
 
-# TODO: Make sure this works still, looks like it will. 
 # date formatting function
 def formatted_date(date_string, default="undefined"):
     if not date_string: 
@@ -31,7 +30,6 @@ def format_sponsor_district(bill_type, district_number):
         prefix = ""
     return f"{prefix}{district_number}" if prefix else "undefined"
 
-# TODO: Fix this, may have the data we need in the new format
 # fiscal code based on subject description
 def map_fiscal_code(subject_description):
     if subject_description == "Appropriations  (see also: State Finance)":
@@ -84,10 +82,11 @@ for bill in bills:
     if not bill_type or not bill_number:
         continue
 
-    # TODO: Fix this
     # most recent action
-    most_recent_action = bill_actions[0] if bill_actions else {}
-    action_type = safe_get(most_recent_action, ["actionType"], {})
+    bill_statuses = draft_data.get("billStatuses", [])
+    most_recent_action = bill_statuses[-1] if bill_statuses else {}
+    last_action_time = formatted_date(safe_get(most_recent_action, ["timeStamp"]))
+    last_bill_status = safe_get(most_recent_action, ["billStatusCode"])
     sponsor_roles = bill.get("primarySponsorBillRoles", [])
     sponsor_data = safe_get(sponsor_roles[0], ["legislator"], {}) if sponsor_roles else {}
 
@@ -105,14 +104,13 @@ for bill in bills:
     requester_last_name = requester.get("lastName")
     bill_requester = f"{requester_first_name} {requester_last_name}"
 
-    # TODO: fix this: 
     subjects = [
         {
-            "subject": safe_get(subject, ["subject", "description"]),
-            "fiscalCode": map_fiscal_code(safe_get(subject, ["subject", "description"])),
-            "voteReq": safe_get(subject, ["subject", "voteRequirement"]),
+            "subject": safe_get(raw_subjects, ["subjectCode", "description"]),
+            "fiscalCode": map_fiscal_code(safe_get(raw_subjects, ["subjectCode", "description"])),
+            "voteReq": safe_get(raw_subjects, ["subjectCode", "voteMajorityType"]),
         }
-        for subject in bill.get("subjects", [])
+        for raw_subjects in draft_data.get("subjects", [])
     ]
     vote_requirements = list({subject.get("voteReq", "undefined") for subject in subjects})
     
@@ -133,13 +131,13 @@ for bill in bills:
         "sponsor": f"{safe_get(sponsor, ['firstName'])} {safe_get(sponsor, ['lastName'])}",
         "sponsorParty": party,
         "sponsorDistrict": sponsor_district,
-        "statusDate": formatted_date(safe_get(most_recent_action, ["date"])),
-        "lastAction": safe_get(action_type, ["description"]),
-        "billStatus": safe_get(action_type, ["progressCategory", "description"]),
+        "statusDate": last_action_time,
+        "lastAction": last_bill_status.get("name", "undefined"),
+        "billStatus": safe_get(last_bill_status, ["billProgressCategory", "description"]),
         "fiscalNotesListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=amend",
         "legalNoteUrl": "undefined",
         "amendmentListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=amend",
-        "draftRequestor": None,
+        "draftRequestor": None, # TODO: See if we have any of these in the data
         "billRequestor": bill_requester,
         "primarySponsor": f"{safe_get(sponsor, ['firstName'])} {safe_get(sponsor, ['lastName'])}",
         "subjects": subjects,
