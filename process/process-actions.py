@@ -71,18 +71,17 @@ for bill in bills:
     bill_actions_data = []
 
     for action in bill_actions:
-        print(action)
 
         # get action details
-        action_type = action.get("actionType", {})
-        action_description = action_type.get("description", "undefined")
+        action_type = action.get("billStatusCode", {})
+        action_description = action_type.get("name", "undefined")
         action_category = (
             action_type.get("progressCategory", {})
             .get("description", "undefined")
             if action_type.get("progressCategory") is not None
             else "undefined"
         )
-        action_date = formatted_date(action.get("date"))
+        action_date = formatted_date(action.get("timeStamp"))
         # TODO - Will need to use PDF vote totals maybe? 
         # hard to say since they often just leave fields off entirely when empty so
         # yesVotes/noVotes/voteSeq may be there? :| 
