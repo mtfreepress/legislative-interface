@@ -52,7 +52,7 @@ for bill in bills:
     draft = bill.get("draft", {})
     draft_number = draft.get("draftNumber", "undefined")
     bill_type = safe_get(bill, ["billType", "code"], "undefined")
-    bill_number = safe_get(bill, ["billType", "id"], "undefined")
+    bill_number = safe_get(bill, ["billNumber"], "undefined")
 
 
     # skip bills without both a bill_type and bill_number
@@ -85,9 +85,9 @@ for bill in bills:
         # TODO - Will need to use PDF vote totals maybe? 
         # hard to say since they often just leave fields off entirely when empty so
         # yesVotes/noVotes/voteSeq may be there? :| 
-        vote_seq = action.get("voteSeq", "undefined")
-        yes_votes = action.get("yesVotes", "undefined")
-        no_votes = action.get("noVotes", "undefined")
+        vote_seq = action_type.get("voteSeq", "undefined")
+        yes_votes = action_type.get("yesVotes", "undefined")
+        no_votes = action_type.get("noVotes", "undefined")
 
         # generate unique id for actions
         action_id = f"{bill_key}-{bill_action_counters[bill_key]:04d}"
