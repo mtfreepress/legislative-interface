@@ -2,9 +2,9 @@ name: Run Python Scripts on Schedule
 
 on:
 # Uncomment these lines to run on a schedule
-  # schedule:
+  schedule:
 # runs every 20 minutes - may be excessive
-    # - cron: '*/20 * * * *'
+    - cron: '*/20 * * * *'
   workflow_dispatch:  
 
 jobs:
