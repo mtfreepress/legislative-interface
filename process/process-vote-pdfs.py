@@ -1,6 +1,6 @@
 import os
 import re
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 import json
 import sys
 
@@ -19,13 +19,15 @@ class PDFVoteParser:
         bill_dir = f"{bill_type}{bill_number}"
         pdf_dir = os.path.join(self.base_path, 'vote_pdfs', bill_dir)
 
-    # NOTE: Disabled for prod, too verbose
-        # if not os.path.exists(pdf_dir):
-        #     return {"error": f"Directory not found: {pdf_dir}"}
+        # Check if the directory exists
+        if not os.path.exists(pdf_dir):
+            print(f"Warning: Directory not found: {pdf_dir}")
+            return []  # Return an empty list if the directory doesn't exist
 
         pdf_files = [f for f in os.listdir(pdf_dir) if f.endswith('.pdf')]
         if not pdf_files:
-            return {"error": f"No PDFs found in directory: {pdf_dir}"}
+            print(f"Warning: No PDFs found in directory: {pdf_dir}")
+            return []  # Return an empty list if no PDFs are found
 
         all_data = []
 
