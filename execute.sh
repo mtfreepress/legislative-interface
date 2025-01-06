@@ -1,22 +1,35 @@
-# TODO: Maybe modify these to take in an argument for `sessionId`
+#!/bin/bash
+
+# 2023 arguments 
+# 2023 and older requires changing the api call in get-bill-data
+# Commented out at the top of the file
+# sessionId=20231
+# sessionOrdinal=20251
+# legislatureOrdinal=69
+
+# 2025 arguments
+sessionId=2 
+sessionOrdinal=20251 
+legislatureOrdinal=69
+
 
 # get bill data json
-/interface/get-bill-data.py
+python ./interface/get-bill-data.py $sessionId
 
 # get legislators
-/interface/get-legislators.py
+python ./interface/get-legislators.py
 
 # generate list of bills for input into other scripts
-/interface/generate-bill-list.py
+python ./interface/generate-bill-list.py $sessionId
 
 # download PDFs:
-/interface/get-pdf-votesheets.py
+python ./interface/get-pdf-votesheets.py --sessionId "$sessionId" --legislatureOrdinal "$legislatureOrdinal" --sessionOrdinal "$sessionOrdinal"
 
 # parse vote counts from PDFs
-/process/process-vote-pdfs.py
+python ./process/process-vote-pdfs.py $sessionId
 
 # process bill json into format we need
-/process/process-bills.py
+python ./process/process-bills.py $sessionId
 
 # process bill actions
-/process/process-actions.py
+python ./process/process-actions.py $sessionId

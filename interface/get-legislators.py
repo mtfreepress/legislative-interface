@@ -8,7 +8,7 @@ api_url = "https://api.legmt.gov/legislators/v1/legislators"
 response = requests.get(api_url)
 
 if response.status_code == 200:
-    directory_path = os.path.abspath(os.path.join(os.getcwd(), "../inputs/legislators"))
+    directory_path = os.path.abspath(os.path.join(os.getcwd(), "./inputs/legislators"))
     os.makedirs(directory_path, exist_ok=True)
     file_path = os.path.join(directory_path, "legislators.json")
     with open(file_path, "w") as json_file:

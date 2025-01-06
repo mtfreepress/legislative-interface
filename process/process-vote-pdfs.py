@@ -2,14 +2,14 @@ import os
 import re
 from PyPDF2 import PdfReader
 import json
+import sys
 
 class PDFVoteParser:
     def __init__(self):
         """
-        Initialize the parser with a hardcoded base directory path.
+        Initialize the parser with a base directory path relative to the script location.
         """
-        self.base_path = "../inputs/"
-
+        self.base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../inputs/")
 
     def parse_pdf_vote(self, bill_type, bill_number, session_id):
         """
@@ -36,9 +36,9 @@ class PDFVoteParser:
                 with open(pdf_path, 'rb') as f:
                     pdf = PdfReader(f)
                     text = pdf.pages[0].extract_text()
-                    # DEBUG: 
-                    print(f"Extracted text for {pdf_file}:")
-                    print(text)
+                    # DEBUG:
+                    # print(f"Extracted text for {pdf_file}:")
+                    # print(text)
 
 # comittee bills –– format of `HB0001APH230105.pdf`
                     if pdf_file.startswith(bill_type):
@@ -262,19 +262,21 @@ class PDFVoteParser:
                 print(f"Error processing PDF {pdf_file}: {str(e)}")
 
         # Save data to file
-        output_dir = os.path.join('output', str(session_id))
+        output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'output', str(session_id))
         os.makedirs(output_dir, exist_ok=True)
-        output_file = os.path.join(output_dir, f"{bill_type}-{bill_number}--votes.json")
+        output_file = os.path.join(output_dir, f"{bill_type}-{bill_number}-votes.json")
         with open(output_file, 'w') as f:
             json.dump(all_data, f, indent=4)
             print(f"Saved results to {output_file}")
 
         return all_data
 
-def load_bill_list(file_path):
+def load_bill_list(session_id):
     """
     Load the list of bills from a JSON file.
     """
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(script_dir, f"../list-bills-{session_id}.json")
     try:
         with open(file_path, 'r') as f:
             return json.load(f)
@@ -283,19 +285,20 @@ def load_bill_list(file_path):
         return []
 
 if __name__ == "__main__":
-    SESSION_ID = 2
-    BILL_LIST_FILE = f"../interface/list-bills-{SESSION_ID}.json"
+    if len(sys.argv) != 2:
+        print("Usage: python get-pdf-votesheets.py <SESSION_ID>")
+        sys.exit(1)
+
+    # Get session_id from command-line arguments
+    session_id = sys.argv[1]
 
     parser = PDFVoteParser()
 
-# standalone usage for testing:
-    # result = parser.parse_pdf_vote("HB", 1, SESSION_ID)
-
-# loading the file in: 
-    bills = load_bill_list(BILL_LIST_FILE)
+    # Load bills from the JSON file
+    bills = load_bill_list(session_id)
     for bill in bills:
         bill_type = bill.get("billType")
         bill_number = bill.get("billNumber")
         if bill_type and bill_number:
-            result = parser.parse_pdf_vote(bill_type, bill_number, SESSION_ID)
+            result = parser.parse_pdf_vote(bill_type, bill_number, session_id)
             print(json.dumps(result, indent=4))
