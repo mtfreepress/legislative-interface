@@ -19,8 +19,9 @@ class PDFVoteParser:
         bill_dir = f"{bill_type}{bill_number}"
         pdf_dir = os.path.join(self.base_path, 'vote_pdfs', bill_dir)
 
-        if not os.path.exists(pdf_dir):
-            return {"error": f"Directory not found: {pdf_dir}"}
+    # NOTE: Disabled for prod, too verbose
+        # if not os.path.exists(pdf_dir):
+        #     return {"error": f"Directory not found: {pdf_dir}"}
 
         pdf_files = [f for f in os.listdir(pdf_dir) if f.endswith('.pdf')]
         if not pdf_files:

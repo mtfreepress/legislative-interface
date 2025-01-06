@@ -39,7 +39,8 @@ def list_files_in_directory(subdir):
         print(f"Visible files in directory '{vote_pdfs_dir}': {files}")
         return set(files)
 
-    print(f"Directory '{vote_pdfs_dir}' does not exist.")
+# NOTE: Disabled for prod, too verbose
+    # print(f"Directory '{vote_pdfs_dir}' does not exist.")
     return set()
 
 
