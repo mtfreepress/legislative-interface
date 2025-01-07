@@ -52,7 +52,7 @@ def process_bills(sessionId):
         if not bill_type or not bill_number:
             continue
 
-        bill_key = f"{bill_type} {bill_number}" if bill_type and bill_number else f"{draft_number}"
+        bill_key = f"{bill_type}{bill_number}" if bill_type and bill_number else f"{draft_number}"
         bill_actions = draft.get("billStatuses")
 
         # counter for the current bill if not already set
