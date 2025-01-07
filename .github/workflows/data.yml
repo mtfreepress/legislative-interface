@@ -26,6 +26,7 @@ jobs:
         key: ${{ runner.os }}-pip-cache-${{ hashFiles('requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-cache-
+        save-always: true
 
     # Set up Python
     - name: Set up Python
