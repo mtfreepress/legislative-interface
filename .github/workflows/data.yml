@@ -1,9 +1,11 @@
 name: Run Python Scripts on Schedule
 
 on:
-# Uncomment these lines to run on a schedule
+  push:  # Trigger workflow on any push to the repository
+    branches:
+      - main  # Run only when pushing to the `main` branch
   schedule:
-# runs every 20 minutes - may be excessive
+# runs every 20 mins
     - cron: '*/20 * * * *'
   workflow_dispatch:  
 
