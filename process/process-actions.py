@@ -53,6 +53,7 @@ def process_bills(sessionId):
             continue
 
         bill_key = f"{bill_type}{bill_number}" if bill_type and bill_number else f"{draft_number}"
+        hyphen_bill_key = f"{bill_type}-{bill_number}" if bill_type and bill_number else f"{draft_number}"
         bill_actions = draft.get("billStatuses")
 
         # counter for the current bill if not already set
@@ -101,7 +102,7 @@ def process_bills(sessionId):
 
         # save the actions data for each bill
         if bill_actions_data:
-            actions_file = os.path.join(cleaned_dir, f"{bill_key}-actions.json")
+            actions_file = os.path.join(cleaned_dir, f"{hyphen_bill_key}-actions.json")
             with open(actions_file, "w") as f:
                 json.dump(bill_actions_data, f, indent=2)
 

@@ -120,6 +120,7 @@ def process_bills(session_id):
 
         # build bill json
         bill_key = f"{bill_type} {bill_number}" if bill_type and bill_number else f"{draft_number}"
+        hypen_bill_key = f"{bill_type}-{bill_number}" if bill_type and bill_number else f"{draft_number}"
         processed_bill = {
             "key": bill_key,
             "session": session_id,
@@ -148,7 +149,7 @@ def process_bills(session_id):
         }
 
         sanitized_key = sanitize_filename(processed_bill["key"])
-        bill_file_path = os.path.join(cleaned_dir, f"{sanitized_key}-data.json")
+        bill_file_path = os.path.join(cleaned_dir, f"{hypen_bill_key}-data.json")
         with open(bill_file_path, "w") as bill_file:
             json.dump(processed_bill, bill_file, indent=2)
         # verbose output - not needed in production but handy for debugging
