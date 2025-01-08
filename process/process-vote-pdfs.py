@@ -264,7 +264,7 @@ class PDFVoteParser:
             except Exception as e:
                 print(f"Error processing PDF {pdf_file}: {str(e)}")
 
-            # Get the script directory
+        # Get the script directory
         script_dir = os.path.dirname(os.path.abspath(__file__))
 
         # Prepare directory for cleaned votes (relative to the script directory)
