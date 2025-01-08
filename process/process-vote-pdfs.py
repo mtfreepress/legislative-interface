@@ -264,13 +264,19 @@ class PDFVoteParser:
             except Exception as e:
                 print(f"Error processing PDF {pdf_file}: {str(e)}")
 
-        # Save data to file
-        output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'output', str(session_id))
-        os.makedirs(output_dir, exist_ok=True)
-        output_file = os.path.join(output_dir, f"{bill_type}-{bill_number}-votes.json")
+            # Get the script directory
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+
+        # Prepare directory for cleaned votes (relative to the script directory)
+        cleaned_dir = os.path.join(script_dir, "cleaned", f"votes-{session_id}")
+        os.makedirs(cleaned_dir, exist_ok=True)
+
+        # Save the JSON file in the cleaned directory
+        output_file = os.path.join(cleaned_dir, f"{bill_type}-{bill_number}-votes.json")
         with open(output_file, 'w') as f:
             json.dump(all_data, f, indent=4)
-            print(f"Saved results to {output_file}")
+
+        print(f"Votes for {bill_type}-{bill_number} saved to {output_file}")
 
         return all_data
 
