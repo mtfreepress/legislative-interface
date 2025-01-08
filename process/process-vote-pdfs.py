@@ -4,6 +4,10 @@ from pypdf import PdfReader
 import json
 import sys
 
+
+# TODO: Fix the "A IR" bug
+# TODO: Map "Mr. Speaker" to name of speaker (maybe do that in front end?)
+
 class PDFVoteParser:
     def __init__(self):
         """
