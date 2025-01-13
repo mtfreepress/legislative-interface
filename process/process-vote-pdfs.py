@@ -81,8 +81,8 @@ class PDFVoteParser:
                             continue
 
                         # Parse votes
-                        # Modify the vote parsing section
-                        vote_pattern = re.compile(r'^([YN])([A-Z][a-zA-Z\'\-]+(?:\s+[A-Z][a-zA-Z\'\-]+)*)', re.MULTILINE)
+                        vote_pattern = re.compile(r'([YN])((?:Mc|Mac)[A-Z][a-z]+|[A-Z][a-z]+\'[A-Za-z]+|[A-Z][a-z]+(?:[- ][A-Z][a-z]+)*)', re.MULTILINE)
+
                         votes = []
                         for match in vote_pattern.finditer(text):
                             # Skip if the match starts with 'EAS' or contains non-name characters
@@ -206,21 +206,38 @@ class PDFVoteParser:
 
                     # Extract vote section and parse votes
                     def parse_votes(result_section):
-                        """
-                        Parses the result section for votes and names.
-                        Returns a list of dictionaries with keys 'vote' and 'name'.
-                        """
                         votes = []
-                        # Split the section into lines
-                        lines = result_section.split('\n')
+                        
+                        # Clean up the input text
+                        result_section = re.sub(r'\bIN THE CHAIR:.*$', '', result_section, flags=re.MULTILINE)
+                        
+                        # Handle Mr. President specially
+                        if "Mr. President" in result_section and not any(v["name"] == "PRESIDENT_PLACEHOLDER" for v in votes):
+                            votes.append({"vote": "Y", "name": "PRESIDENT_PLACEHOLDER"})
+                            result_section = re.sub(r'\bMr\. President\b|\bPresident\b', '', result_section)
+                        
+                        # Updated pattern with correct character ranges
+                        pattern = r'([YN])(?:((?:Mc|Mac)[A-Z][a-z]+)|([A-Z][a-z]+\'[A-Za-z]+)|([A-Z][a-z]+(?:[- ][A-Z][a-z]+)*))'
 
-                        for line in lines:
-                            # special handling for hyphenated names and apostrophe names
-                            line_vote_pattern = re.findall(r'([YNEA])([A-Za-z\'-]+)', line)
-                            for vote, name in line_vote_pattern:
-                                votes.append({"vote": vote, "name": name.strip()})
-
-
+                        matches = re.finditer(pattern, result_section)
+                        
+                        seen_names = set()
+                        for match in matches:
+                            vote = match.group(1)
+                            # Take the first non-None group after the vote as the name
+                            name = next((group for group in match.groups()[1:] if group is not None), None)
+                            
+                            if not name or name in {"I", "IR"} or name == "Mr":
+                                continue
+                                
+                            # Clean up the name
+                            name = name.strip()
+                            
+                            # Only add if not already seen
+                            if name not in seen_names:
+                                seen_names.add(name)
+                                votes.append({"vote": vote, "name": name})
+                        
                         return votes
 
                     # Example Usage
@@ -233,7 +250,7 @@ class PDFVoteParser:
                         # Get the result section text
                         result_section = result_section_match.group(2)
 
-                        # Parse votes from the result section
+                        # whole sheet parse rather than line by line
                         votes = parse_votes(result_section)
 
                         if not votes:
@@ -242,11 +259,12 @@ class PDFVoteParser:
                             print(f"Parsed votes: {votes}")
 
 
+                    # was already parsing above, this is line by line. May be more accurate so leaving in if we have issues. 
                     # First, collect all votes
-                    votes = []
-                    for line in result_section.split('\n'):
-                        line_votes = parse_votes(line)
-                        votes.extend(line_votes)
+                    # votes = []
+                    # for line in result_section.split('\n'):
+                    #     line_votes = parse_votes(line)
+                    #     votes.extend(line_votes)
 
                     # Then, create a single data entry after collecting all votes
                     data = {
