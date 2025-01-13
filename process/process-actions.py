@@ -42,6 +42,10 @@ def process_bills(sessionId):
 
     processed_actions = {}
     bills = json_data.get("content", [])
+
+    # Sort bills alphabetically by bill field (i.e., bill_type and bill_number)
+    bills.sort(key=lambda bill: (safe_get(bill, ["billType", "code"], ""), safe_get(bill, ["billNumber"], "")))
+
     for bill in bills:
         draft = bill.get("draft", {})
         draft_number = draft.get("draftNumber", "undefined")
@@ -58,7 +62,7 @@ def process_bills(sessionId):
 
         # counter for the current bill if not already set
         if bill_key not in bill_action_counters:
-            bill_action_counters[bill_key] = 0
+            bill_action_counters[bill_key] = 1
 
         bill_actions_data = []
 
@@ -112,7 +116,6 @@ def process_bills(sessionId):
         cleaned_dir) if os.path.isfile(os.path.join(cleaned_dir, f))])
 
     print(f"\nTotal number of files saved in '{cleaned_dir}': {files_in_directory}")
-
 
 # main function to handle argument parsing
 if __name__ == "__main__":
