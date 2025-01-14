@@ -1,56 +1,75 @@
 import json
 import os
 import requests
+import argparse
 
-# Define the base path relative to the script's location
+# relative to file - not where it is called
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LIST_BILLS_PATH = os.path.join(BASE_DIR, '../list-bills-2.json')
-DOWNLOAD_DIR = os.path.join(BASE_DIR, 'downloads/raw-votes')
 
-# Ensure the download directory exists
-os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+# takes legislative session as arg
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Fetch and save vote data for bills.")
+    parser.add_argument('legislative_session', type=str, help="Legislative session identifier")
+    return parser.parse_args()
 
-# Load the list of bills from the JSON file
+# get download directory, create if doesn't exist rather than throwing an error
+def get_download_dir(legislative_session):
+    path = os.path.join(BASE_DIR, f'downloads/raw-{legislative_session}-votes')
+    os.makedirs(path, exist_ok=True) 
+    return path
+
+# load bill list
 def load_bills(file_path):
     with open(file_path, 'r') as file:
         return json.load(file)
 
-# Fetch data from the API for a given LC number
-def fetch_vote_data(lc_number):
-    url = f"https://api.legmt.gov/bills/v1/votes/findByBillId?billId={lc_number}"
-    print(f"DEBUG: Fetching URL: {url}")  # Debugging output for URL
+# fetch vote data jsons
+def fetch_data(url):
+    print(f"DEBUG: Fetching URL: {url}")
     response = requests.get(url)
-    print(response)
-    response.raise_for_status()  # Raise an exception for HTTP errors
+    response.raise_for_status()
     return response.json()
 
-# Save the fetched data to a file
-def save_vote_data(data, bill_type, bill_number):
+# save data to file ie `HB-1-raw-votes.json`
+def save_merged_data(data, bill_type, bill_number, download_dir):
     file_name = f"{bill_type}-{bill_number}-raw-votes.json"
-    file_path = os.path.join(DOWNLOAD_DIR, file_name)
+    file_path = os.path.join(download_dir, file_name)
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
-# Main script logic
 def main():
+    args = parse_arguments()
+    legislative_session = args.legislative_session
+    download_dir = get_download_dir(legislative_session)
+
+    # Ensure the download directory exists
+    os.makedirs(download_dir, exist_ok=True)
+
     bills = load_bills(LIST_BILLS_PATH)
 
     for bill in bills:
-        id = bill['id']
+        lc_number = bill['id']
         bill_type = bill['billType']
         bill_number = bill['billNumber']
 
-        # lc_number = "1372"  # Hardcoded LC number for debugging
-        # bill_type = "HB"
-        # bill_number = 1
-
         try:
-            print(f"Fetching data for LC{id} ({bill_type} {bill_number})...")
-            vote_data = fetch_vote_data(id)
-            save_vote_data(vote_data, bill_type, bill_number)
-            print(f"Saved data for {bill_type} {bill_number}.")
+            print(f"Fetching vote data for LC{lc_number} ({bill_type} {bill_number})...")
+            vote_data_url = f"https://api.legmt.gov/bills/v1/votes/findByBillId?billId={lc_number}"
+            vote_data = fetch_data(vote_data_url)
+
+            print(f"Fetching executive action data for LC{lc_number} ({bill_type} {bill_number})...")
+            exec_action_url = f"https://api.legmt.gov/committees/v1/executiveActions/findByBillId?billId={lc_number}"
+            exec_action_data = fetch_data(exec_action_url)
+
+            # Merge both data into a single list
+            merged_data = vote_data + exec_action_data
+
+            # Save the merged data
+            save_merged_data(merged_data, bill_type, bill_number, download_dir)
+            print(f"Saved merged data for {bill_type} {bill_number}.")
         except requests.RequestException as e:
-            print(f"Failed to fetch data for LC{id}: {e}")
+            print(f"Failed to fetch data for LC{lc_number}: {e}")
 
 if __name__ == "__main__":
     main()
