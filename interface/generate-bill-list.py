@@ -33,6 +33,7 @@ if __name__ == "__main__":
     # Iterate through bills and extract `lc` and `key`
     for bill in bills:
         draft = bill.get("draft", {})
+        id = bill.get("id", "undefined")
         draft_number = draft.get("draftNumber", "undefined")
         bill_type_data = bill.get("billType", {})
         bill_type = (bill_type_data.get("code", "") if bill_type_data else "").upper()
@@ -44,7 +45,8 @@ if __name__ == "__main__":
             continue
 
         # Add to output list
-        output.append({"lc": draft_number, 
+        output.append({"lc": draft_number,
+                       "id": id,
                        "billType": bill_type,
                        "billNumber": bill_number
                        })
