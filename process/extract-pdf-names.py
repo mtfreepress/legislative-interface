@@ -1,6 +1,6 @@
 import os
 import re
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 import json
 
 # NOTE: This is not needed each run
@@ -14,7 +14,7 @@ class PDFNameExtractor:
         bill_dir = f"{bill_type}{bill_number}"
         pdf_dir = os.path.join(self.base_path, '..', 'vote_pdfs_fast', bill_dir)  # Path relative to the script
 
-# Disabled for prod, too verbose
+# NOTE: Disabled for prod, too verbose
         # if not os.path.exists(pdf_dir):
             # return {"error": f"Directory not found: {pdf_dir}"}
 
