@@ -32,7 +32,7 @@ def fetch_data(url):
     return response.json()
 
 # save data to file ie `HB-1-raw-votes.json`
-def save_merged_data(data, bill_type, bill_number, download_dir):
+def save_vote_data(data, bill_type, bill_number, download_dir):
     file_name = f"{bill_type}-{bill_number}-raw-votes.json"
     file_path = os.path.join(download_dir, file_name)
     with open(file_path, 'w') as file:
@@ -58,16 +58,9 @@ def main():
             vote_data_url = f"https://api.legmt.gov/bills/v1/votes/findByBillId?billId={lc_number}"
             vote_data = fetch_data(vote_data_url)
 
-            print(f"Fetching executive action data for LC{lc_number} ({bill_type} {bill_number})...")
-            exec_action_url = f"https://api.legmt.gov/committees/v1/executiveActions/findByBillId?billId={lc_number}"
-            exec_action_data = fetch_data(exec_action_url)
-
-            # Merge both data into a single list
-            merged_data = vote_data + exec_action_data
-
-            # Save the merged data
-            save_merged_data(merged_data, bill_type, bill_number, download_dir)
-            print(f"Saved merged data for {bill_type} {bill_number}.")
+            # Save the vote data (no executive action data)
+            save_vote_data(vote_data, bill_type, bill_number, download_dir)
+            print(f"Saved vote data for {bill_type} {bill_number}.")
         except requests.RequestException as e:
             print(f"Failed to fetch data for LC{lc_number}: {e}")
 

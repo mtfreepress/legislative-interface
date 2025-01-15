@@ -53,21 +53,25 @@ def main():
         votes_data = load_json(vote_file_path)
         bill_data = load_json(bill_file_path)
 
-        # counter for the current bill if not already set
+        # Initialize counters for action IDs
         bill_action_counters = {}
         bill_key = f"{bill_type}{bill_number}"
         if bill_key not in bill_action_counters:
             bill_action_counters[bill_key] = 1
 
-         # generate unique id for actions
-        action_id = f"{bill_key}-{bill_action_counters[bill_key]:04d}"
-        bill_action_counters[bill_key] += 1
-
+        # Store actions for this bill
         actions = []
 
-        for item in votes_data:
-            bill_status_id = item.get('billStatus', {}).get('id') or item.get('billStatusId')
-            action_type = item.get("billStatusCode", {})
+        # Ensure actions are sorted by timestamp from billStatuses
+        bill_statuses = bill_data.get('draft', {}).get('billStatuses', [])
+        bill_statuses.sort(key=lambda x: x.get('timeStamp'))  # Sort by timestamp (oldest first)
+
+        # Process each billStatus entry and generate actions
+        for bill_status in bill_statuses:
+            action_id = f"{bill_key}-{bill_action_counters[bill_key]:04d}"
+            bill_action_counters[bill_key] += 1
+            
+            action_type = bill_status.get("billStatusCode", {})
             action_description = action_type.get("name", "undefined")
             action_category = (
                 action_type.get("progressCategory", {})
@@ -75,10 +79,10 @@ def main():
                 if action_type.get("progressCategory") is not None
                 else "undefined"
             )
-            action_date = formatted_date(item.get("timeStamp"))
-            yes_votes = item.get("yesVotes", 0)
-            no_votes = item.get("noVotes", 0)
-            vote_seq = item.get("voteSeq", "undefined")
+            action_date = formatted_date(bill_status.get("timeStamp"))
+            yes_votes = 0
+            no_votes = 0
+            vote_seq = "undefined"
 
             action_data = {
                 "id": action_id,
@@ -86,46 +90,56 @@ def main():
                 "date": action_date,
                 "description": action_description,
                 "posession": "house" if bill_type.startswith("H") else "senate",
-                "committee": item.get("committee", None),
+                "committee": bill_status.get("committee", None),
                 "actionUrl": None,
                 "recordings": [],
                 "transcriptUrl": None,
                 "key": action_description,
             }
 
+            # Match with votes data
             matched_votes = []
-            for bill_status in bill_data.get('draft', {}).get('billStatuses', []):
-                if bill_status['id'] == bill_status_id:
-                    # match legislator votes with their id
-                    for vote in item.get('legislatorVotes', []):
-                        legislator_id = vote.get('legislatorId')
-                        if legislator_id is None:
-                            print(f"Skipping vote without legislatorId: {vote}")
-                            continue
+            for item in votes_data:
+                bill_status_data = item.get('billStatus')
+                if bill_status_data and 'id' in bill_status_data:
+                    if bill_status_data['id'] == bill_status['id']:
+                        yes_votes += item.get("yesVotes", 0)
+                        no_votes += item.get("noVotes", 0)
+                        vote_seq = item.get("voteSeq", "undefined")
+                        
+                        # Process legislator votes
+                        for vote in item.get('legislatorVotes', []):
+                            legislator_id = vote.get('legislatorId')
+                            if legislator_id is None:
+                                print(f"Skipping vote without legislatorId: {vote}")
+                                continue
 
-                        legislator = legislators.get(legislator_id)
-                        if legislator:
-                            political_party = legislator.get("politicalParty", {})
-                            district = legislator.get("district", {})
-                            district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
-                            district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
+                            legislator = legislators.get(legislator_id)
+                            if legislator:
+                                political_party = legislator.get("politicalParty", {})
+                                district = legislator.get("district", {})
+                                district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
+                                district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
 
-                            matched_votes.append({
-                                "option": vote.get('voteType', "Unknown")[0],  # E.g., 'Y' or 'N'
-                                "name": f"{legislator['firstName']} {legislator['lastName']}",
-                                "lastName": legislator['lastName'],
-                                "party": political_party.get("code", "Unknown"),
-                                "locale": legislator.get("city", "Unknown"),
-                                "district": district_formatted,
-                            })
+                                matched_votes.append({
+                                    "option": vote.get('voteType', "Unknown")[0],  # E.g., 'Y' or 'N'
+                                    "name": f"{legislator['firstName']} {legislator['lastName']}",
+                                    "lastName": legislator['lastName'],
+                                    "party": political_party.get("code", "Unknown"),
+                                    "locale": legislator.get("city", "Unknown"),
+                                    "district": district_formatted,
+                                })
+                else:
+                    print(f"Skipping item with missing or invalid 'billStatus': {item}")
 
+
+            # Add matched votes to action if any
             if matched_votes:
-                # populate vote structure if it exists
                 action_data["vote"] = {
                     "action": action_data["id"],
                     "bill": action_data["bill"],
                     "date": action_data["date"],
-                    "type": "committee",  # TODO: Figure this out
+                    "type": "committee",  # TODO: Determine action type
                     "seqNumber": vote_seq,
                     "voteChamber": None,
                     "voteUrl": None,
@@ -133,19 +147,19 @@ def main():
                     "motion": action_description,
                     "thresholdRequired": "simple",
                     "count": {"Y": yes_votes, "N": no_votes},
-                    "gopCount": {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}, # TODO: calculate this
-                    "demCount": {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}, # TODO: calculate this
+                    "gopCount": {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0},  # TODO: Calculate this
+                    "demCount": {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0},  # TODO: Calculate this
                     "motionPassed": yes_votes > no_votes,
-                    "gopSupported": None, # TODO: calculate this
-                    "demSupported": None, # TODO: calculate this
+                    "gopSupported": None,  # TODO: Calculate this
+                    "demSupported": None,  # TODO: Calculate this
                     "votes": matched_votes,
                 }
             else:
-                # set vote to null if no votes matched
                 action_data["vote"] = None
 
             actions.append(action_data)
 
+        # Write actions to output file
         output_file_path = os.path.join(output_dir.format(session_id=session_id), f"{bill_type}-{bill_number}-matched-actions.json")
         with open(output_file_path, "w") as f:
             json.dump(actions, f, indent=2)
