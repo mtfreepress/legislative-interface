@@ -31,22 +31,12 @@ def fetch_data(url):
     response.raise_for_status()
     return response.json()
 
-# save data to file
-def save_data(data, file_path):
+# save data to file ie `HB-1-raw-votes.json`
+def save_merged_data(data, bill_type, bill_number, download_dir):
+    file_name = f"{bill_type}-{bill_number}-raw-votes.json"
+    file_path = os.path.join(download_dir, file_name)
     with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
-
-# Extract unique standingCommitteeId values from merged data
-def extract_unique_committee_ids(merged_data):
-    committee_ids = set()
-    for entry in merged_data:
-        draft = entry.get('draft', {})
-        bill_statuses = draft.get('billStatuses', [])
-        for status in bill_statuses:
-            committee_id = status.get('standingCommitteeId')
-            if committee_id is not None:
-                committee_ids.add(committee_id)
-    return sorted(committee_ids)
 
 def main():
     args = parse_arguments()
@@ -57,7 +47,6 @@ def main():
     os.makedirs(download_dir, exist_ok=True)
 
     bills = load_bills(LIST_BILLS_PATH)
-    unique_committee_ids = set()
 
     for bill in bills:
         lc_number = bill['id']
@@ -76,20 +65,11 @@ def main():
             # Merge both data into a single list
             merged_data = vote_data + exec_action_data
 
-            # Extract unique committee IDs from merged data
-            committee_ids = extract_unique_committee_ids(merged_data)
-            unique_committee_ids.update(committee_ids)
-
             # Save the merged data
             save_merged_data(merged_data, bill_type, bill_number, download_dir)
             print(f"Saved merged data for {bill_type} {bill_number}.")
         except requests.RequestException as e:
             print(f"Failed to fetch data for LC{lc_number}: {e}")
-
-    # Save unique committee IDs to a separate file
-    unique_committee_ids_path = os.path.join(download_dir, 'unique_committee_ids.json')
-    save_data(list(unique_committee_ids), unique_committee_ids_path)
-    print(f"Saved unique committee IDs to {unique_committee_ids_path}")
 
 if __name__ == "__main__":
     main()
