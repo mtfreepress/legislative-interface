@@ -59,9 +59,17 @@ def main():
                                 print(f"Skipping vote without legislatorId: {vote}")
                                 continue
                             legislator = legislators.get(legislator_id)
+                            political_party = legislator.get("politicalParty")
+                            district = legislator.get["district"]
+                            district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
+                            district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
+
                             if legislator:
                                 matched_votes.append({
                                     "legislator": f"{legislator['lastName']}, {legislator['firstName']}",
+                                    "party": f"{political_party['name']}",
+                                    "partyAbbreviation": f"{political_party['code']}",
+                                    "district": district_formatted,
                                     "voteType": vote['voteType'],
                                     "votingMemberStatus": vote['votingMemberStatus']
                                 })
