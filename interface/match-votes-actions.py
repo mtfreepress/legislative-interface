@@ -53,6 +53,16 @@ def main():
         votes_data = load_json(vote_file_path)
         bill_data = load_json(bill_file_path)
 
+        # counter for the current bill if not already set
+        bill_action_counters = {}
+        bill_key = f"{bill_type}{bill_number}"
+        if bill_key not in bill_action_counters:
+            bill_action_counters[bill_key] = 1
+
+         # generate unique id for actions
+        action_id = f"{bill_key}-{bill_action_counters[bill_key]:04d}"
+        bill_action_counters[bill_key] += 1
+
         actions = []
 
         for item in votes_data:
@@ -71,7 +81,7 @@ def main():
             vote_seq = item.get("voteSeq", "undefined")
 
             action_data = {
-                "id": f"{bill_type}-{bill_number}-{vote_seq}",
+                "id": action_id,
                 "bill": f"{bill_type} {bill_number}",
                 "date": action_date,
                 "description": action_description,
