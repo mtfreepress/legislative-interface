@@ -32,15 +32,15 @@ def fetch_data(url):
     return response.json()
 
 # save data to file
-def save_data(data, filename):
-    with open(filename, 'w') as file:
+def save_data(data, file_path):
+    with open(file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
-def extract_unique_committee_ids(bills):
-    """Extract unique standingCommitteeId values from bill statuses."""
+# Extract unique standingCommitteeId values from merged data
+def extract_unique_committee_ids(merged_data):
     committee_ids = set()
-    for bill in bills:
-        draft = bill.get('draft', {})
+    for entry in merged_data:
+        draft = entry.get('draft', {})
         bill_statuses = draft.get('billStatuses', [])
         for status in bill_statuses:
             committee_id = status.get('standingCommitteeId')
@@ -65,19 +65,29 @@ def main():
         bill_number = bill['billNumber']
 
         try:
-            print(f"Fetching data for LC{lc_number} ({bill_type} {bill_number})...")
-            bill_data_url = f"https://api.legmt.gov/bills/v1/findById?billId={lc_number}"
-            bill_data = fetch_data(bill_data_url)
+            print(f"Fetching vote data for LC{lc_number} ({bill_type} {bill_number})...")
+            vote_data_url = f"https://api.legmt.gov/bills/v1/votes/findByBillId?billId={lc_number}"
+            vote_data = fetch_data(vote_data_url)
 
-            # Extract unique committee IDs
-            committee_ids = extract_unique_committee_ids([bill_data])
+            print(f"Fetching executive action data for LC{lc_number} ({bill_type} {bill_number})...")
+            exec_action_url = f"https://api.legmt.gov/committees/v1/executiveActions/findByBillId?billId={lc_number}"
+            exec_action_data = fetch_data(exec_action_url)
+
+            # Merge both data into a single list
+            merged_data = vote_data + exec_action_data
+
+            # Extract unique committee IDs from merged data
+            committee_ids = extract_unique_committee_ids(merged_data)
             unique_committee_ids.update(committee_ids)
 
+            # Save the merged data
+            save_merged_data(merged_data, bill_type, bill_number, download_dir)
+            print(f"Saved merged data for {bill_type} {bill_number}.")
         except requests.RequestException as e:
             print(f"Failed to fetch data for LC{lc_number}: {e}")
 
-    # Save unique committee IDs to a file
-    unique_committee_ids_path = os.path.join(download_dir, 'committee_ids.json')
+    # Save unique committee IDs to a separate file
+    unique_committee_ids_path = os.path.join(download_dir, 'unique_committee_ids.json')
     save_data(list(unique_committee_ids), unique_committee_ids_path)
     print(f"Saved unique committee IDs to {unique_committee_ids_path}")
 
