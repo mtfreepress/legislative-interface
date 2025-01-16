@@ -118,6 +118,8 @@ def main():
 
             # match with votes
             matched_votes = []
+
+            
             for item in votes_data:
                 bill_status_data = item.get('billStatus')
                 if bill_status_data and 'id' in bill_status_data:
@@ -126,33 +128,42 @@ def main():
                         no_votes += item.get("noVotes", 0)
                         vote_seq = item.get("voteSeq", "undefined")
                         
-                        # process legislator votes
-                        for vote in item.get('legislatorVotes', []):
-                            legislator_id = vote.get('legislatorId')
-                            if legislator_id is None:
-                                print(f"Skipping vote without legislatorId: {vote}")
-                                continue
+            # process legislator votes
+            gop_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
+            dem_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
 
-                            legislator = legislators.get(legislator_id)
-                            if legislator:
-                                political_party = legislator.get("politicalParty", {})
-                                district = legislator.get("district", {})
-                                district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
-                                district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
+            # Process legislator votes
+            for vote in item.get('legislatorVotes', []):
+                legislator_id = vote.get('legislatorId')
+                if legislator_id is None:
+                    print(f"Skipping vote without legislatorId: {vote}")
+                    continue
 
-                                matched_votes.append({
-                                    "option": vote.get('voteType', "Unknown")[0],  # E.g., 'Y' or 'N'
-                                    "name": f"{legislator['firstName']} {legislator['lastName']}",
-                                    "lastName": legislator['lastName'],
-                                    "party": political_party.get("code", "Unknown"),
-                                    "locale": legislator.get("city", "Unknown"),
-                                    "district": district_formatted,
-                                })
-                else:
-                    print(f"Skipping item with missing or invalid 'billStatus': {item}")
+                legislator = legislators.get(legislator_id)
+                if legislator:
+                    vote_type = vote.get('voteType', "Unknown")[0]  # Get first letter, e.g., 'Y' or 'N'
+                    political_party_code = legislator.get("politicalParty", {}).get("code", "Unknown")
 
+                    # Increment counts based on party and vote type
+                    if political_party_code == "R":  # Republican
+                        gop_count[vote_type] = gop_count.get(vote_type, 0) + 1
+                    elif political_party_code == "D":  # Democrat
+                        dem_count[vote_type] = dem_count.get(vote_type, 0) + 1
 
-            # dd matched votes to action
+                    district = legislator.get("district", {})
+                    district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
+                    district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
+
+                    matched_votes.append({
+                        "option": vote_type,
+                        "name": f"{legislator['firstName']} {legislator['lastName']}",
+                        "lastName": legislator['lastName'],
+                        "party": political_party_code,
+                        "locale": legislator.get("city", "Unknown"),
+                        "district": district_formatted,
+                    })
+
+            # Add matched votes to action if any
             if matched_votes:
                 action_data["vote"] = {
                     "action": action_data["id"],
@@ -166,8 +177,8 @@ def main():
                     "motion": action_description,
                     "thresholdRequired": "simple",
                     "count": {"Y": yes_votes, "N": no_votes},
-                    "gopCount": {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0},  # TODO: Calculate this
-                    "demCount": {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0},  # TODO: Calculate this
+                    "gopCount": gop_count,  # Include GOP counts
+                    "demCount": dem_count,  # Include DEM counts
                     "motionPassed": yes_votes > no_votes,
                     "gopSupported": None,  # TODO: Calculate this
                     "demSupported": None,  # TODO: Calculate this
