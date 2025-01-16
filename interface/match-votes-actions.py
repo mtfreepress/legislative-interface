@@ -9,6 +9,7 @@ votes_dir = os.path.join(BASE_DIR, "downloads/raw-{session_id}-votes")
 bills_dir = os.path.join(BASE_DIR, "downloads/raw-{session_id}-bills")
 list_bills_file = os.path.join(BASE_DIR, "../list-bills-2.json")
 legislators_file = os.path.join(BASE_DIR, "../inputs/legislators/legislators.json")
+committees_file = os.path.join(BASE_DIR, "downloads/committees-2.json")  # Path to the committees file
 output_dir = os.path.join(BASE_DIR, "downloads/matched-{session_id}-votes")
 
 def parse_arguments():
@@ -19,7 +20,7 @@ def parse_arguments():
 def load_json(file_path):
     with open(file_path, "r") as f:
         return json.load(f)
-    
+
 def formatted_date(date_string, default="undefined"):
     if not date_string:
         return default
@@ -36,6 +37,10 @@ def main():
 
     list_bills = load_json(list_bills_file)
     legislators = {leg['id']: leg for leg in load_json(legislators_file)}
+    committees = load_json(committees_file)  # committees data
+
+    # lookup for committees by their id
+    committee_lookup = {committee['id']: committee['committeeDetails'] for committee in committees}
 
     os.makedirs(output_dir.format(session_id=session_id), exist_ok=True)
 
@@ -53,7 +58,7 @@ def main():
         votes_data = load_json(vote_file_path)
         bill_data = load_json(bill_file_path)
 
-        # Initialize counters for action IDs
+        # counters for action IDs
         bill_action_counters = {}
         bill_key = f"{bill_type}{bill_number}"
         if bill_key not in bill_action_counters:
@@ -97,7 +102,21 @@ def main():
                 "key": action_description,
             }
 
-            # Match with votes data
+            # match committee by id - may need some tweaking
+            committee_id = bill_status.get('committee', None)
+            if committee_id and committee_id in committee_lookup:
+                committee_details = committee_lookup[committee_id]
+                committee_name = committee_details.get('name', 'undefined')
+                # strip the (H) or (S) prefix to determine the chamber
+                if committee_name.startswith("(H)"):
+                    action_data["voteChamber"] = "House"
+                    committee_name = committee_name[4:].strip()  # remove the (H) part
+                elif committee_name.startswith("(S)"):
+                    action_data["voteChamber"] = "Senate"
+                    committee_name = committee_name[4:].strip()  # remove the (S) part
+                action_data["committee"] = committee_name  # use cleaned committee name
+
+            # match with votes
             matched_votes = []
             for item in votes_data:
                 bill_status_data = item.get('billStatus')
@@ -107,7 +126,7 @@ def main():
                         no_votes += item.get("noVotes", 0)
                         vote_seq = item.get("voteSeq", "undefined")
                         
-                        # Process legislator votes
+                        # process legislator votes
                         for vote in item.get('legislatorVotes', []):
                             legislator_id = vote.get('legislatorId')
                             if legislator_id is None:
@@ -133,7 +152,7 @@ def main():
                     print(f"Skipping item with missing or invalid 'billStatus': {item}")
 
 
-            # Add matched votes to action if any
+            # dd matched votes to action
             if matched_votes:
                 action_data["vote"] = {
                     "action": action_data["id"],
@@ -141,7 +160,7 @@ def main():
                     "date": action_data["date"],
                     "type": "committee",  # TODO: Determine action type
                     "seqNumber": vote_seq,
-                    "voteChamber": None,
+                    "voteChamber": action_data.get("voteChamber"),
                     "voteUrl": None,
                     "session": session_id,
                     "motion": action_description,
@@ -159,7 +178,7 @@ def main():
 
             actions.append(action_data)
 
-        # Write actions to output file
+        # rite actions to output file
         output_file_path = os.path.join(output_dir.format(session_id=session_id), f"{bill_type}-{bill_number}-matched-actions.json")
         with open(output_file_path, "w") as f:
             json.dump(actions, f, indent=2)
