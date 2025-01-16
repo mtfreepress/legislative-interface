@@ -54,7 +54,7 @@ def main():
         bill_number = bill['billNumber']
 
         try:
-            print(f"Fetching vote data for LC{lc_number} ({bill_type} {bill_number})...")
+            # print(f"Fetching vote data for LC{lc_number} ({bill_type} {bill_number})...")
             vote_data_url = f"https://api.legmt.gov/bills/v1/votes/findByBillId?billId={lc_number}"
             vote_data = fetch_data(vote_data_url)
 
