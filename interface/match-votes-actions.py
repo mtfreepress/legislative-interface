@@ -64,14 +64,13 @@ def main():
         if bill_key not in bill_action_counters:
             bill_action_counters[bill_key] = 1
 
-        # Store actions for this bill
         actions = []
 
-        # Ensure actions are sorted by timestamp from billStatuses
+        # sort by action/timestamp
         bill_statuses = bill_data.get('draft', {}).get('billStatuses', [])
         bill_statuses.sort(key=lambda x: x.get('timeStamp'))  # Sort by timestamp (oldest first)
 
-        # Process each billStatus entry and generate actions
+        # process each billStatus entry and generate actions
         for bill_status in bill_statuses:
             action_id = f"{bill_key}-{bill_action_counters[bill_key]:04d}"
             bill_action_counters[bill_key] += 1
@@ -119,51 +118,47 @@ def main():
             # match with votes
             matched_votes = []
 
-            
             for item in votes_data:
                 bill_status_data = item.get('billStatus')
-                if bill_status_data and 'id' in bill_status_data:
-                    if bill_status_data['id'] == bill_status['id']:
-                        yes_votes += item.get("yesVotes", 0)
-                        no_votes += item.get("noVotes", 0)
-                        vote_seq = item.get("voteSeq", "undefined")
-                        
-            # process legislator votes
-            gop_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
-            dem_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
+                if bill_status_data and bill_status_data.get('id') == bill_status.get('id'):
+                    # TODO: Fix these counters, they're broken.
+                    yes_votes += item.get("yesVotes", 0)
+                    no_votes += item.get("noVotes", 0)
+                    vote_seq = item.get("voteSeq", "undefined")
 
-            # Process legislator votes
-            for vote in item.get('legislatorVotes', []):
-                legislator_id = vote.get('legislatorId')
-                if legislator_id is None:
-                    print(f"Skipping vote without legislatorId: {vote}")
-                    continue
+                    gop_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
+                    dem_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
 
-                legislator = legislators.get(legislator_id)
-                if legislator:
-                    vote_type = vote.get('voteType', "Unknown")[0]  # Get first letter, e.g., 'Y' or 'N'
-                    political_party_code = legislator.get("politicalParty", {}).get("code", "Unknown")
+                    # process legislator votes
+                    for vote in item.get('legislatorVotes', []):
+                        legislator_id = vote.get('legislatorId')
+                        if legislator_id is None:
+                            print(f"Skipping vote without legislatorId: {vote}")
+                            continue
 
-                    # Increment counts based on party and vote type
-                    if political_party_code == "R":  # Republican
-                        gop_count[vote_type] = gop_count.get(vote_type, 0) + 1
-                    elif political_party_code == "D":  # Democrat
-                        dem_count[vote_type] = dem_count.get(vote_type, 0) + 1
+                        legislator = legislators.get(legislator_id)
+                        if legislator:
+                            vote_type = vote.get('voteType', "Unknown")[0]
+                            political_party_code = legislator.get("politicalParty", {}).get("code", "Unknown")
 
-                    district = legislator.get("district", {})
-                    district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
-                    district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
+                            if political_party_code == "R":
+                                gop_count[vote_type] = gop_count.get(vote_type, 0) + 1
+                            elif political_party_code == "D":
+                                dem_count[vote_type] = dem_count.get(vote_type, 0) + 1
 
-                    matched_votes.append({
-                        "option": vote_type,
-                        "name": f"{legislator['firstName']} {legislator['lastName']}",
-                        "lastName": legislator['lastName'],
-                        "party": political_party_code,
-                        "locale": legislator.get("city", "Unknown"),
-                        "district": district_formatted,
-                    })
+                            district = legislator.get("district", {})
+                            district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
+                            district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
 
-            # Add matched votes to action if any
+                            matched_votes.append({
+                                "option": vote_type,
+                                "name": f"{legislator['firstName']} {legislator['lastName']}",
+                                "lastName": legislator['lastName'],
+                                "party": political_party_code,
+                                "locale": legislator.get("city", "Unknown"),
+                                "district": district_formatted,
+                            })
+
             if matched_votes:
                 action_data["vote"] = {
                     "action": action_data["id"],
@@ -177,11 +172,11 @@ def main():
                     "motion": action_description,
                     "thresholdRequired": "simple",
                     "count": {"Y": yes_votes, "N": no_votes},
-                    "gopCount": gop_count,  # Include GOP counts
-                    "demCount": dem_count,  # Include DEM counts
-                    "motionPassed": yes_votes > no_votes,
-                    "gopSupported": None,  # TODO: Calculate this
-                    "demSupported": None,  # TODO: Calculate this
+                    "gopCount": gop_count,
+                    "demCount": dem_count,
+                    "motionPassed": yes_votes > no_votes, # TODO: make sure this works after yes/no votes are fixed 
+                    "gopSupported": gop_count["Y"] > gop_count["N"],
+                    "demSupported": dem_count["Y"] > dem_count["N"],
                     "votes": matched_votes,
                 }
             else:
@@ -189,7 +184,7 @@ def main():
 
             actions.append(action_data)
 
-        # rite actions to output file
+        # write actions to output file
         output_file_path = os.path.join(output_dir.format(session_id=session_id), f"{bill_type}-{bill_number}-matched-actions.json")
         with open(output_file_path, "w") as f:
             json.dump(actions, f, indent=2)
