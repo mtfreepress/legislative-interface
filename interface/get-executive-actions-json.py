@@ -54,7 +54,7 @@ def main():
         bill_number = bill['billNumber']
 
         try:
-            print(f"Fetching executive actions data for LC{lc_number} ({bill_type} {bill_number})...")
+            # print(f"Fetching executive actions data for LC{lc_number} ({bill_type} {bill_number})...")
             executive_actions_url = f"https://api.legmt.gov/committees/v1/executiveActions/findByBillId?billId={lc_number}"
             executive_actions_data = fetch_data(executive_actions_url)
 
