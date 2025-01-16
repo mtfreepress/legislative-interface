@@ -30,7 +30,11 @@ python ./interface/generate-bill-list.py $sessionId
 # get vote data:
 python ./interface/get-votes-json.py $sessionId
 
-python3 ./interface/match-votes-actions.py $sessionId
+# executive actions data
+python ./interface/get-executive-actions-json.py $sessionId
+
+# match some votes:
+python ./interface/match-votes-actions.py $sessionId
 
 #TODO: logic for `if sessionOrdinal is <20251, use this else use get-votes-json.py`
 # download PDFs - only needed for sessions prior to 2025:

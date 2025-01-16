@@ -1,15 +1,16 @@
 import os
 import json
-from datetime import datetime
 import argparse
+from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 votes_dir = os.path.join(BASE_DIR, "downloads/raw-{session_id}-votes")
 bills_dir = os.path.join(BASE_DIR, "downloads/raw-{session_id}-bills")
+executive_actions_dir = os.path.join(BASE_DIR, "downloads/raw-{session_id}-executive-actions")
 list_bills_file = os.path.join(BASE_DIR, "../list-bills-2.json")
 legislators_file = os.path.join(BASE_DIR, "../inputs/legislators/legislators.json")
-committees_file = os.path.join(BASE_DIR, "downloads/committees-2.json")  # Path to the committees file
+committees_file = os.path.join(BASE_DIR, "downloads/committees-2.json")
 output_dir = os.path.join(BASE_DIR, "downloads/matched-{session_id}-votes")
 
 def parse_arguments():
@@ -31,6 +32,33 @@ def formatted_date(date_string, default="undefined"):
         # handle invalid date strings
         return default
 
+def process_legislator_votes(votes, legislators):
+    processed_votes = []
+    for vote in votes:
+        legislator_id = vote.get('legislatorId') or vote['membership']['legislatorId']
+        vote_type = vote.get('voteType') or vote['committeeVote']
+        if legislator_id is None or vote_type is None:
+            continue
+
+        legislator = legislators.get(legislator_id)
+        if legislator:
+            vote_type = vote_type[0]  # use first letter of vote_type
+            political_party_code = legislator.get("politicalParty", {}).get("code", "Unknown")
+
+            district = legislator.get("district", {})
+            district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
+            district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
+
+            processed_votes.append({
+                "option": vote_type,
+                "name": f"{legislator['firstName']} {legislator['lastName']}",
+                "lastName": legislator['lastName'],
+                "party": political_party_code,
+                "locale": legislator.get("city", "Unknown"),
+                "district": district_formatted,
+            })
+    return processed_votes
+
 def main():
     args = parse_arguments()
     session_id = args.session_id
@@ -50,13 +78,14 @@ def main():
 
         vote_file_path = os.path.join(votes_dir.format(session_id=session_id), f"{bill_type}-{bill_number}-raw-votes.json")
         bill_file_path = os.path.join(bills_dir.format(session_id=session_id), f"{bill_type}-{bill_number}-raw-bill.json")
+        executive_actions_file_path = os.path.join(executive_actions_dir.format(session_id=session_id), f"{bill_type}-{bill_number}-executive-actions.json")
 
         if not os.path.exists(vote_file_path) or not os.path.exists(bill_file_path):
-            print(f"Missing files for {bill_type} {bill_number}. Skipping.")
             continue
 
         votes_data = load_json(vote_file_path)
         bill_data = load_json(bill_file_path)
+        executive_actions_data = load_json(executive_actions_file_path) if os.path.exists(executive_actions_file_path) else []
 
         # counters for action IDs
         bill_action_counters = {}
@@ -66,9 +95,9 @@ def main():
 
         actions = []
 
-        # sort by action/timestamp
+        # sort by action/timestamp - oldest first
         bill_statuses = bill_data.get('draft', {}).get('billStatuses', [])
-        bill_statuses.sort(key=lambda x: x.get('timeStamp'))  # Sort by timestamp (oldest first)
+        bill_statuses.sort(key=lambda x: x.get('timeStamp'))
 
         # process each billStatus entry and generate actions
         for bill_status in bill_statuses:
@@ -86,7 +115,7 @@ def main():
             action_date = formatted_date(bill_status.get("timeStamp"))
             yes_votes = 0
             no_votes = 0
-            vote_seq = "undefined"
+            vote_seq = f"{action_type.get('chamber', 'U')[0]}{action_type.get('billProgressCategory', {}).get('id', '0')}"
 
             action_data = {
                 "id": action_id,
@@ -94,7 +123,7 @@ def main():
                 "date": action_date,
                 "description": action_description,
                 "posession": "house" if bill_type.startswith("H") else "senate",
-                "committee": None,  # Initialize as None
+                "committee": None,
                 "actionUrl": None,
                 "recordings": [],
                 "transcriptUrl": None,
@@ -110,7 +139,7 @@ def main():
                     house_sequence = item["systemId"]
                     vote_seq = f"{house_sequence['chamber'][0]}{house_sequence['sequence']}"
                     
-                    # TODO: This appears to be working but need to make sure once more data is in the system
+                    # TODO: Figure out if we need this? I don't think so. I think this only applies to `executive actions`
                     standing_committee_id = bill_status_data.get('standingCommitteeId')
                     if standing_committee_id and standing_committee_id in committee_lookup:
                         committee_details = committee_lookup[standing_committee_id]
@@ -127,39 +156,57 @@ def main():
                     dem_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
 
                     # process legislator votes
-                    for vote in item.get('legislatorVotes', []):
-                        legislator_id = vote.get('legislatorId')
-                        if legislator_id is None:
-                            print(f"Skipping vote without legislatorId: {vote}")
-                            continue
+                    for vote in process_legislator_votes(item.get('legislatorVotes', []), legislators):
+                        vote_type = vote['option']
+                        if vote_type == "Y":
+                            yes_votes += 1
+                        elif vote_type == "N":
+                            no_votes += 1
 
-                        legislator = legislators.get(legislator_id)
-                        if legislator:
-                            vote_type = vote.get('voteType', "Unknown")[0]
-                            political_party_code = legislator.get("politicalParty", {}).get("code", "Unknown")
+                        if vote['party'] == "R":
+                            gop_count[vote_type] = gop_count.get(vote_type, 0) + 1
+                        elif vote['party'] == "D":
+                            dem_count[vote_type] = dem_count.get(vote_type, 0) + 1
 
-                            if vote_type == "Y":
-                                yes_votes += 1
-                            elif vote_type == "N":
-                                no_votes += 1
+                        matched_votes.append(vote)
 
-                            if political_party_code == "R":
-                                gop_count[vote_type] = gop_count.get(vote_type, 0) + 1
-                            elif political_party_code == "D":
-                                dem_count[vote_type] = dem_count.get(vote_type, 0) + 1
+            # match with executive actions
+            for exec_action in executive_actions_data:
+                if exec_action.get('billStatusId') == bill_status.get('id'):
+                    # vote_seq from status code
+                    action_type = bill_status.get("billStatusCode", {})
+                    vote_seq = f"{action_type.get('chamber', 'U')[0]}{action_type.get('billProgressCategory', {}).get('id', '0')}"
 
-                            district = legislator.get("district", {})
-                            district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
-                            district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
+                    gop_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
+                    dem_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
 
-                            matched_votes.append({
-                                "option": vote_type,
-                                "name": f"{legislator['firstName']} {legislator['lastName']}",
-                                "lastName": legislator['lastName'],
-                                "party": political_party_code,
-                                "locale": legislator.get("city", "Unknown"),
-                                "district": district_formatted,
-                            })
+                    # process legislator votes
+                    for vote in process_legislator_votes(exec_action.get('legislatorVotes', []), legislators):
+                        vote_type = vote['option']
+                        if vote_type == "Y":
+                            yes_votes += 1
+                        elif vote_type == "N":
+                            no_votes += 1
+
+                        if vote['party'] == "R":
+                            gop_count[vote_type] = gop_count.get(vote_type, 0) + 1
+                        elif vote['party'] == "D":
+                            dem_count[vote_type] = dem_count.get(vote_type, 0) + 1
+
+                        matched_votes.append(vote)
+
+                    # get committees via exec actions
+                    standing_committee_id = exec_action.get('standingCommitteeMeeting').get('standingCommittee', {}).get('id')
+                    if standing_committee_id and standing_committee_id in committee_lookup:
+                        committee_details = committee_lookup[standing_committee_id]
+                        committee_name = committee_details.get('name', 'undefined')
+                        if committee_name.startswith("(H)"):
+                            action_data["voteChamber"] = "House"
+                            committee_name = committee_name[4:].strip()
+                        elif committee_name.startswith("(S)"):
+                            action_data["voteChamber"] = "Senate"
+                            committee_name = committee_name[4:].strip()
+                        action_data["committee"] = f"{action_data['voteChamber']} {committee_name}"
 
             if matched_votes:
                 action_data["vote"] = {
@@ -168,7 +215,7 @@ def main():
                     "date": action_data["date"],
                     "type": "committee" if action_data.get("committee") else "floor",
                     "seqNumber": vote_seq,
-                    "voteChamber": house_sequence['chamber'].lower(),
+                    "voteChamber": action_type.get('chamber', 'unknown').lower(),
                     "voteUrl": None,
                     "session": session_id,
                     "motion": action_description,
