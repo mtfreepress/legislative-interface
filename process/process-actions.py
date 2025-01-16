@@ -109,8 +109,8 @@ def process_bills(sessionId):
             actions_file = os.path.join(cleaned_dir, f"{hyphen_bill_key}-actions.json")
             with open(actions_file, "w") as f:
                 json.dump(bill_actions_data, f, indent=2)
-
-            print(f"Actions for {bill_key} saved to {actions_file}")
+        # Too Verbose for Prod
+            # print(f"Actions for {bill_key} saved to {actions_file}")
 
     files_in_directory = len([f for f in os.listdir(
         cleaned_dir) if os.path.isfile(os.path.join(cleaned_dir, f))])

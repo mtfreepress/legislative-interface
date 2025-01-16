@@ -26,7 +26,7 @@ def load_bills(file_path):
 
 # fetch executive actions data jsons
 def fetch_data(url):
-    print(f"DEBUG: Fetching URL: {url}")
+    # print(f"DEBUG: Fetching URL: {url}")
     response = requests.get(url)
     response.raise_for_status()
     return response.json()
@@ -60,7 +60,7 @@ def main():
 
             # Save the executive actions data
             save_executive_actions_data(executive_actions_data, bill_type, bill_number, download_dir)
-            print(f"Saved executive actions data for {bill_type} {bill_number}.")
+            # print(f"Saved executive actions data for {bill_type} {bill_number}.")
         except requests.RequestException as e:
             print(f"Failed to fetch data for LC{lc_number}: {e}")
 

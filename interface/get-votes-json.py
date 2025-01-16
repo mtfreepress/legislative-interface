@@ -26,7 +26,7 @@ def load_bills(file_path):
 
 # fetch vote data jsons
 def fetch_data(url):
-    print(f"DEBUG: Fetching URL: {url}")
+    # print(f"DEBUG: Fetching URL: {url}")
     response = requests.get(url)
     response.raise_for_status()
     return response.json()
@@ -60,7 +60,7 @@ def main():
 
             # Save the vote data (no executive action data)
             save_vote_data(vote_data, bill_type, bill_number, download_dir)
-            print(f"Saved vote data for {bill_type} {bill_number}.")
+            # print(f"Saved vote data for {bill_type} {bill_number}.")
         except requests.RequestException as e:
             print(f"Failed to fetch data for LC{lc_number}: {e}")
 
