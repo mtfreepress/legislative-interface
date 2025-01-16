@@ -94,36 +94,35 @@ def main():
                 "date": action_date,
                 "description": action_description,
                 "posession": "house" if bill_type.startswith("H") else "senate",
-                "committee": bill_status.get("committee", None),
+                "committee": None,  # Initialize as None
                 "actionUrl": None,
                 "recordings": [],
                 "transcriptUrl": None,
                 "key": action_description,
             }
 
-            # match committee by id - may need some tweaking
-            committee_id = bill_status.get('committee', None)
-            if committee_id and committee_id in committee_lookup:
-                committee_details = committee_lookup[committee_id]
-                committee_name = committee_details.get('name', 'undefined')
-                # strip the (H) or (S) prefix to determine the chamber
-                if committee_name.startswith("(H)"):
-                    action_data["voteChamber"] = "House"
-                    committee_name = committee_name[4:].strip()  # remove the (H) part
-                elif committee_name.startswith("(S)"):
-                    action_data["voteChamber"] = "Senate"
-                    committee_name = committee_name[4:].strip()  # remove the (S) part
-                action_data["committee"] = committee_name  # use cleaned committee name
-
-            # match with votes
+            # match with votes first
             matched_votes = []
-
+            
             for item in votes_data:
                 bill_status_data = item.get('billStatus')
                 if bill_status_data and bill_status_data.get('id') == bill_status.get('id'):
                     house_sequence = item["systemId"]
-
                     vote_seq = f"{house_sequence['chamber'][0]}{house_sequence['sequence']}"
+                    
+                    # TODO: This appears to be working but need to make sure once more data is in the system
+                    standing_committee_id = bill_status_data.get('standingCommitteeId')
+                    if standing_committee_id and standing_committee_id in committee_lookup:
+                        committee_details = committee_lookup[standing_committee_id]
+                        committee_name = committee_details.get('name', 'undefined')
+                        if committee_name.startswith("(H)"):
+                            action_data["voteChamber"] = "House"
+                            committee_name = committee_name[4:].strip()
+                        elif committee_name.startswith("(S)"):
+                            action_data["voteChamber"] = "Senate" 
+                            committee_name = committee_name[4:].strip()
+                        action_data["committee"] = committee_name
+
                     gop_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
                     dem_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
 
