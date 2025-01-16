@@ -166,7 +166,7 @@ def main():
                     "action": action_data["id"],
                     "bill": action_data["bill"],
                     "date": action_data["date"],
-                    "type": "committee",  # TODO: Determine action type
+                    "type": "committee" if action_data.get("committee") else "floor",
                     "seqNumber": vote_seq,
                     "voteChamber": house_sequence['chamber'].lower(),
                     "voteUrl": None,
