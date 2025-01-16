@@ -121,11 +121,9 @@ def main():
             for item in votes_data:
                 bill_status_data = item.get('billStatus')
                 if bill_status_data and bill_status_data.get('id') == bill_status.get('id'):
-                    # TODO: Fix these counters, they're broken.
-                    yes_votes += item.get("yesVotes", 0)
-                    no_votes += item.get("noVotes", 0)
-                    vote_seq = item.get("voteSeq", "undefined")
+                    house_sequence = item["systemId"]
 
+                    vote_seq = f"{house_sequence['chamber'][0]}{house_sequence['sequence']}"
                     gop_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
                     dem_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
 
@@ -171,7 +169,7 @@ def main():
                     "date": action_data["date"],
                     "type": "committee",  # TODO: Determine action type
                     "seqNumber": vote_seq,
-                    "voteChamber": action_data.get("voteChamber"),
+                    "voteChamber": house_sequence['chamber'].lower(),
                     "voteUrl": None,
                     "session": session_id,
                     "motion": action_description,
