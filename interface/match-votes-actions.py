@@ -141,6 +141,11 @@ def main():
                             vote_type = vote.get('voteType', "Unknown")[0]
                             political_party_code = legislator.get("politicalParty", {}).get("code", "Unknown")
 
+                            if vote_type == "Y":
+                                yes_votes += 1
+                            elif vote_type == "N":
+                                no_votes += 1
+
                             if political_party_code == "R":
                                 gop_count[vote_type] = gop_count.get(vote_type, 0) + 1
                             elif political_party_code == "D":
@@ -174,7 +179,7 @@ def main():
                     "count": {"Y": yes_votes, "N": no_votes},
                     "gopCount": gop_count,
                     "demCount": dem_count,
-                    "motionPassed": yes_votes > no_votes, # TODO: make sure this works after yes/no votes are fixed 
+                    "motionPassed": yes_votes > no_votes,
                     "gopSupported": gop_count["Y"] > gop_count["N"],
                     "demSupported": dem_count["Y"] > dem_count["N"],
                     "votes": matched_votes,
