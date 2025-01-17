@@ -58,14 +58,14 @@ class PDFNameExtractor:
         output_file_json = os.path.join(output_dir, "unique-names.json")
         with open(output_file_json, 'w') as f:
             json.dump(sorted_names, f, indent=4)
-            print(f"Saved results to {output_file_json}")
+            # print(f"Saved results to {output_file_json}")
 
         # Saving as text
         output_file_txt = os.path.join(output_dir, "unique-names.txt")
         with open(output_file_txt, 'w') as f:
             for name in sorted_names:
                 f.write(f"{name}\n")
-            print(f"Saved results to {output_file_txt}")
+            # print(f"Saved results to {output_file_txt}")
 
         # Print the count of unique names
         print(f"Total unique names: {len(unique_names)}")

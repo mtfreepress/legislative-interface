@@ -298,7 +298,7 @@ class PDFVoteParser:
         with open(output_file, 'w') as f:
             json.dump(all_data, f, indent=4)
 
-        print(f"Votes for {bill_type}-{bill_number} saved to {output_file}")
+        # print(f"Votes for {bill_type}-{bill_number} saved to {output_file}")
 
         return all_data
 

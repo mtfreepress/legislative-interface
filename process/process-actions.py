@@ -115,7 +115,7 @@ def process_bills(sessionId):
     files_in_directory = len([f for f in os.listdir(
         cleaned_dir) if os.path.isfile(os.path.join(cleaned_dir, f))])
 
-    print(f"\nTotal number of files saved in '{cleaned_dir}': {files_in_directory}")
+    # print(f"\nTotal number of files saved in '{cleaned_dir}': {files_in_directory}")
 
 # main function to handle argument parsing
 if __name__ == "__main__":
