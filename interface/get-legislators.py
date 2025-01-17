@@ -14,6 +14,6 @@ if response.status_code == 200:
     with open(file_path, "w") as json_file:
         json.dump(response.json(), json_file, indent=2)
 
-    print(f"Data saved to {file_path}")
+    # print(f"Data saved to {file_path}")
 else:
     print(f"Failed to fetch data. Status code: {response.status_code}")
