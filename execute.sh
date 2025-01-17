@@ -12,42 +12,51 @@ sessionId=2
 sessionOrdinal=20251 
 legislatureOrdinal=69
 
+# Function to measure time taken for a command
+measure_time() {
+    local start_time=$(date +%s)
+    echo "Running: $@"
+    "$@"
+    local end_time=$(date +%s)
+    local elapsed_time=$((end_time - start_time))
+    echo "Time taken: ${elapsed_time} seconds"
+}
 
 # get bill data json
-python ./interface/get-bill-data.py $sessionId
+measure_time python ./interface/get-bill-data.py $sessionId
 
 # split into separate files for processing
-python ./interface/split-bills.py $sessionId
+measure_time python ./interface/split-bills.py $sessionId
 
 # match votes with actions:
 
 # get legislators
-python ./interface/get-legislators.py
+measure_time python ./interface/get-legislators.py
 
 # generate list of bills for input into other scripts
-python ./interface/generate-bill-list.py $sessionId
+measure_time python ./interface/generate-bill-list.py $sessionId
 
 # get vote data:
-python ./interface/get-votes-json.py $sessionId
+measure_time python ./interface/get-votes-json.py $sessionId
 
 # executive actions data
-python ./interface/get-executive-actions-json.py $sessionId
+measure_time python ./interface/get-executive-actions-json.py $sessionId
 
 # match some votes:
-python ./interface/match-votes-actions.py $sessionId
+measure_time python ./interface/match-votes-actions.py $sessionId
 
 #TODO: logic for `if sessionOrdinal is <20251, use this else use get-votes-json.py`
 # download PDFs - only needed for sessions prior to 2025:
-# python ./interface/get-pdf-votesheets.py --sessionId "$sessionId" --legislatureOrdinal "$legislatureOrdinal" --sessionOrdinal "$sessionOrdinal"
+# measure_time python ./interface/get-pdf-votesheets.py --sessionId "$sessionId" --legislatureOrdinal "$legislatureOrdinal" --sessionOrdinal "$sessionOrdinal"
 
 # parse vote counts from PDFs - pre-2025 only
-# python ./process/process-vote-pdfs.py $sessionId
+# measure_time python ./process/process-vote-pdfs.py $sessionId
 
 # parse vote jsons:
-python ./process/process-vote-jsons.py $sessionId
+measure_time python ./process/process-vote-json.py $sessionId
 
 # process bill json into format we need
-python ./process/process-bills.py $sessionId
+measure_time python ./process/process-bills.py $sessionId
 
 # process bill actions
-python ./process/process-actions.py $sessionId
+measure_time python ./process/process-actions.py $sessionId
