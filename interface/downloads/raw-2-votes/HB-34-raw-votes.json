@@ -474,6 +474,27 @@
                         }
                     },
                     {
+                        "id": 21608,
+                        "timeStamp": "2025-01-15T14:00:00",
+                        "standingCommitteeId": 24,
+                        "billStatusCode": {
+                            "id": 299,
+                            "code": "516",
+                            "name": "(H) Committee Executive Action--Bill Passed",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 5,
+                                "code": "30",
+                                "description": "In First House Committee--Nontabled"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
                         "id": 18037,
                         "timeStamp": "2025-01-15T14:19:05.350694",
                         "standingCommitteeId": 24,
@@ -495,13 +516,76 @@
                         }
                     },
                     {
-                        "id": 18210,
-                        "timeStamp": "2025-01-15T17:48:17.172457",
-                        "standingCommitteeId": 24,
+                        "id": 21609,
+                        "timeStamp": "2025-01-17T13:00:00",
+                        "standingCommitteeId": null,
                         "billStatusCode": {
-                            "id": 299,
-                            "code": "516",
-                            "name": "(H) Committee Executive Action--Bill Passed",
+                            "id": 335,
+                            "code": "553",
+                            "name": "(H) Scheduled for 2nd Reading",
+                            "actionWeight": "SOFT",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 21610,
+                        "timeStamp": "2025-01-17T13:16:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 337,
+                            "code": "556",
+                            "name": "(H) 2nd Reading Passed",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 7,
+                                "code": "50",
+                                "description": "In First House--Through 2nd Reading"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 21611,
+                        "timeStamp": "2025-01-17T13:52:00",
+                        "standingCommitteeId": 4,
+                        "billStatusCode": {
+                            "id": 311,
+                            "code": "528",
+                            "name": "(H) Rereferred to Committee",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 5,
+                                "code": "30",
+                                "description": "In First House Committee--Nontabled"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 21607,
+                        "timeStamp": "2025-01-17T14:55:15.125174",
+                        "standingCommitteeId": 4,
+                        "billStatusCode": {
+                            "id": 295,
+                            "code": "512",
+                            "name": "(H) Hearing",
                             "actionWeight": "HARD",
                             "chamber": "HOUSE",
                             "billProgressCategory": {
@@ -1170,7 +1254,27 @@
                 "votingMemberStatus": null
             }
         ],
-        "billStatus": null,
+        "billStatus": {
+            "id": 21610,
+            "timeStamp": "2025-01-17T13:16:00",
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 337,
+                "code": "556",
+                "name": "(H) 2nd Reading Passed",
+                "actionWeight": "HARD",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 7,
+                    "code": "50",
+                    "description": "In First House--Through 2nd Reading"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
+        },
         "systemId": {
             "chamber": "HOUSE",
             "sequence": 82
