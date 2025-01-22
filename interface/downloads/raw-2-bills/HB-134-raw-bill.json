@@ -340,14 +340,35 @@
                 }
             },
             {
-                "id": 23242,
-                "timeStamp": "2025-01-21T12:23:49.613295",
+                "id": 23854,
+                "timeStamp": "2025-01-21T17:45:43.612197",
                 "standingCommitteeId": 9,
                 "billStatusCode": {
-                    "id": 295,
-                    "code": "512",
-                    "name": "(H) Hearing",
-                    "actionWeight": "HARD",
+                    "id": 297,
+                    "code": "514",
+                    "name": "(H) Hearing Canceled",
+                    "actionWeight": "SOFT",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 23855,
+                "timeStamp": "2025-01-21T18:02:42.153616",
+                "standingCommitteeId": 9,
+                "billStatusCode": {
+                    "id": 297,
+                    "code": "514",
+                    "name": "(H) Hearing Canceled",
+                    "actionWeight": "SOFT",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
                         "id": 5,
