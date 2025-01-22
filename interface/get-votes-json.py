@@ -41,7 +41,7 @@ def fetch_and_save_vote_data(bill, download_dir):
         vote_data = fetch_data(vote_data_url)
         save_vote_data(vote_data, bill_type, bill_number, download_dir)
     except requests.RequestException as e:
-        print(f"Failed to fetch data for LC{lc_number}: {e}")
+        print(f"Failed to fetch data for {bill_type}{bill_number}: {e}")
 
 def main():
     args = parse_arguments()
