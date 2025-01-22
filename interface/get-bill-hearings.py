@@ -3,6 +3,8 @@ import json
 import requests
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from urllib3.util.retry import Retry
+from requests.adapters import HTTPAdapter
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 LIST_BILLS_PATH = os.path.join(BASE_DIR, '../list-bills-2.json')
@@ -22,7 +24,18 @@ def load_bills(file_path):
         return json.load(file)
 
 def fetch_data(url):
-    response = requests.get(url)
+    session = requests.Session()
+    retry = Retry(
+        total=5,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["HEAD", "GET", "OPTIONS"]
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+
+    response = session.get(url)
     response.raise_for_status()
     return response.json()
 
@@ -33,7 +46,6 @@ def save_hearings_data(data, bill_type, bill_number, download_dir):
         json.dump(data, file, indent=4)
 
 def fetch_and_save_hearings_data(bill, download_dir):
-    lc_number = bill['lc']
     bill_id = bill['id']
     bill_type = bill['billType']
     bill_number = bill['billNumber']
@@ -42,7 +54,7 @@ def fetch_and_save_hearings_data(bill, download_dir):
         hearings_data = fetch_data(hearings_data_url)
         save_hearings_data(hearings_data, bill_type, bill_number, download_dir)
     except requests.RequestException as e:
-        print(f"Failed to fetch data for {lc_number}: {e}")
+        print(f"Failed to fetch data for bill ID {bill_id}: {e}")
 
 def main():
     args = parse_arguments()
@@ -54,6 +66,6 @@ def main():
         futures = [executor.submit(fetch_and_save_hearings_data, bill, download_dir) for bill in bills]
         for future in as_completed(futures):
             future.result()
-
+            
 if __name__ == "__main__":
     main()
