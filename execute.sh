@@ -12,7 +12,7 @@ sessionId=2
 sessionOrdinal=20251 
 legislatureOrdinal=69
 
-# Function to measure time taken for a command
+# measure time taken for a command
 measure_time() {
     local start_time=$(date +%s)
     echo "Running: $@"
@@ -35,6 +35,9 @@ measure_time python ./interface/get-legislators.py
 
 # generate list of bills for input into other scripts
 measure_time python ./interface/generate-bill-list.py $sessionId
+
+# get committee hearings data
+measure_time python ./interface/get-bill-hearings.py $sessionId
 
 # get vote data:
 measure_time python ./interface/get-votes-json.py $sessionId
