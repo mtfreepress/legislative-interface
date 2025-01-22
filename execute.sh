@@ -55,8 +55,10 @@ measure_time python ./interface/match-votes-actions.py $sessionId
 # parse vote counts from PDFs - pre-2025 only
 # measure_time python ./process/process-vote-pdfs.py $sessionId
 
+measure_time python ./process/merge-actions.py $sessionId
+
 # parse vote jsons:
-measure_time python ./process/process-vote-json.py $sessionId
+# measure_time python ./process/process-vote-json.py $sessionId
 
 # process bill json into format we need
 measure_time python ./process/process-bills.py $sessionId
