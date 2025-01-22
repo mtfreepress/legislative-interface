@@ -59,12 +59,12 @@ def process_legislator_votes(votes, legislators):
     return processed_votes
 
 def match_committee_hearing(bill_status_id, committee_meetings):
-    print(f"Matching committee hearing for bill status ID: {bill_status_id}")
+    # print(f"Matching committee hearing for bill status ID: {bill_status_id}")
     for meeting in committee_meetings:
-        print(f"Checking meeting with standingCommittee ID: {meeting['committeeMeeting']['standingCommittee']['id']}")
+        # print(f"Checking meeting with standingCommittee ID: {meeting['committeeMeeting']['standingCommittee']['id']}")
         if meeting['committeeMeeting']['standingCommittee']['id'] == bill_status_id:
             formatted_meeting_time = formatted_date(meeting['committeeMeeting']['meetingTime'])
-            print(f"Matched meeting time: {formatted_meeting_time}")
+            # print(f"Matched meeting time: {formatted_meeting_time}")
             return formatted_meeting_time
     return None
 
