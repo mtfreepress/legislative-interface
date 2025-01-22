@@ -33,11 +33,11 @@ def save_vote_data(data, bill_type, bill_number, download_dir):
         json.dump(data, file, indent=4)
 
 def fetch_and_save_vote_data(bill, download_dir):
-    lc_number = bill['id']
+    bill_id = bill['id']
     bill_type = bill['billType']
     bill_number = bill['billNumber']
     try:
-        vote_data_url = f"https://api.legmt.gov/bills/v1/votes/findByBillId?billId={lc_number}"
+        vote_data_url = f"https://api.legmt.gov/bills/v1/votes/findByBillId?billId={bill_id}"
         vote_data = fetch_data(vote_data_url)
         save_vote_data(vote_data, bill_type, bill_number, download_dir)
     except requests.RequestException as e:
