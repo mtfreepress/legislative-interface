@@ -2,6 +2,7 @@ import json
 import os
 import argparse
 from datetime import datetime
+import re
 
 # safe get function for nested data
 def safe_get(d, keys, default="undefined"):
@@ -34,6 +35,19 @@ def match_committee_hearing_date(standing_committee_id, committee_meetings):
 def load_json(file_path):
     with open(file_path, "r") as f:
         return json.load(f)
+
+# determine possession based on description prefix
+def determine_possession(description):
+    posession_search = re.search(r'(?<=\()(C|LC|H|S)(?=\))', description)
+    posession_key = posession_search.group(0) if posession_search else 'O'
+    posession_map = {
+        'C': 'staff',
+        'LC': 'staff',
+        'H': 'house',
+        'S': 'senate',
+        'O': 'other'
+    }
+    return posession_map.get(posession_key, 'other')
 
 # process bills and actions
 def process_bills(sessionId):
@@ -103,6 +117,9 @@ def process_bills(sessionId):
             if hearing_date:
                 action_date = hearing_date
 
+            # Determine possession based on description prefix
+            possession = determine_possession(action_description)
+
             # Strip parenthesis and leading space from description and key
             if action_description.startswith("(") and ")" in action_description:
                 action_description = action_description.split(")", 1)[1].strip()
@@ -119,7 +136,7 @@ def process_bills(sessionId):
                 "noVotes": no_votes,
                 "voteSeq": vote_seq,
                 "description": action_description,
-                "posession": "staff",  # TODO: placeholder
+                "posession": possession,
                 "committee": action.get("committee", None),
                 "actionUrl": None,
                 "recordings": [],
