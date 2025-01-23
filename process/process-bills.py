@@ -102,6 +102,7 @@ def process_bills(session_id):
         requester = legislator_map.get(requester_id)
         requester_first_name = requester.get("firstName")
         requester_last_name = requester.get("lastName")
+    # Bill requestor is a committee or council. Not a lawmaker
         bill_requester = f"{requester_first_name} {requester_last_name}"
 
         subjects = [
