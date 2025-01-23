@@ -23,6 +23,18 @@ def formatted_date(date_string, default="undefined"):
         # handle invalid date strings
         return default
 
+# match committee hearing date
+def match_committee_hearing_date(standing_committee_id, committee_meetings):
+    for meeting in committee_meetings:
+        if meeting['committeeMeeting']['standingCommittee']['id'] == standing_committee_id:
+            return formatted_date(meeting['committeeMeeting']['meetingTime'])
+    return None
+
+# load json file
+def load_json(file_path):
+    with open(file_path, "r") as f:
+        return json.load(f)
+
 # process bills and actions
 def process_bills(sessionId):
     # determine the script's directory
@@ -66,6 +78,10 @@ def process_bills(sessionId):
 
         bill_actions_data = []
 
+        # Load committee hearings data for the bill
+        hearings_file_path = os.path.join(script_dir, f"../interface/downloads/committee-{sessionId}-hearings/{hyphen_bill_key}-committee-hearings.json")
+        committee_meetings = load_json(hearings_file_path) if os.path.exists(hearings_file_path) else []
+
         for action in bill_actions:
             # get action details
             action_type = action.get("billStatusCode", {})
@@ -80,6 +96,12 @@ def process_bills(sessionId):
             vote_seq = action_type.get("voteSeq", "undefined")
             yes_votes = action_type.get("yesVotes", "undefined")
             no_votes = action_type.get("noVotes", "undefined")
+
+            # Match committee hearing date
+            standing_committee_id = action.get("standingCommitteeId")
+            hearing_date = match_committee_hearing_date(standing_committee_id, committee_meetings)
+            if hearing_date:
+                action_date = hearing_date
 
             # generate unique id for actions
             action_id = f"{bill_key}-{bill_action_counters[bill_key]:04d}"
