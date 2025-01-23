@@ -103,6 +103,10 @@ def process_bills(sessionId):
             if hearing_date:
                 action_date = hearing_date
 
+            # Strip parenthesis and leading space from description and key
+            if action_description.startswith("(") and ")" in action_description:
+                action_description = action_description.split(")", 1)[1].strip()
+
             # generate unique id for actions
             action_id = f"{bill_key}-{bill_action_counters[bill_key]:04d}"
             bill_action_counters[bill_key] += 1
