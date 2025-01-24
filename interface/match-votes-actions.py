@@ -113,6 +113,8 @@ def main():
             
             action_type = bill_status.get("billStatusCode", {})
             action_description = action_type.get("name", "undefined")
+            if action_description.startswith("(") and ")" in action_description:
+                action_description = action_description.split(")", 1)[1].strip()
             action_category = (
                 action_type.get("progressCategory", {})
                 .get("description", "undefined")
