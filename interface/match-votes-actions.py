@@ -12,7 +12,7 @@ hearings_dir = os.path.join(BASE_DIR, "downloads/committee-{session_id}-hearings
 list_bills_file = os.path.join(BASE_DIR, "../list-bills-2.json")
 legislators_file = os.path.join(BASE_DIR, "../inputs/legislators/legislators.json")
 committees_file = os.path.join(BASE_DIR, "downloads/committees-2.json")
-output_dir = os.path.join(BASE_DIR, "downloads/matched-{session_id}-votes")
+output_dir = os.path.join(BASE_DIR, "../process/cleaned/actions-{session_id}")
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Match votes and bill statuses.")
@@ -237,7 +237,7 @@ def main():
 
             actions.append(action_data)
 
-        output_file_path = os.path.join(output_dir.format(session_id=session_id), f"{bill_type}-{bill_number}-matched-actions.json")
+        output_file_path = os.path.join(output_dir.format(session_id=session_id), f"{bill_type}-{bill_number}-actions.json")
         with open(output_file_path, "w") as f:
             json.dump(actions, f, indent=2)
 

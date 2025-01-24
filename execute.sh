@@ -62,6 +62,3 @@ measure_time python ./process/merge-actions.py $sessionId
 
 # process bill json into format we need
 measure_time python ./process/process-bills.py $sessionId
-
-# process bill actions
-measure_time python ./process/process-actions.py $sessionId
