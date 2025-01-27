@@ -124,10 +124,10 @@ def process_bills(session_id):
         bill_key = f"{bill_type} {bill_number}" if bill_type and bill_number else f"{draft_number}"
         hypen_bill_key = f"{bill_type}-{bill_number}" if bill_type and bill_number else f"{draft_number}"
         expanded_name = f"{bill_description}_{bill_number}" if bill_description and bill_number else "undefined"
-        
+
         processed_bill = {
             "key": bill_key,
-            "expandedName": expanded_name,
+            "identifierLong": expanded_name,
             "session": session_id,
             "billPageUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=sum",
             "billTextUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=bill",
