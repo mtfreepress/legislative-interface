@@ -11,6 +11,7 @@ executive_actions_dir = os.path.join(BASE_DIR, "downloads/raw-{session_id}-execu
 hearings_dir = os.path.join(BASE_DIR, "downloads/committee-{session_id}-hearings")
 list_bills_file = os.path.join(BASE_DIR, "../list-bills-2.json")
 legislators_file = os.path.join(BASE_DIR, "../inputs/legislators/legislators.json")
+roster_file = os.path.join(BASE_DIR, "../inputs/legislators/legislator-roster-2025.json")
 committees_file = os.path.join(BASE_DIR, "downloads/committees-2.json")
 output_dir = os.path.join(BASE_DIR, "../process/cleaned/actions-{session_id}")
 
@@ -31,7 +32,7 @@ def formatted_date(date_string, default="undefined"):
     except (ValueError, AttributeError):
         return default
 
-def process_legislator_votes(votes, legislators):
+def process_legislator_votes(votes, legislators, roster):
     processed_votes = []
     for vote in votes:
         legislator_id = vote.get('legislatorId') or vote['membership']['legislatorId']
@@ -48,23 +49,27 @@ def process_legislator_votes(votes, legislators):
             district_prefix = "HD" if district.get("chamber") == "HOUSE" else "SD"
             district_formatted = f"{district_prefix} {district.get('number', 'Unknown')}"
 
+            # Match based on name to get locale
+            first_name = legislator['firstName']
+            last_name = legislator['lastName']
+            name = f"{first_name} {last_name}"
+            roster_entry = next((item for item in roster if item['first_name'] == first_name and item['last_name'] == last_name), None)
+            locale = roster_entry.get("locale", "Unknown") if roster_entry else "Unknown"
+
             processed_votes.append({
                 "option": vote_type,
-                "name": f"{legislator['firstName']} {legislator['lastName']}",
-                "lastName": legislator['lastName'],
+                "name": name,
+                "lastName": last_name,
                 "party": political_party_code,
-                "locale": legislator.get("city", "Unknown"),
+                "locale": locale,
                 "district": district_formatted,
             })
     return processed_votes
 
 def match_committee_hearing(bill_status_id, committee_meetings):
-    # print(f"Matching committee hearing for bill status ID: {bill_status_id}")
     for meeting in committee_meetings:
-        # print(f"Checking meeting with standingCommittee ID: {meeting['committeeMeeting']['standingCommittee']['id']}")
         if meeting['committeeMeeting']['standingCommittee']['id'] == bill_status_id:
             formatted_meeting_time = formatted_date(meeting['committeeMeeting']['meetingTime'])
-            # print(f"Matched meeting time: {formatted_meeting_time}")
             return formatted_meeting_time
     return None
 
@@ -74,6 +79,7 @@ def main():
 
     list_bills = load_json(list_bills_file)
     legislators = {leg['id']: leg for leg in load_json(legislators_file)}
+    roster = load_json(roster_file)
     committees = load_json(committees_file)
 
     committee_lookup = {committee['id']: committee['committeeDetails'] for committee in committees}
@@ -163,7 +169,7 @@ def main():
                     gop_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
                     dem_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
 
-                    for vote in process_legislator_votes(item.get('legislatorVotes', []), legislators):
+                    for vote in process_legislator_votes(item.get('legislatorVotes', []), legislators, roster):
                         vote_type = vote['option']
                         if vote_type == "Y":
                             yes_votes += 1
@@ -185,7 +191,7 @@ def main():
                     gop_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
                     dem_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
 
-                    for vote in process_legislator_votes(exec_action.get('legislatorVotes', []), legislators):
+                    for vote in process_legislator_votes(exec_action.get('legislatorVotes', []), legislators, roster):
                         vote_type = vote['option']
                         if vote_type == "Y":
                             yes_votes += 1
