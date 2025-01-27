@@ -123,7 +123,7 @@ def process_bills(session_id):
         # build bill json
         bill_key = f"{bill_type} {bill_number}" if bill_type and bill_number else f"{draft_number}"
         hypen_bill_key = f"{bill_type}-{bill_number}" if bill_type and bill_number else f"{draft_number}"
-        expanded_name = f"{bill_description}_{bill_number}" if bill_description and bill_number else "undefined"
+        expanded_name = f"{bill_description} {bill_number}" if bill_description and bill_number else "undefined"
 
         processed_bill = {
             "key": bill_key,
