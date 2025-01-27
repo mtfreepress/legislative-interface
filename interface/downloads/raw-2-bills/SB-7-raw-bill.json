@@ -360,19 +360,40 @@
                 }
             },
             {
-                "id": 25532,
-                "timeStamp": "2025-01-23T14:02:24.919693",
+                "id": 26905,
+                "timeStamp": "2025-01-22T16:00:00",
                 "standingCommitteeId": 20,
                 "billStatusCode": {
-                    "id": 72,
-                    "code": "120",
-                    "name": "(S) Committee Executive Action--Bill Not Passed",
+                    "id": 68,
+                    "code": "116",
+                    "name": "(S) Committee Executive Action--Bill Passed",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
                     "billProgressCategory": {
                         "id": 5,
                         "code": "30",
                         "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 26904,
+                "timeStamp": "2025-01-24T14:02:00",
+                "standingCommitteeId": 20,
+                "billStatusCode": {
+                    "id": 82,
+                    "code": "130",
+                    "name": "(S) Committee Report--Bill Passed",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 6,
+                        "code": "40",
+                        "description": "In First House--Out of Committee"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
