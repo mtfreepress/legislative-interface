@@ -36,6 +36,9 @@ measure_time python ./interface/get-legislators.py
 # generate list of bills for input into other scripts
 measure_time python ./interface/generate-bill-list.py $sessionId
 
+# get legal notices
+measure_time python ./interface/get-legal-review-notes.py "$sessionId" "$legislatureOrdinal" "$sessionOrdinal"
+
 # get committee hearings data
 measure_time python ./interface/get-bill-hearings.py $sessionId
 
@@ -55,6 +58,7 @@ measure_time python ./interface/match-votes-actions.py $sessionId
 # parse vote counts from PDFs - pre-2025 only
 # measure_time python ./process/process-vote-pdfs.py $sessionId
 
+# merge actions and votes:
 measure_time python ./process/merge-actions.py $sessionId
 
 # parse vote jsons:
