@@ -8,10 +8,15 @@ from urllib3.util.retry import Retry
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 API_BASE_URL = "https://api.legmt.gov"
+LEGAL_NOTES_FILE = os.path.join(BASE_DIR, "legal_notes.json")
 
 def load_json(file_path):
     with open(file_path, "r") as f:
         return json.load(f)
+
+def save_json(data, file_path):
+    with open(file_path, "w") as f:
+        json.dump(data, f, indent=2)
 
 def download_file(url, dest_folder, file_name):
     if not os.path.exists(dest_folder):
@@ -28,7 +33,7 @@ def download_file(url, dest_folder, file_name):
 def list_files_in_directory(subdir):
     if os.path.exists(subdir):
         files = [f for f in os.listdir(subdir) if not f.startswith('.')]
-        print(f"Visible files in directory '{subdir}': {files}")
+        # print(f"Visible files in directory '{subdir}': {files}")
         return set(files)
     return set()
 
@@ -69,7 +74,7 @@ def fetch_pdf_url(session, document_id):
         # print(f"Error fetching PDF URL for document {document_id}: {response.status_code}")
         return None
 
-def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal, download_dir):
+def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal, download_dir, legal_notes):
     session = create_session_with_retries()
     bill_type = bill["billType"]
     bill_number = bill["billNumber"]
@@ -92,6 +97,8 @@ def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal
                 if pdf_url:
                     # print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
                     download_file(pdf_url, dest_folder, file_name)
+            legal_notes.append({"billType": bill_type, "billNumber": bill_number})
+            # print(f"Added to legal_notes: {{'billType': {bill_type}, 'billNumber': {bill_number}}}")
 
 def main():
     parser = argparse.ArgumentParser(description="Download legal review notes for bills")
@@ -111,10 +118,15 @@ def main():
     download_dir = os.path.join(BASE_DIR, f"downloads/legal-note-pdfs-{session_id}")
     # print(f"Download directory: {download_dir}")
 
+    legal_notes = []
+
     with ThreadPoolExecutor(max_workers=5) as executor:
-        futures = [executor.submit(fetch_and_save_legal_review_notes, bill, legislature_ordinal, session_ordinal, download_dir) for bill in bills_data]
+        futures = [executor.submit(fetch_and_save_legal_review_notes, bill, legislature_ordinal, session_ordinal, download_dir, legal_notes) for bill in bills_data]
         for future in as_completed(futures):
             future.result()
+
+    save_json(legal_notes, LEGAL_NOTES_FILE)
+    # print(f"Saved legal notes to {LEGAL_NOTES_FILE}")
 
 if __name__ == "__main__":
     main()

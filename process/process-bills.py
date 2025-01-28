@@ -62,6 +62,12 @@ def process_bills(session_id):
     with open(json_file, "r") as f:
         json_data = json.load(f)
 
+    # load legal notes json
+    legal_notes_file = os.path.join(script_dir, "../interface/legal_notes.json")
+    with open(legal_notes_file, "r") as f:
+        legal_notes_data = json.load(f)
+    legal_notes_set = {(note["billType"], note["billNumber"]) for note in legal_notes_data}
+
     processed_bills = []
     bills = json_data.get("content", []) 
 
@@ -120,9 +126,12 @@ def process_bills(session_id):
         most_recent_date_raw = safe_get(most_recent_action, ["date"])
         most_recent_date_formatted = formatted_date(most_recent_date_raw)
 
+        # check if the bill has a legal note
+        has_legal_note = (bill_type, bill_number) in legal_notes_set
+
         # build bill json
         bill_key = f"{bill_type} {bill_number}" if bill_type and bill_number else f"{draft_number}"
-        hypen_bill_key = f"{bill_type}-{bill_number}" if bill_type and bill_number else f"{draft_number}"
+        hypen_bill_key = f"{bill_type.lower()}-{bill_number}" if bill_type and bill_number else f"{draft_number}"
         expanded_name = f"{bill_description}_{bill_number}" if bill_description and bill_number else "undefined"
 
         processed_bill = {
@@ -141,7 +150,7 @@ def process_bills(session_id):
             "lastAction": last_bill_status.get("name", "undefined"),
             "billStatus": safe_get(last_bill_status, ["billProgressCategory", "description"]),
             "fiscalNotesListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=fiscal",
-            "legalNoteUrl": "undefined",
+            "legalNoteUrl": f"/bills/{hypen_bill_key}/legal" if has_legal_note else None,
             "amendmentListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=amend",
             "draftRequestor": None, # TODO: See if we have any of these in the data
             "billRequestor": bill_requester,
