@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 88,
     "carrierId": null,
-    "drafterStaffMemberId": 47,
+    "drafterStaffMemberId": 71,
     "billType": {
         "id": 4,
         "description": "Senate Bill",
@@ -17,11 +17,11 @@
     "draft": {
         "id": 2035,
         "draftNumber": "LC2037",
-        "date": "2024-12-16T11:21:02",
-        "shortTitle": "Revise county canvassing processes",
+        "date": "2025-01-15T12:56:06",
+        "shortTitle": "Provide for a child tax credit",
         "description": null,
-        "requesterId": 39,
-        "requesterType": "NON_STANDING_COMMITTEE",
+        "requesterId": 10,
+        "requesterType": "LEGISLATOR",
         "billStatuses": [
             {
                 "id": 5672,
@@ -366,15 +366,53 @@
                     "voteMajorityType": "SIMPLE",
                     "primary": true
                 }
+            },
+            {
+                "id": 84828,
+                "subjectCode": {
+                    "id": 157,
+                    "code": "TXIN",
+                    "description": "Taxation--Individual Income",
+                    "revenueAndAprops": null,
+                    "voteMajorityType": "SIMPLE",
+                    "primary": true
+                }
+            },
+            {
+                "id": 84829,
+                "subjectCode": {
+                    "id": 96,
+                    "code": "MIN",
+                    "description": "Minors  (see also: Family Law)",
+                    "revenueAndAprops": null,
+                    "voteMajorityType": "SIMPLE",
+                    "primary": true
+                }
+            },
+            {
+                "id": 84830,
+                "subjectCode": {
+                    "id": 121,
+                    "code": "REVS",
+                    "description": "Revenue, State",
+                    "revenueAndAprops": "REVENUE",
+                    "voteMajorityType": "SIMPLE",
+                    "primary": true
+                }
+            },
+            {
+                "id": 84831,
+                "subjectCode": {
+                    "id": 150,
+                    "code": "TX",
+                    "description": "Taxation (Generally)",
+                    "revenueAndAprops": null,
+                    "voteMajorityType": "SIMPLE",
+                    "primary": true
+                }
             }
         ],
-        "byRequestOfs": [
-            {
-                "id": 4035,
-                "byRequestOfId": 39,
-                "billRequestType": "NON_STANDING_COMMITTEE"
-            }
-        ]
+        "byRequestOfs": []
     },
     "enrolled": null,
     "versionNumber": 2,
