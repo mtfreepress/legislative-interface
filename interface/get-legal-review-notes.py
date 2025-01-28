@@ -57,7 +57,7 @@ def fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type,
     if response.status_code == 200:
         return response.json()
     else:
-        print(f"Error fetching document IDs: {response.status_code}")
+        # print(f"Error fetching document IDs: {response.status_code}")
         return []
 
 def fetch_pdf_url(session, document_id):
@@ -66,14 +66,14 @@ def fetch_pdf_url(session, document_id):
     if response.status_code == 200:
         return response.text.strip()
     else:
-        print(f"Error fetching PDF URL for document {document_id}: {response.status_code}")
+        # print(f"Error fetching PDF URL for document {document_id}: {response.status_code}")
         return None
 
 def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal, download_dir):
     session = create_session_with_retries()
     bill_type = bill["billType"]
     bill_number = bill["billNumber"]
-    print(f"Processing bill: {bill_type} {bill_number}")
+    # print(f"Processing bill: {bill_type} {bill_number}")
 
     documents = fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type, bill_number)
     expected_files = {document["fileName"] for document in documents if "legal" in document["fileName"].lower()}
@@ -81,7 +81,7 @@ def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal
     existing_files = list_files_in_directory(dest_folder)
 
     missing_files = expected_files - existing_files
-    print(f"Missing files to download: {missing_files}")
+    # print(f"Missing files to download: {missing_files}")
 
     for document in documents:
         if "legal" in document["fileName"].lower():
@@ -90,7 +90,7 @@ def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal
                 document_id = document["id"]
                 pdf_url = fetch_pdf_url(session, document_id)
                 if pdf_url:
-                    print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
+                    # print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
                     download_file(pdf_url, dest_folder, file_name)
 
 def main():
@@ -104,12 +104,12 @@ def main():
     legislature_ordinal = args.legislatureOrdinal
     session_ordinal = args.sessionOrdinal
     list_bills_file = os.path.join(BASE_DIR, f"../list-bills-{session_id}.json")
-    print(f"Loading bills from: {list_bills_file}")
+    # print(f"Loading bills from: {list_bills_file}")
     bills_data = load_json(list_bills_file)
-    print(f"Loaded {len(bills_data)} bills")
+    # print(f"Loaded {len(bills_data)} bills")
 
     download_dir = os.path.join(BASE_DIR, f"downloads/legal-note-pdfs-{session_id}")
-    print(f"Download directory: {download_dir}")
+    # print(f"Download directory: {download_dir}")
 
     with ThreadPoolExecutor(max_workers=5) as executor:
         futures = [executor.submit(fetch_and_save_legal_review_notes, bill, legislature_ordinal, session_ordinal, download_dir) for bill in bills_data]
