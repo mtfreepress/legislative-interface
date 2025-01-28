@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 88,
     "carrierId": null,
-    "drafterStaffMemberId": 71,
+    "drafterStaffMemberId": 47,
     "billType": {
         "id": 4,
         "description": "Senate Bill",
@@ -17,11 +17,11 @@
     "draft": {
         "id": 2035,
         "draftNumber": "LC2037",
-        "date": "2025-01-15T12:56:06",
-        "shortTitle": "Provide for a child tax credit",
+        "date": "2024-12-16T11:21:02",
+        "shortTitle": "Revise county canvassing processes",
         "description": null,
-        "requesterId": 10,
-        "requesterType": "LEGISLATOR",
+        "requesterId": 39,
+        "requesterType": "NON_STANDING_COMMITTEE",
         "billStatuses": [
             {
                 "id": 5672,
@@ -412,7 +412,13 @@
                 }
             }
         ],
-        "byRequestOfs": []
+        "byRequestOfs": [
+            {
+                "id": 4040,
+                "byRequestOfId": 39,
+                "billRequestType": "NON_STANDING_COMMITTEE"
+            }
+        ]
     },
     "enrolled": null,
     "versionNumber": 2,
