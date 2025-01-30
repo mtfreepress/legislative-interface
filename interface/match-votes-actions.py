@@ -140,13 +140,14 @@ def main():
             vote_seq = f"{action_type.get('chamber', 'U')[0]}{action_type.get('billProgressCategory', {}).get('id', '0')}"
 
             standing_committee_id = bill_status.get('standingCommitteeId')
-            committee_name = committee_lookup.get(standing_committee_id, {}).get('name', 'undefined') if standing_committee_id else 'undefined'
+            committee_name = committee_lookup.get(standing_committee_id, {}).get('name', None) if standing_committee_id else None
 
             # Replace (H) and (S) with House and Senate in committee_name
-            if committee_name.startswith("(H)"):
-                committee_name = "House " + committee_name[4:].strip()
-            elif committee_name.startswith("(S)"):
-                committee_name = "Senate " + committee_name[4:].strip()
+            if committee_name:
+                if committee_name.startswith("(H)"):
+                    committee_name = "House " + committee_name[4:].strip()
+                elif committee_name.startswith("(S)"):
+                    committee_name = "Senate " + committee_name[4:].strip()
 
             action_data = {
                 "id": action_id,
