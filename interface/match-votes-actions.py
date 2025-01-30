@@ -119,6 +119,13 @@ def main():
             
             action_type = bill_status.get("billStatusCode", {})
             action_description = action_type.get("name", "undefined")
+            # Determine possession based on action_description
+            if action_description.startswith("(H)"):
+                possession = "House"
+            elif action_description.startswith("(S)"):
+                possession = "Senate"
+            else:
+                possession = "undefined"
             if action_description.startswith("(") and ")" in action_description:
                 action_description = action_description.split(")", 1)[1].strip()
             action_category = (
@@ -132,13 +139,22 @@ def main():
             no_votes = 0
             vote_seq = f"{action_type.get('chamber', 'U')[0]}{action_type.get('billProgressCategory', {}).get('id', '0')}"
 
+            standing_committee_id = bill_status.get('standingCommitteeId')
+            committee_name = committee_lookup.get(standing_committee_id, {}).get('name', 'undefined') if standing_committee_id else 'undefined'
+
+            # Replace (H) and (S) with House and Senate in committee_name
+            if committee_name.startswith("(H)"):
+                committee_name = "House " + committee_name[4:].strip()
+            elif committee_name.startswith("(S)"):
+                committee_name = "Senate " + committee_name[4:].strip()
+
             action_data = {
                 "id": action_id,
                 "bill": f"{bill_type} {bill_number}",
                 "date": action_date,
                 "description": action_description,
-                "posession": "house" if bill_type.startswith("H") else "senate",
-                "committee": None,
+                "possession": possession,
+                "committee": committee_name,
                 "actionUrl": None,
                 "recordings": [],
                 "transcriptUrl": None,
@@ -160,10 +176,10 @@ def main():
                         committee_name = committee_details.get('name', 'undefined')
                         if committee_name.startswith("(H)"):
                             action_data["voteChamber"] = "House"
-                            committee_name = committee_name[4:].strip()
+                            committee_name = "House " + committee_name[4:].strip()
                         elif committee_name.startswith("(S)"):
                             action_data["voteChamber"] = "Senate" 
-                            committee_name = committee_name[4:].strip()
+                            committee_name = "Senate " + committee_name[4:].strip()
                         action_data["committee"] = committee_name
 
                     gop_count = {"Y": 0, "N": 0, "A": 0, "E": 0, "O": 0}
@@ -211,10 +227,10 @@ def main():
                         committee_name = committee_details.get('name', 'undefined')
                         if committee_name.startswith("(H)"):
                             action_data["voteChamber"] = "House"
-                            committee_name = committee_name[4:].strip()
+                            committee_name = "House " + committee_name[4:].strip()
                         elif committee_name.startswith("(S)"):
                             action_data["voteChamber"] = "Senate"
-                            committee_name = committee_name[4:].strip()
+                            committee_name = "Senate " + committee_name[4:].strip()
                         action_data["committee"] = f"{action_data['voteChamber']} {committee_name}"
 
             if matched_votes:

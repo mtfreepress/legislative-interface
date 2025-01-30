@@ -48,6 +48,9 @@ measure_time python ./interface/get-votes-json.py $sessionId
 # executive actions data
 measure_time python ./interface/get-executive-actions-json.py $sessionId
 
+# get committees by id
+measure_time python ./interface/get-committees.py $sessionId
+
 # match some votes:
 measure_time python ./interface/match-votes-actions.py $sessionId
 

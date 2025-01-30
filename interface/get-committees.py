@@ -52,7 +52,7 @@ def save_to_file(data, session_id):
     with open(output_file, 'w') as file:
         json.dump(data, file, indent=4)
 
-    print(f"saved data for session {session_id} to {output_file}")
+    # print(f"saved data for session {session_id} to {output_file}")
 
 
 
@@ -71,12 +71,12 @@ def extract_required_fields(api_response):
 def main(session_id):
     votes_dir, bills = load_votes_and_bills(session_id)
     committee_ids = extract_unique_committee_ids(votes_dir, bills)
-    print(f"unique committee ids: {committee_ids}")
+    # print(f"unique committee ids: {committee_ids}")
 
     all_data = []
     for committee_id in committee_ids:
         api_response = call_committee_api(committee_id, session_id)
-        print(api_response)
+        # print(api_response)
         extracted_data = extract_required_fields(api_response)
         if extracted_data:
             all_data.append(extracted_data)
