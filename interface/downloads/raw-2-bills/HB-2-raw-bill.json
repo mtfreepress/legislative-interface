@@ -1,0 +1,97 @@
+{
+    "id": 708,
+    "deadlineCodeId": 2,
+    "billNumber": 2,
+    "sessionLawChapterNumber": null,
+    "sponsorId": 119,
+    "carrierId": null,
+    "drafterStaffMemberId": 58,
+    "billType": {
+        "id": 1,
+        "description": "House Bill",
+        "code": "HB",
+        "sortOrder": 6,
+        "chamber": "HOUSE"
+    },
+    "draft": {
+        "id": 708,
+        "draftNumber": "LC0708",
+        "date": "2025-01-14T09:51:01",
+        "shortTitle": "General Appropriations Act",
+        "description": null,
+        "requesterId": 130,
+        "requesterType": "AGENCY",
+        "billStatuses": [
+            {
+                "id": 29219,
+                "timeStamp": "2024-12-20T12:43:07.811143",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 5,
+                    "code": "1",
+                    "name": "(LC) Drafter Assigned",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 2,
+                        "code": "10",
+                        "description": "In Drafting Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 29218,
+                "timeStamp": "2024-12-20T12:43:08.811143",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 284,
+                    "code": "500",
+                    "name": "(H) Introduced",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 3,
+                        "code": "20",
+                        "description": "In First House--Introduced"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            }
+        ],
+        "legalNote": false,
+        "sessionId": 2,
+        "fiscalNote": false,
+        "fiscalAnalystId": null,
+        "preIntroRequired": true,
+        "subjects": [
+            {
+                "id": 1314,
+                "subjectCode": {
+                    "id": 10,
+                    "code": "APP",
+                    "description": "Appropriations  (see also: State Finance)",
+                    "revenueAndAprops": "APPROPRIATION",
+                    "voteMajorityType": "SIMPLE",
+                    "primary": true
+                }
+            }
+        ],
+        "byRequestOfs": [
+            {
+                "id": 192,
+                "byRequestOfId": 96,
+                "billRequestType": "ORGANIZATION"
+            }
+        ]
+    },
+    "enrolled": null,
+    "versionNumber": 1,
+    "sessionId": 2
+}
