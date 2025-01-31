@@ -12,8 +12,10 @@ API_BASE_URL = "https://api.legmt.gov"
 FISCAL_NOTES_FILE = os.path.join(BASE_DIR, "fiscal_notes.json")
 
 def load_json(file_path):
-    with open(file_path, "r") as f:
-        return json.load(f)
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            return json.load(f)
+    return []
 
 def save_json(data, file_path):
     with open(file_path, "w") as f:
@@ -27,7 +29,6 @@ def download_file(url, dest_folder, file_name):
         file_path = os.path.join(dest_folder, file_name)
         with open(file_path, "wb") as f:
             f.write(response.content)
-        # print(f"Downloaded: {file_path}")
     else:
         print(f"Failed to download: {url}")
 
@@ -60,7 +61,6 @@ def fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type,
     }
     response = session.get(url, params=params)
     if response.status_code == 200:
-        # print(f"Fetched document IDs for {bill_type} {bill_number}: {response.json()}")
         return response.json()
     else:
         print(f"Error fetching document IDs: {response.status_code}")
@@ -82,25 +82,32 @@ def get_latest_document(documents):
         for attribute in document.get("attributes", []):
             if attribute["name"] == "SubmittedDate":
                 date_str = attribute["stringValue"]
-                for date_format in ("%d/%m/%Y", "%d/%m/%Y, %I:%M %p", "%a %b %d %Y %H:%M:%S GMT%z (%Z)"):
+                date_formats = [
+                    "%d/%m/%Y",
+                    "%d/%m/%Y, %I:%M %p",
+                    "%a %b %d %Y %H:%M:%S",
+                    "%a %b %d %Y %H:%M:%S GMT%z" 
+                ]
+                for date_format in date_formats:
                     try:
-                        submitted_date = datetime.strptime(date_str, date_format)
+                        # Remove timezone info before parsing
+                        cleaned_date_str = date_str.split(" GMT")[0] if "GMT" in date_str else date_str
+                        submitted_date = datetime.strptime(cleaned_date_str, date_format)
                         break
                     except ValueError:
                         continue
                 else:
-                    # print(f"Error parsing date: {date_str}")
+                    print(f"Error parsing date: {date_str}")
                     continue
                 if latest_date is None or submitted_date > latest_date:
                     latest_date = submitted_date
                     latest_document = document
     return latest_document
 
-def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, download_dir, fiscal_notes):
+def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, download_dir, fiscal_notes, processed_bills):
     session = create_session_with_retries()
     bill_type = bill["billType"]
     bill_number = bill["billNumber"]
-    # print(f"Processing bill: {bill_type} {bill_number}")
 
     documents = fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type, bill_number, "getBillFiscalNotes")
     documents_rebuttals = fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type, bill_number, "getBillFiscalNotesRebuttals")
@@ -115,20 +122,16 @@ def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, down
             document_id = latest_document["id"]
             pdf_url = fetch_pdf_url(session, document_id)
             if pdf_url:
-                # print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
                 download_file(pdf_url, dest_folder, file_name)
+            else:
+                print(f"Failed to fetch PDF URL for document ID: {document_id}")
         fiscal_notes.append({"billType": bill_type, "billNumber": bill_number})
-
-    latest_document_rebuttal = get_latest_document(documents_rebuttals)
-    if latest_document_rebuttal:
-        file_name = latest_document_rebuttal["fileName"]
-        if file_name not in existing_files:
-            document_id = latest_document_rebuttal["id"]
-            pdf_url = fetch_pdf_url(session, document_id)
-            if pdf_url:
-                # print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
-                download_file(pdf_url, dest_folder, file_name)
-        fiscal_notes.append({"billType": bill_type, "billNumber": bill_number})
+        processed_bills.add((bill_type, bill_number))
+    else:
+        # Remove existing files if no fiscal notes are found
+        for file in existing_files:
+            os.remove(os.path.join(dest_folder, file))
+        # print(f"No fiscal notes found for {bill_type} {bill_number}. Removed existing files.")
 
 def main():
     parser = argparse.ArgumentParser(description="Download fiscal notes for bills")
@@ -141,29 +144,32 @@ def main():
     legislature_ordinal = args.legislatureOrdinal
     session_ordinal = args.sessionOrdinal
 
-# Comment this out and use the hardcoded HB 4 bill for debugging
     list_bills_file = os.path.join(BASE_DIR, f"../list-bills-{session_id}.json")
     bills_data = load_json(list_bills_file)
 
-    # Hardcoded bill for debugging
+# debugging:
     # bills_data = [
     #     {
-    #         "lc": "LC0709",
-    #         "id": 709,
+    #         "lc": "LC0710",
+    #         "id": 710,
     #         "billType": "HB",
-    #         "billNumber": 4
-    #     }
+    #         "billNumber": 5
+    #     },
     # ]
 
     download_dir = os.path.join(BASE_DIR, f"downloads/fiscal-note-pdfs-{session_id}")
     # print(f"Download directory: {download_dir}")
 
-    fiscal_notes = []
+    fiscal_notes = load_json(FISCAL_NOTES_FILE)
+    processed_bills = set()
 
     with ThreadPoolExecutor(max_workers=5) as executor:
-        futures = [executor.submit(fetch_and_save_fiscal_notes, bill, legislature_ordinal, session_ordinal, download_dir, fiscal_notes) for bill in bills_data]
+        futures = [executor.submit(fetch_and_save_fiscal_notes, bill, legislature_ordinal, session_ordinal, download_dir, fiscal_notes, processed_bills) for bill in bills_data]
         for future in as_completed(futures):
             future.result()
+
+    # Remove outdated fiscal notes
+    fiscal_notes = [note for note in fiscal_notes if (note["billType"], note["billNumber"]) in processed_bills]
 
     save_json(fiscal_notes, FISCAL_NOTES_FILE)
     # print(f"Saved fiscal notes to {FISCAL_NOTES_FILE}")
