@@ -27,7 +27,7 @@ def download_file(url, dest_folder, file_name):
         file_path = os.path.join(dest_folder, file_name)
         with open(file_path, "wb") as f:
             f.write(response.content)
-        print(f"Downloaded: {file_path}")
+        # print(f"Downloaded: {file_path}")
     else:
         print(f"Failed to download: {url}")
 
@@ -60,7 +60,7 @@ def fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type,
     }
     response = session.get(url, params=params)
     if response.status_code == 200:
-        print(f"Fetched document IDs for {bill_type} {bill_number}: {response.json()}")
+        # print(f"Fetched document IDs for {bill_type} {bill_number}: {response.json()}")
         return response.json()
     else:
         print(f"Error fetching document IDs: {response.status_code}")
@@ -89,7 +89,7 @@ def get_latest_document(documents):
                     except ValueError:
                         continue
                 else:
-                    print(f"Error parsing date: {date_str}")
+                    # print(f"Error parsing date: {date_str}")
                     continue
                 if latest_date is None or submitted_date > latest_date:
                     latest_date = submitted_date
@@ -100,7 +100,7 @@ def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, down
     session = create_session_with_retries()
     bill_type = bill["billType"]
     bill_number = bill["billNumber"]
-    print(f"Processing bill: {bill_type} {bill_number}")
+    # print(f"Processing bill: {bill_type} {bill_number}")
 
     documents = fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type, bill_number, "getBillFiscalNotes")
     documents_rebuttals = fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type, bill_number, "getBillFiscalNotesRebuttals")
@@ -115,7 +115,7 @@ def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, down
             document_id = latest_document["id"]
             pdf_url = fetch_pdf_url(session, document_id)
             if pdf_url:
-                print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
+                # print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
                 download_file(pdf_url, dest_folder, file_name)
         fiscal_notes.append({"billType": bill_type, "billNumber": bill_number})
 
@@ -126,7 +126,7 @@ def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, down
             document_id = latest_document_rebuttal["id"]
             pdf_url = fetch_pdf_url(session, document_id)
             if pdf_url:
-                print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
+                # print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
                 download_file(pdf_url, dest_folder, file_name)
         fiscal_notes.append({"billType": bill_type, "billNumber": bill_number})
 
@@ -140,10 +140,10 @@ def main():
     session_id = args.sessionId
     legislature_ordinal = args.legislatureOrdinal
     session_ordinal = args.sessionOrdinal
+
+# Comment this out and use the hardcoded HB 4 bill for debugging
     list_bills_file = os.path.join(BASE_DIR, f"../list-bills-{session_id}.json")
-    # print(f"Loading bills from: {list_bills_file}")
     bills_data = load_json(list_bills_file)
-    # print(f"Loaded {len(bills_data)} bills")
 
     # Hardcoded bill for debugging
     # bills_data = [
@@ -156,7 +156,7 @@ def main():
     # ]
 
     download_dir = os.path.join(BASE_DIR, f"downloads/fiscal-note-pdfs-{session_id}")
-    print(f"Download directory: {download_dir}")
+    # print(f"Download directory: {download_dir}")
 
     fiscal_notes = []
 
@@ -166,7 +166,7 @@ def main():
             future.result()
 
     save_json(fiscal_notes, FISCAL_NOTES_FILE)
-    print(f"Saved fiscal notes to {FISCAL_NOTES_FILE}")
+    # print(f"Saved fiscal notes to {FISCAL_NOTES_FILE}")
 
 if __name__ == "__main__":
     main()
