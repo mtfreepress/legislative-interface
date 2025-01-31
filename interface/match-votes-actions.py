@@ -143,10 +143,10 @@ def main():
             committee_name = committee_lookup.get(standing_committee_id, {}).get('name', 'undefined') if standing_committee_id else 'undefined'
 
             # Replace (H) and (S) with House and Senate in committee_name
-            if committee_name.startswith("(H)"):
-                committee_name = "House " + committee_name[4:].strip()
-            elif committee_name.startswith("(S)"):
-                committee_name = "Senate " + committee_name[4:].strip()
+            # if committee_name.startswith("(H)"):
+            #     committee_name = "House " + committee_name[4:].strip()
+            # elif committee_name.startswith("(S)"):
+            #     committee_name = "Senate " + committee_name[4:].strip()
 
             action_data = {
                 "id": action_id,
