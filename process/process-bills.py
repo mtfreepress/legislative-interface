@@ -68,6 +68,11 @@ def process_bills(session_id):
         legal_notes_data = json.load(f)
     legal_notes_set = {(note["billType"], note["billNumber"]) for note in legal_notes_data}
 
+    fiscal_notes_file = os.path.join(script_dir, "../interface/fiscal_notes.json")
+    with open(fiscal_notes_file, "r") as f:
+        fiscal_notes_data = json.load(f)
+    fiscal_notes_set = {(note["billType"], note["billNumber"]) for note in fiscal_notes_data}
+
     processed_bills = []
     bills = json_data.get("content", []) 
 
@@ -128,6 +133,7 @@ def process_bills(session_id):
 
         # check if the bill has a legal note
         has_legal_note = (bill_type, bill_number) in legal_notes_set
+        has_fiscal_note = (bill_type, bill_number) in fiscal_notes_set
 
         # build bill json
         bill_key = f"{bill_type} {bill_number}" if bill_type and bill_number else f"{draft_number}"
@@ -149,7 +155,7 @@ def process_bills(session_id):
             "statusDate": last_action_time,
             "lastAction": last_bill_status.get("name", "undefined"),
             "billStatus": safe_get(last_bill_status, ["billProgressCategory", "description"]),
-            "fiscalNotesListUrl": f"/bills/fiscal-note/{hypen_bill_key}" if has_legal_note else None,
+            "fiscalNotesListUrl": f"/bills/fiscal-note/{hypen_bill_key}" if has_fiscal_note else None,
             "legalNoteUrl": f"/bills/legal-note/{hypen_bill_key}" if has_legal_note else None,
             "amendmentListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=amend",
             "draftRequestor": None, # TODO: See if we have any of these in the data
