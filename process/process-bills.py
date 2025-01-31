@@ -149,7 +149,7 @@ def process_bills(session_id):
             "statusDate": last_action_time,
             "lastAction": last_bill_status.get("name", "undefined"),
             "billStatus": safe_get(last_bill_status, ["billProgressCategory", "description"]),
-            "fiscalNotesListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=fiscal",
+            "fiscalNotesListUrl": f"/bills/fiscal-note/{hypen_bill_key}" if has_legal_note else None,
             "legalNoteUrl": f"/bills/legal-note/{hypen_bill_key}" if has_legal_note else None,
             "amendmentListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=amend",
             "draftRequestor": None, # TODO: See if we have any of these in the data
