@@ -163,7 +163,7 @@ def process_bills(session_id):
         }
 
         sanitized_key = sanitize_filename(processed_bill["key"])
-        bill_file_path = os.path.join(cleaned_dir, f"{bill_type}-{bill_number}-data.json")
+        bill_file_path = os.path.join(cleaned_dir, f"{bill_type.upper()}-{bill_number}-data.json")
         with open(bill_file_path, "w") as bill_file:
             json.dump(processed_bill, bill_file, indent=2)
         # verbose output - not needed in production but handy for debugging
