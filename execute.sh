@@ -39,6 +39,9 @@ measure_time python ./interface/generate-bill-list.py $sessionId
 # get legal notices
 measure_time python ./interface/get-legal-review-notes.py "$sessionId" "$legislatureOrdinal" "$sessionOrdinal"
 
+# get fiscal notices
+measure_time python ./interface/get-fiscal-review-notes.py "$sessionId" "$legislatureOrdinal" "$sessionOrdinal"
+
 # get committee hearings data
 measure_time python ./interface/get-bill-hearings.py $sessionId
 
