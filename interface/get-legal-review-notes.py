@@ -5,14 +5,17 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 API_BASE_URL = "https://api.legmt.gov"
-LEGAL_NOTES_FILE = os.path.join(BASE_DIR, "legal_notes.json")
+LEGAL_NOTE_UPDATES_FILE = os.path.join(BASE_DIR, "legal-note-updates.json")
 
 def load_json(file_path):
-    with open(file_path, "r") as f:
-        return json.load(f)
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            return json.load(f)
+    return []
 
 def save_json(data, file_path):
     with open(file_path, "w") as f:
@@ -33,7 +36,6 @@ def download_file(url, dest_folder, file_name):
 def list_files_in_directory(subdir):
     if os.path.exists(subdir):
         files = [f for f in os.listdir(subdir) if not f.startswith('.')]
-        # print(f"Visible files in directory '{subdir}': {files}")
         return set(files)
     return set()
 
@@ -62,7 +64,7 @@ def fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type,
     if response.status_code == 200:
         return response.json()
     else:
-        # print(f"Error fetching document IDs: {response.status_code}")
+        print(f"Error fetching document IDs: {response.status_code} for bill:{bill_type} {bill_number}")
         return []
 
 def fetch_pdf_url(session, document_id):
@@ -71,34 +73,66 @@ def fetch_pdf_url(session, document_id):
     if response.status_code == 200:
         return response.text.strip()
     else:
-        # print(f"Error fetching PDF URL for document {document_id}: {response.status_code}")
+        print(f"Error fetching PDF URL for document {document_id}: {response.status_code}")
         return None
 
-def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal, download_dir, legal_notes):
+def get_latest_document(documents):
+    latest_document = None
+    latest_date = None
+    for document in documents:
+        for attribute in document.get("attributes", []):
+            if attribute["name"] == "SubmittedDate":
+                date_str = attribute["stringValue"]
+                date_formats = [
+                    "%d/%m/%Y",
+                    "%d/%m/%Y, %I:%M %p",
+                    "%a %b %d %Y %H:%M:%S",
+                    "%a %b %d %Y %H:%M:%S GMT%z" 
+                ]
+                for date_format in date_formats:
+                    try:
+                        # Remove timezone info before parsing
+                        cleaned_date_str = date_str.split(" GMT")[0] if "GMT" in date_str else date_str
+                        submitted_date = datetime.strptime(cleaned_date_str, date_format)
+                        break
+                    except ValueError:
+                        continue
+                else:
+                    print(f"Error parsing date: {date_str}")
+                    continue
+                if latest_date is None or submitted_date > latest_date:
+                    latest_date = submitted_date
+                    latest_document = document
+    return latest_document
+
+def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal, download_dir, legal_notes, processed_bills):
     session = create_session_with_retries()
     bill_type = bill["billType"]
     bill_number = bill["billNumber"]
-    # print(f"Processing bill: {bill_type} {bill_number}")
 
     documents = fetch_document_ids(session, legislature_ordinal, session_ordinal, bill_type, bill_number)
-    expected_files = {document["fileName"] for document in documents if "legal" in document["fileName"].lower()}
     dest_folder = os.path.join(download_dir, f"{bill_type}-{bill_number}")
     existing_files = list_files_in_directory(dest_folder)
 
-    missing_files = expected_files - existing_files
-    # print(f"Missing files to download: {missing_files}")
-
-    for document in documents:
-        if "legal" in document["fileName"].lower():
-            file_name = document["fileName"]
-            if file_name in missing_files:
-                document_id = document["id"]
-                pdf_url = fetch_pdf_url(session, document_id)
-                if pdf_url:
-                    # print(f"Downloading file from: {pdf_url} to {dest_folder}/{file_name}")
-                    download_file(pdf_url, dest_folder, file_name)
-            legal_notes.append({"billType": bill_type, "billNumber": bill_number})
-            # print(f"Added to legal_notes: {{'billType': {bill_type}, 'billNumber': {bill_number}}}")
+    latest_document = get_latest_document(documents)
+    if latest_document:
+        file_name = latest_document["fileName"]
+        if file_name not in existing_files:
+            document_id = latest_document["id"]
+            pdf_url = fetch_pdf_url(session, document_id)
+            if pdf_url:
+                download_file(pdf_url, dest_folder, file_name)
+                legal_notes.append({"billType": bill_type, "billNumber": bill_number})
+                processed_bills.add((bill_type, bill_number))
+            else:
+                print(f"Failed to fetch PDF URL for document ID: {document_id}")
+        else:
+            print(f"File {file_name} already exists locally.")
+    else:
+        # Remove existing files if no legal notes are found
+        for file in existing_files:
+            os.remove(os.path.join(dest_folder, file))
+        # print(f"No legal notes found for {bill_type} {bill_number}. Removed existing files.")
 
 def main():
     parser = argparse.ArgumentParser(description="Download legal review notes for bills")
@@ -110,23 +144,40 @@ def main():
     session_id = args.sessionId
     legislature_ordinal = args.legislatureOrdinal
     session_ordinal = args.sessionOrdinal
+
     list_bills_file = os.path.join(BASE_DIR, f"../list-bills-{session_id}.json")
-    # print(f"Loading bills from: {list_bills_file}")
     bills_data = load_json(list_bills_file)
-    # print(f"Loaded {len(bills_data)} bills")
+
+    # debugging:
+    # bills_data = [
+    #     {
+    #         "lc": "LC0710",
+    #         "id": 710,
+    #         "billType": "HB",
+    #         "billNumber": 5
+    #     },
+    # ]
 
     download_dir = os.path.join(BASE_DIR, f"downloads/legal-note-pdfs-{session_id}")
     # print(f"Download directory: {download_dir}")
 
-    legal_notes = []
+    processed_bills = set()
 
     with ThreadPoolExecutor(max_workers=5) as executor:
-        futures = [executor.submit(fetch_and_save_legal_review_notes, bill, legislature_ordinal, session_ordinal, download_dir, legal_notes) for bill in bills_data]
+        futures = [executor.submit(fetch_and_save_legal_review_notes, bill, legislature_ordinal, session_ordinal, download_dir, legal_notes, processed_bills) for bill in bills_data]
         for future in as_completed(futures):
             future.result()
 
-    save_json(legal_notes, LEGAL_NOTES_FILE)
-    # print(f"Saved legal notes to {LEGAL_NOTES_FILE}")
+    # Remove outdated legal notes
+    legal_notes = [note for note in legal_notes if (note["billType"], note["billNumber"]) in processed_bills]
+
+    # Generate legal-note-updates.json
+    legal_note_updates = [
+        {"billType": note["billType"], "billNumber": note["billNumber"]}
+        for note in legal_notes
+    ]
+    save_json(legal_note_updates, LEGAL_NOTE_UPDATES_FILE)
+    # print(f"Saved legal note updates to {LEGAL_NOTE_UPDATES_FILE}")
 
 if __name__ == "__main__":
     main()
