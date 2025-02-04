@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 86,
     "carrierId": null,
-    "drafterStaffMemberId": 30,
+    "drafterStaffMemberId": 131,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -567,6 +567,48 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 31534,
+                "timeStamp": "2025-02-04T13:21:00",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 485,
+                    "code": "714",
+                    "name": "(H) 2nd Reading Motion to Amend Carried",
+                    "actionWeight": "SOFT",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 1,
+                        "code": "0",
+                        "description": "Probably Dead"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 31535,
+                "timeStamp": "2025-02-04T13:22:00",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 339,
+                    "code": "558",
+                    "name": "(H) 2nd Reading Passed as Amended",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 7,
+                        "code": "50",
+                        "description": "In First House--Through 2nd Reading"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -607,6 +649,6 @@
         ]
     },
     "enrolled": null,
-    "versionNumber": 2,
+    "versionNumber": 3,
     "sessionId": 2
 }
