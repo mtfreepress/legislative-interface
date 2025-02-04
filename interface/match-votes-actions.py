@@ -66,11 +66,12 @@ def process_legislator_votes(votes, legislators, roster):
             })
     return processed_votes
 
-def match_committee_hearing(bill_status_id, committee_meetings):
+def match_committee_hearing(bill_status_id, committee_meetings, action_date):
     for meeting in committee_meetings:
         if meeting['committeeMeeting']['standingCommittee']['id'] == bill_status_id:
-            formatted_meeting_time = formatted_date(meeting['committeeMeeting']['meetingTime'])
-            return formatted_meeting_time
+            meeting_date = formatted_date(meeting['modifiedDateTime'])
+            if meeting_date == action_date:
+                return formatted_date(meeting['committeeMeeting']['meetingTime'])
     return None
 
 def main():
@@ -142,12 +143,6 @@ def main():
             standing_committee_id = bill_status.get('standingCommitteeId')
             committee_name = committee_lookup.get(standing_committee_id, {}).get('name', 'undefined') if standing_committee_id else 'undefined'
 
-            # Replace (H) and (S) with House and Senate in committee_name
-            # if committee_name.startswith("(H)"):
-            #     committee_name = "House " + committee_name[4:].strip()
-            # elif committee_name.startswith("(S)"):
-            #     committee_name = "Senate " + committee_name[4:].strip()
-
             action_data = {
                 "id": action_id,
                 "bill": f"{bill_type} {bill_number}",
@@ -161,6 +156,13 @@ def main():
                 "key": action_description,
                 "committeeHearingTime": None
             }
+
+            if standing_committee_id:
+                action_data["committeeHearingTime"] = match_committee_hearing(
+                    standing_committee_id,
+                    committee_meetings,
+                    action_date
+                )
 
             matched_votes = []
             
@@ -178,7 +180,7 @@ def main():
                             action_data["voteChamber"] = "House"
                             committee_name = "House " + committee_name[4:].strip()
                         elif committee_name.startswith("(S)"):
-                            action_data["voteChamber"] = "Senate" 
+                            action_data["voteChamber"] = "Senate"
                             committee_name = "Senate " + committee_name[4:].strip()
                         action_data["committee"] = committee_name
 
@@ -255,9 +257,6 @@ def main():
                 }
             else:
                 action_data["vote"] = None
-
-            # match the committee hearing time
-            action_data["committeeHearingTime"] = match_committee_hearing(bill_status['standingCommitteeId'], committee_meetings)
 
             actions.append(action_data)
 
