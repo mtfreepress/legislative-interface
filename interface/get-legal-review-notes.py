@@ -9,6 +9,7 @@ from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 API_BASE_URL = "https://api.legmt.gov"
+LEGAL_NOTES_FILE = os.path.join(BASE_DIR, "legal_notes.json")
 LEGAL_NOTE_UPDATES_FILE = os.path.join(BASE_DIR, "legal-note-updates.json")
 
 def load_json(file_path):
@@ -105,7 +106,7 @@ def get_latest_document(documents):
                     latest_document = document
     return latest_document
 
-def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal, download_dir, legal_note_updates, processed_bills):
+def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal, download_dir, legal_notes, legal_note_updates, processed_bills):
     session = create_session_with_retries()
     bill_type = bill["billType"]
     bill_number = bill["billNumber"]
@@ -129,8 +130,7 @@ def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal
                 processed_bills.add((bill_type, bill_number))
             else:
                 print(f"Failed to fetch PDF URL for document ID: {document_id}")
-        else:
-            print(f"File {file_name} already exists locally.")
+        legal_notes.append({"billType": bill_type, "billNumber": bill_number, "fileName": file_name})
     else:
         # Remove existing files if no legal notes are found
         for file in existing_files:
@@ -164,20 +164,22 @@ def main():
     download_dir = os.path.join(BASE_DIR, f"downloads/legal-note-pdfs-{session_id}")
     # print(f"Download directory: {download_dir}")
 
-    legal_note_updates = load_json(LEGAL_NOTE_UPDATES_FILE)
+    legal_notes = []
+    legal_note_updates = []
     processed_bills = set()
 
     with ThreadPoolExecutor(max_workers=5) as executor:
-        futures = [executor.submit(fetch_and_save_legal_review_notes, bill, legislature_ordinal, session_ordinal, download_dir, legal_note_updates, processed_bills) for bill in bills_data]
+        futures = [executor.submit(fetch_and_save_legal_review_notes, bill, legislature_ordinal, session_ordinal, download_dir, legal_notes, legal_note_updates, processed_bills) for bill in bills_data]
         for future in as_completed(futures):
             future.result()
 
-    # Remove outdated legal notes
-    legal_note_updates = [note for note in legal_note_updates if (note["billType"], note["billNumber"]) in processed_bills]
+    # Save legal_notes.json
+    save_json(legal_notes, LEGAL_NOTES_FILE)
+    print(f"Saved legal notes to {LEGAL_NOTES_FILE}")
 
-    # Generate legal-note-updates.json
+    # Save legal-note-updates.json
     save_json(legal_note_updates, LEGAL_NOTE_UPDATES_FILE)
-    # print(f"Saved legal note updates to {LEGAL_NOTE_UPDATES_FILE}")
+    print(f"Saved legal note updates to {LEGAL_NOTE_UPDATES_FILE}")
 
 if __name__ == "__main__":
     main()

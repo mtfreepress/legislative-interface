@@ -9,6 +9,7 @@ from datetime import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 API_BASE_URL = "https://api.legmt.gov"
+FISCAL_NOTES_FILE = os.path.join(BASE_DIR, "fiscal_notes.json")
 FISCAL_NOTE_UPDATES_FILE = os.path.join(BASE_DIR, "fiscal-note-updates.json")
 
 def load_json(file_path):
@@ -105,7 +106,7 @@ def get_latest_document(documents):
                     latest_document = document
     return latest_document
 
-def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, download_dir, fiscal_note_updates, processed_bills):
+def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, download_dir, fiscal_notes, fiscal_note_updates, processed_bills):
     session = create_session_with_retries()
     bill_type = bill["billType"]
     bill_number = bill["billNumber"]
@@ -131,8 +132,7 @@ def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, down
                 processed_bills.add((bill_type, bill_number))
             else:
                 print(f"Failed to fetch PDF URL for document ID: {document_id}")
-        else:
-            print(f"File {file_name} already exists locally.")
+        fiscal_notes.append({"billType": bill_type, "billNumber": bill_number, "fileName": file_name})
     else:
         # Remove existing files if no fiscal notes are found
         for file in existing_files:
@@ -166,20 +166,22 @@ def main():
     download_dir = os.path.join(BASE_DIR, f"downloads/fiscal-note-pdfs-{session_id}")
     # print(f"Download directory: {download_dir}")
 
-    fiscal_note_updates = load_json(FISCAL_NOTE_UPDATES_FILE)
+    fiscal_notes = []
+    fiscal_note_updates = []
     processed_bills = set()
 
     with ThreadPoolExecutor(max_workers=5) as executor:
-        futures = [executor.submit(fetch_and_save_fiscal_notes, bill, legislature_ordinal, session_ordinal, download_dir, fiscal_note_updates, processed_bills) for bill in bills_data]
+        futures = [executor.submit(fetch_and_save_fiscal_notes, bill, legislature_ordinal, session_ordinal, download_dir, fiscal_notes, fiscal_note_updates, processed_bills) for bill in bills_data]
         for future in as_completed(futures):
             future.result()
 
-    # Remove outdated fiscal notes
-    fiscal_note_updates = [note for note in fiscal_note_updates if (note["billType"], note["billNumber"]) in processed_bills]
+    # Save fiscal_notes.json
+    save_json(fiscal_notes, FISCAL_NOTES_FILE)
+    print(f"Saved fiscal notes to {FISCAL_NOTES_FILE}")
 
-    # Generate fiscal-note-updates.json
+    # Save fiscal-note-updates.json
     save_json(fiscal_note_updates, FISCAL_NOTE_UPDATES_FILE)
-    # print(f"Saved fiscal note updates to {FISCAL_NOTE_UPDATES_FILE}")
+    print(f"Saved fiscal note updates to {FISCAL_NOTE_UPDATES_FILE}")
 
 if __name__ == "__main__":
     main()
