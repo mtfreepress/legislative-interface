@@ -16,7 +16,7 @@
     "draft": {
         "id": 5344,
         "draftNumber": "LC4357",
-        "date": "2025-02-06T08:36:33",
+        "date": "2025-02-06T13:18:39",
         "shortTitle": "Senate rules resolution",
         "description": null,
         "requesterId": 33,
@@ -199,6 +199,27 @@
                     "code": "100",
                     "name": "(S) Introduced",
                     "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 3,
+                        "code": "20",
+                        "description": "In First House--Introduced"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 32811,
+                "timeStamp": "2025-02-06T10:00:00",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 53,
+                    "code": "101",
+                    "name": "(S) First Reading",
+                    "actionWeight": "SOFT",
                     "chamber": "SENATE",
                     "billProgressCategory": {
                         "id": 3,
