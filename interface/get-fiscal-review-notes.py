@@ -77,40 +77,14 @@ def fetch_pdf_url(session, document_id):
         print(f"Error fetching PDF URL for document {document_id}: {response.status_code}")
         return None
 
-def parse_date(date_str):
-    date_formats = [
-        "%d/%m/%Y",
-        "%d/%m/%Y, %I:%M %p",
-        "%a %b %d %Y %H:%M:%S",
-        "%a %b %d %Y %H:%M:%S GMT%z",
-        "%Y-%m-%dT%H:%M:%S.%fZ",  # ISO 8601 format with milliseconds and timezone
-        "%a %b %d %Y %H:%M:%S GMT%z (%Z)"  # Full text representation of the timezone
-    ]
-    for date_format in date_formats:
-        try:
-            return datetime.strptime(date_str, date_format).astimezone(timezone.utc)
-        except ValueError:
-            continue
-    # Custom parsing for "Mon Feb 10 2025 13:10:44 GMT-0700 (Mountain Standard Time)"
-    try:
-        return datetime.strptime(date_str.split(" (")[0], "%a %b %d %Y %H:%M:%S GMT%z").astimezone(timezone.utc)
-    except ValueError:
-        print(f"Error parsing date: {date_str}")
-        return None
-
 def get_latest_document(documents):
     latest_document = None
-    latest_date = None
+    latest_id = None
     for document in documents:
-        for attribute in document.get("attributes", []):
-            if attribute["name"] == "SubmittedDate":
-                date_str = attribute["stringValue"]
-                submitted_date = parse_date(date_str)
-                if submitted_date is None:
-                    continue
-                if latest_date is None or submitted_date > latest_date:
-                    latest_date = submitted_date
-                    latest_document = document
+        document_id = document["id"]
+        if latest_id is None or document_id > latest_id:
+            latest_id = document_id
+            latest_document = document
     return latest_document
 
 def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, download_dir, fiscal_notes, fiscal_note_updates, processed_bills):
