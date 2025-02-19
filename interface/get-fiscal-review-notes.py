@@ -109,7 +109,7 @@ def fetch_and_save_fiscal_notes(bill, legislature_ordinal, session_ordinal, down
             pdf_url = fetch_pdf_url(session, document_id)
             if pdf_url:
                 download_file(pdf_url, dest_folder, file_name)
-                fiscal_note_updates.append({"billType": bill_type, "billNumber": bill_number})
+                fiscal_note_updates.append({"billType": bill_type, "billNumber": bill_number, "fileName": file_name})
                 processed_bills.add((bill_type, bill_number))
             else:
                 print(f"Failed to fetch PDF URL for document ID: {document_id}")

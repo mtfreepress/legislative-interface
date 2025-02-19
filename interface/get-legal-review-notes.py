@@ -79,31 +79,12 @@ def fetch_pdf_url(session, document_id):
 
 def get_latest_document(documents):
     latest_document = None
-    latest_date = None
+    latest_id = None
     for document in documents:
-        for attribute in document.get("attributes", []):
-            if attribute["name"] == "SubmittedDate":
-                date_str = attribute["stringValue"]
-                date_formats = [
-                    "%d/%m/%Y",
-                    "%d/%m/%Y, %I:%M %p",
-                    "%a %b %d %Y %H:%M:%S",
-                    "%a %b %d %Y %H:%M:%S GMT%z" 
-                ]
-                for date_format in date_formats:
-                    try:
-                        # Remove timezone info before parsing
-                        cleaned_date_str = date_str.split(" GMT")[0] if "GMT" in date_str else date_str
-                        submitted_date = datetime.strptime(cleaned_date_str, date_format)
-                        break
-                    except ValueError:
-                        continue
-                else:
-                    print(f"Error parsing date: {date_str}")
-                    continue
-                if latest_date is None or submitted_date > latest_date:
-                    latest_date = submitted_date
-                    latest_document = document
+        document_id = document["id"]
+        if latest_id is None or document_id > latest_id:
+            latest_id = document_id
+            latest_document = document
     return latest_document
 
 def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal, download_dir, legal_notes, legal_note_updates, processed_bills):
@@ -126,7 +107,7 @@ def fetch_and_save_legal_review_notes(bill, legislature_ordinal, session_ordinal
             pdf_url = fetch_pdf_url(session, document_id)
             if pdf_url:
                 download_file(pdf_url, dest_folder, file_name)
-                legal_note_updates.append({"billType": bill_type, "billNumber": bill_number})
+                legal_note_updates.append({"billType": bill_type, "billNumber": bill_number, "fileName": file_name})
                 processed_bills.add((bill_type, bill_number))
             else:
                 print(f"Failed to fetch PDF URL for document ID: {document_id}")
