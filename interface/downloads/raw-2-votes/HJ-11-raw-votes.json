@@ -365,6 +365,27 @@
                                 "name": "test_name"
                             }
                         }
+                    },
+                    {
+                        "id": 40331,
+                        "timeStamp": "2025-02-19T14:44:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 441,
+                            "code": "662",
+                            "name": "(H) Motion Failed",
+                            "actionWeight": "SOFT",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
                     }
                 ],
                 "legalNote": false,
@@ -1396,6 +1417,27 @@
                                 "name": "test_name"
                             }
                         }
+                    },
+                    {
+                        "id": 40331,
+                        "timeStamp": "2025-02-19T14:44:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 441,
+                            "code": "662",
+                            "name": "(H) Motion Failed",
+                            "actionWeight": "SOFT",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
                     }
                 ],
                 "legalNote": false,
@@ -2035,7 +2077,27 @@
                 "votingMemberStatus": null
             }
         ],
-        "billStatus": null,
+        "billStatus": {
+            "id": 40331,
+            "timeStamp": "2025-02-19T14:44:00",
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 441,
+                "code": "662",
+                "name": "(H) Motion Failed",
+                "actionWeight": "SOFT",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
+        },
         "systemId": {
             "chamber": "HOUSE",
             "sequence": 636
