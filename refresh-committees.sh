@@ -15,10 +15,10 @@ legislatureOrdinal=69
 year=2025
 
 # get all committees
-measure_time python ./interface get-all-committees.py $sessionId
+measure_time python ./interface/get-all-committees.py $sessionId
 
 # get legislators json
 measure_time python ./interface/get-legislators.py
 
 # process legislators & committees in to a csv
-measure_time python ./interface/process-legislators-committees.py
+measure_time python ./process/process-legislators-committees-csv.py $year
