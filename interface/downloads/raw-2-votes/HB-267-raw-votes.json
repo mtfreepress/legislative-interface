@@ -8,7 +8,7 @@
         "amendmentNumber": null,
         "bill": {
             "id": 1338,
-            "deadlineCodeId": 3,
+            "deadlineCodeId": 5,
             "billNumber": 267,
             "sessionLawChapterNumber": null,
             "sponsorId": 49,
@@ -596,6 +596,27 @@
                                 "name": "test_name"
                             }
                         }
+                    },
+                    {
+                        "id": 40409,
+                        "timeStamp": "2025-02-19T15:12:09.895853",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 384,
+                            "code": "605",
+                            "name": "(H) Transmitted to Senate",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 9,
+                                "code": "70",
+                                "description": "Transmitted to Second House"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
                     }
                 ],
                 "legalNote": false,
@@ -622,6 +643,17 @@
                             "code": "CR",
                             "description": "Crimes",
                             "revenueAndAprops": null,
+                            "voteMajorityType": "SIMPLE",
+                            "primary": true
+                        }
+                    },
+                    {
+                        "id": 85570,
+                        "subjectCode": {
+                            "id": 121,
+                            "code": "REVS",
+                            "description": "Revenue, State",
+                            "revenueAndAprops": "REVENUE",
                             "voteMajorityType": "SIMPLE",
                             "primary": true
                         }
@@ -1270,7 +1302,7 @@
         "amendmentNumber": null,
         "bill": {
             "id": 1338,
-            "deadlineCodeId": 3,
+            "deadlineCodeId": 5,
             "billNumber": 267,
             "sessionLawChapterNumber": null,
             "sponsorId": 49,
@@ -1858,6 +1890,27 @@
                                 "name": "test_name"
                             }
                         }
+                    },
+                    {
+                        "id": 40409,
+                        "timeStamp": "2025-02-19T15:12:09.895853",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 384,
+                            "code": "605",
+                            "name": "(H) Transmitted to Senate",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 9,
+                                "code": "70",
+                                "description": "Transmitted to Second House"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
                     }
                 ],
                 "legalNote": false,
@@ -1884,6 +1937,17 @@
                             "code": "CR",
                             "description": "Crimes",
                             "revenueAndAprops": null,
+                            "voteMajorityType": "SIMPLE",
+                            "primary": true
+                        }
+                    },
+                    {
+                        "id": 85570,
+                        "subjectCode": {
+                            "id": 121,
+                            "code": "REVS",
+                            "description": "Revenue, State",
+                            "revenueAndAprops": "REVENUE",
                             "voteMajorityType": "SIMPLE",
                             "primary": true
                         }
