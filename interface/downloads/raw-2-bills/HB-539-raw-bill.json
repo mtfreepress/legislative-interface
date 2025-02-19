@@ -16,7 +16,7 @@
     "draft": {
         "id": 3372,
         "draftNumber": "LC3445",
-        "date": "2025-02-17T12:21:43",
+        "date": "2025-02-19T13:58:22",
         "shortTitle": "Revise laws related to veto override polls",
         "description": null,
         "requesterId": 98,
@@ -199,6 +199,48 @@
                     "code": "500",
                     "name": "(H) Introduced",
                     "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 3,
+                        "code": "20",
+                        "description": "In First House--Introduced"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 40069,
+                "timeStamp": "2025-02-19T12:34:03.315725",
+                "standingCommitteeId": 12,
+                "billStatusCode": {
+                    "id": 286,
+                    "code": "502",
+                    "name": "(H) Referred to Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 40104,
+                "timeStamp": "2025-02-19T12:52:09",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 285,
+                    "code": "501",
+                    "name": "(H) First Reading",
+                    "actionWeight": "SOFT",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
                         "id": 3,
