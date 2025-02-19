@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 94,
     "carrierId": null,
-    "drafterStaffMemberId": 70,
+    "drafterStaffMemberId": 49,
     "billType": {
         "id": 4,
         "description": "Senate Bill",
@@ -315,6 +315,48 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 39242,
+                "timeStamp": "2025-02-18T13:15:00",
+                "standingCommitteeId": 17,
+                "billStatusCode": {
+                    "id": 84,
+                    "code": "132",
+                    "name": "(S) Committee Report--Bill Passed as Amended",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 6,
+                        "code": "40",
+                        "description": "In First House--Out of Committee"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 39271,
+                "timeStamp": "2025-02-18T13:41:44.538122",
+                "standingCommitteeId": 17,
+                "billStatusCode": {
+                    "id": 54,
+                    "code": "102",
+                    "name": "(S) Referred to Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -360,6 +402,6 @@
         "byRequestOfs": []
     },
     "enrolled": null,
-    "versionNumber": 1,
+    "versionNumber": 2,
     "sessionId": 2
 }

@@ -3,7 +3,9 @@ Program for grabbing data from Montana Legislature's new bill tracker and proces
 
 ## How do I run it?
 - Runs via GitHub Actions automatically on a timer to keep up with legislative session changes
-- Can be run manually via execute.sh shell script
+- #### note: run `chmod +x ./execute.sh` and `chmod +x .refresh-committees.sh` to make them executable (only required first time after downloading, will remain executable)
+- Can be run manually via `execute.sh` shell script
+- `refresh-committees.sh` is run as needed for committee updating (usually only at start of session)
 
 ## What it does
 - Takes in Bill data

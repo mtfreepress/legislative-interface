@@ -5,7 +5,7 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from datetime import datetime
+from datetime import datetime, timezone
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 API_BASE_URL = "https://api.legmt.gov"
@@ -77,6 +77,27 @@ def fetch_pdf_url(session, document_id):
         print(f"Error fetching PDF URL for document {document_id}: {response.status_code}")
         return None
 
+def parse_date(date_str):
+    date_formats = [
+        "%d/%m/%Y",
+        "%d/%m/%Y, %I:%M %p",
+        "%a %b %d %Y %H:%M:%S",
+        "%a %b %d %Y %H:%M:%S GMT%z",
+        "%Y-%m-%dT%H:%M:%S.%fZ",  # ISO 8601 format with milliseconds and timezone
+        "%a %b %d %Y %H:%M:%S GMT%z (%Z)"  # Full text representation of the timezone
+    ]
+    for date_format in date_formats:
+        try:
+            return datetime.strptime(date_str, date_format).astimezone(timezone.utc)
+        except ValueError:
+            continue
+    # Custom parsing for "Mon Feb 10 2025 13:10:44 GMT-0700 (Mountain Standard Time)"
+    try:
+        return datetime.strptime(date_str.split(" (")[0], "%a %b %d %Y %H:%M:%S GMT%z").astimezone(timezone.utc)
+    except ValueError:
+        print(f"Error parsing date: {date_str}")
+        return None
+
 def get_latest_document(documents):
     latest_document = None
     latest_date = None
@@ -84,22 +105,8 @@ def get_latest_document(documents):
         for attribute in document.get("attributes", []):
             if attribute["name"] == "SubmittedDate":
                 date_str = attribute["stringValue"]
-                date_formats = [
-                    "%d/%m/%Y",
-                    "%d/%m/%Y, %I:%M %p",
-                    "%a %b %d %Y %H:%M:%S",
-                    "%a %b %d %Y %H:%M:%S GMT%z" 
-                ]
-                for date_format in date_formats:
-                    try:
-                        # Remove timezone info before parsing
-                        cleaned_date_str = date_str.split(" GMT")[0] if "GMT" in date_str else date_str
-                        submitted_date = datetime.strptime(cleaned_date_str, date_format)
-                        break
-                    except ValueError:
-                        continue
-                else:
-                    print(f"Error parsing date: {date_str}")
+                submitted_date = parse_date(date_str)
+                if submitted_date is None:
                     continue
                 if latest_date is None or submitted_date > latest_date:
                     latest_date = submitted_date
