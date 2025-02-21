@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 27,
     "carrierId": null,
-    "drafterStaffMemberId": 64,
+    "drafterStaffMemberId": 129,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -294,6 +294,27 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 42460,
+                "timeStamp": "2025-02-21T15:14:00",
+                "standingCommitteeId": 11,
+                "billStatusCode": {
+                    "id": 315,
+                    "code": "532",
+                    "name": "(H) Committee Report--Bill Passed as Amended",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 6,
+                        "code": "40",
+                        "description": "In First House--Out of Committee"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -328,6 +349,6 @@
         "byRequestOfs": []
     },
     "enrolled": null,
-    "versionNumber": 1,
+    "versionNumber": 2,
     "sessionId": 2
 }
