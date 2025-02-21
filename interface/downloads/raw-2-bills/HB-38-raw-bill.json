@@ -4,8 +4,8 @@
     "billNumber": 38,
     "sessionLawChapterNumber": null,
     "sponsorId": 69,
-    "carrierId": null,
-    "drafterStaffMemberId": 49,
+    "carrierId": 87,
+    "drafterStaffMemberId": 129,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -17,7 +17,7 @@
         "id": 254,
         "draftNumber": "LC0235",
         "date": "2024-12-06T17:55:01",
-        "shortTitle": "Revise laws related to disability parking",
+        "shortTitle": "Revise laws relate to disability parking",
         "description": null,
         "requesterId": 20,
         "requesterType": "NON_STANDING_COMMITTEE",
@@ -582,6 +582,27 @@
                         "id": 1,
                         "code": "0",
                         "description": "Probably Dead"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 42612,
+                "timeStamp": "2025-02-21T15:49:57.08",
+                "standingCommitteeId": 30,
+                "billStatusCode": {
+                    "id": 69,
+                    "code": "117",
+                    "name": "(S) Committee Executive Action--Bill Concurred",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 11,
+                        "code": "80",
+                        "description": "In Second House Committee--Nontabled"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
