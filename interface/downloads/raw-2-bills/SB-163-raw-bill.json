@@ -4,7 +4,7 @@
     "billNumber": 163,
     "sessionLawChapterNumber": null,
     "sponsorId": 89,
-    "carrierId": null,
+    "carrierId": 57,
     "drafterStaffMemberId": 127,
     "billType": {
         "id": 4,
@@ -498,6 +498,27 @@
                         "id": 1,
                         "code": "0",
                         "description": "Probably Dead"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 42643,
+                "timeStamp": "2025-02-21T16:47:35.96",
+                "standingCommitteeId": 7,
+                "billStatusCode": {
+                    "id": 300,
+                    "code": "517",
+                    "name": "(H) Committee Executive Action--Bill Concurred",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 11,
+                        "code": "80",
+                        "description": "In Second House Committee--Nontabled"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
