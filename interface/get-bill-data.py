@@ -14,7 +14,6 @@ import sys
 #     "Origin": "https://bills.legmt.gov",
 #     "Referer": "https://bills.legmt.gov/",
 # }
-
 # --- 2025 API is different --- 
 
 def fetch_bills(session_id):
