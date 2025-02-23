@@ -7,18 +7,21 @@ on:
 
 jobs:
   test:
-    # Only run this workflow on fix-404s branch
-    if: github.ref == 'refs/heads/fix-404s'
     runs-on: ubuntu-latest 
 
     steps:
-    # Checkout the repository with specific branch
+    # First checkout main (where workflow file exists)
     - name: Checkout code
       uses: actions/checkout@v2
-      with:
-        ref: fix-404s
 
-    # Restore Python dependencies cache
+    # Switch to fix-404s branch
+    - name: Switch to fix-404s branch
+      run: |
+        git fetch origin fix-404s
+        git checkout fix-404s
+        git pull origin fix-404s
+
+    # Rest of your steps remain the same
     - name: Restore Python dependencies cache
       uses: actions/cache@v4
       with:
