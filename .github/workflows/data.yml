@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - fix-404s
   schedule:
     - cron: '*/20 * * * *'
   workflow_dispatch:
