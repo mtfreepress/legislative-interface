@@ -5,15 +5,20 @@ on:
     - cron: '*/20 * * * *'
   workflow_dispatch:
 
+env:
+  TEST_BRANCH: # branch name goes here
+
 jobs:
   test:
+    # Uncomment this to enmable the workflow
+    if: false
     runs-on: ubuntu-latest 
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        ref: fix-404s
+        ref: ${{ env.TEST_BRANCH }}
         fetch-depth: 0
 
     - name: Restore Python dependencies cache
@@ -54,4 +59,4 @@ jobs:
         git add -A
         timestamp=$(date -u)
         git commit -m "Test run: ${timestamp}" || exit 0
-        git push origin fix-404s
+        git push origin ${{ env.TEST_BRANCH }}
