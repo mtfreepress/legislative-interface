@@ -1,6 +1,6 @@
 {
     "id": 5321,
-    "deadlineCodeId": 3,
+    "deadlineCodeId": 2,
     "billNumber": 320,
     "sessionLawChapterNumber": null,
     "sponsorId": 88,
@@ -387,6 +387,27 @@
                     "id": 58,
                     "code": "106",
                     "name": "(S) Fiscal Note Received",
+                    "actionWeight": "SOFT",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 1,
+                        "code": "0",
+                        "description": "Probably Dead"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 43804,
+                "timeStamp": "2025-02-24T08:54:54.469574",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 230,
+                    "code": "281",
+                    "name": "(S) Fiscal Note Signed",
                     "actionWeight": "SOFT",
                     "chamber": "SENATE",
                     "billProgressCategory": {
