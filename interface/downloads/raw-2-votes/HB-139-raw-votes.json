@@ -428,6 +428,27 @@
                                 "name": "test_name"
                             }
                         }
+                    },
+                    {
+                        "id": 44575,
+                        "timeStamp": "2025-02-24T14:08:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 345,
+                            "code": "564",
+                            "name": "(H) 2nd Reading Not Passed",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
                     }
                 ],
                 "legalNote": false,
@@ -1500,6 +1521,27 @@
                             "code": "553",
                             "name": "(H) Scheduled for 2nd Reading",
                             "actionWeight": "SOFT",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 44575,
+                        "timeStamp": "2025-02-24T14:08:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 345,
+                            "code": "564",
+                            "name": "(H) 2nd Reading Not Passed",
+                            "actionWeight": "HARD",
                             "chamber": "HOUSE",
                             "billProgressCategory": {
                                 "id": 1,
@@ -2594,6 +2636,27 @@
                                 "name": "test_name"
                             }
                         }
+                    },
+                    {
+                        "id": 44575,
+                        "timeStamp": "2025-02-24T14:08:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 345,
+                            "code": "564",
+                            "name": "(H) 2nd Reading Not Passed",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
                     }
                 ],
                 "legalNote": false,
@@ -3222,7 +3285,27 @@
                 "votingMemberStatus": null
             }
         ],
-        "billStatus": null,
+        "billStatus": {
+            "id": 44575,
+            "timeStamp": "2025-02-24T14:08:00",
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 345,
+                "code": "564",
+                "name": "(H) 2nd Reading Not Passed",
+                "actionWeight": "HARD",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
+        },
         "systemId": {
             "chamber": "HOUSE",
             "sequence": 727
