@@ -16,10 +16,10 @@
     "draft": {
         "id": 2243,
         "draftNumber": "LC2243",
-        "date": "2024-12-07T19:48:09",
+        "date": "2025-02-25T08:40:01",
         "shortTitle": "Senate joint rules resolution",
         "description": null,
-        "requesterId": 2,
+        "requesterId": 44,
         "requesterType": "STANDING_COMMITTEE",
         "billStatuses": [
             {
@@ -300,7 +300,7 @@
         "sessionId": 2,
         "fiscalNote": false,
         "fiscalAnalystId": null,
-        "preIntroRequired": false,
+        "preIntroRequired": true,
         "subjects": [
             {
                 "id": 35799,
@@ -312,9 +312,26 @@
                     "voteMajorityType": "SIMPLE",
                     "primary": true
                 }
+            },
+            {
+                "id": 85721,
+                "subjectCode": {
+                    "id": 180,
+                    "code": "GJR",
+                    "description": "General Joint Resolution",
+                    "revenueAndAprops": "REVENUE",
+                    "voteMajorityType": "SIMPLE",
+                    "primary": true
+                }
             }
         ],
-        "byRequestOfs": []
+        "byRequestOfs": [
+            {
+                "id": 4041,
+                "byRequestOfId": 44,
+                "billRequestType": "STANDING_COMMITTEE"
+            }
+        ]
     },
     "enrolled": null,
     "versionNumber": 1,
