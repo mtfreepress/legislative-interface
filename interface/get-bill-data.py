@@ -30,7 +30,6 @@ def fetch_bills(session_id):
     payload = {"sessionIds": [session_id]}
 
     response = requests.post(bills_url, json=payload, headers=headers)
-    print(response)
     if response.status_code == 200:
         return response.json()
     else:
