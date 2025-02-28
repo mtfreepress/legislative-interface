@@ -2,7 +2,7 @@
     "id": 1522,
     "deadlineCodeId": 3,
     "billNumber": 203,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 10,
     "sponsorId": 232,
     "carrierId": null,
     "drafterStaffMemberId": 70,
@@ -735,6 +735,27 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 48665,
+                "timeStamp": "2025-02-28T12:05:09",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 437,
+                    "code": "658",
+                    "name": "Chapter Number Assigned",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -769,6 +790,6 @@
         "byRequestOfs": []
     },
     "enrolled": null,
-    "versionNumber": 1,
+    "versionNumber": 2,
     "sessionId": 2
 }

@@ -2,7 +2,7 @@
     "id": 103,
     "deadlineCodeId": 3,
     "billNumber": 54,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 11,
     "sponsorId": 161,
     "carrierId": 43,
     "drafterStaffMemberId": 71,
@@ -16,7 +16,7 @@
     "draft": {
         "id": 103,
         "draftNumber": "LC0100",
-        "date": "2025-02-20T06:39:09",
+        "date": "2025-02-28T12:14:18",
         "shortTitle": "Require certain tax payments to be made electronically",
         "description": null,
         "requesterId": 126,
@@ -792,6 +792,48 @@
                         "id": 22,
                         "code": "180",
                         "description": "Transmitted to Governor"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 48666,
+                "timeStamp": "2025-02-27T12:13:17",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 207,
+                    "code": "258",
+                    "name": "Chapter Number Assigned",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 48792,
+                "timeStamp": "2025-02-28T13:24:02",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 205,
+                    "code": "256",
+                    "name": "(S) Signed by Governor",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
