@@ -39,20 +39,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Network diagnostics
-      run: |
-        echo "== DNS Lookup =="
-        nslookup api.legmt.gov
-        
-        echo "== Checking connectivity =="
-        curl -v -I https://api.legmt.gov 2>&1
-        
-        echo "== Runner IP Info =="
-        curl -s https://ipinfo.io
-        
-        echo "== Traceroute =="
-        traceroute api.legmt.gov
-
     # Ensure the script is executable
     - name: Make execute.sh executable
       run: chmod +x ./execute.sh
