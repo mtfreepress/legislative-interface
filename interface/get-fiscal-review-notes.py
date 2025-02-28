@@ -151,7 +151,7 @@ def main():
     fiscal_note_updates = []
     processed_bills = set()
 
-    with ThreadPoolExecutor(max_workers=7) as executor:
+    with ThreadPoolExecutor(max_workers=5) as executor:
         futures = [executor.submit(fetch_and_save_fiscal_notes, bill, legislature_ordinal, session_ordinal, download_dir, fiscal_notes, fiscal_note_updates, processed_bills) for bill in bills_data]
         for future in as_completed(futures):
             future.result()
