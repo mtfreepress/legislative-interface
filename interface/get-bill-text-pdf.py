@@ -105,7 +105,7 @@ def main():
 
     download_dir = os.path.join(DOWNLOAD_DIR, f"bill-text-{session_id}")
 # TODO: Play wwith the number of workers to see if we can push it higher to speed things up
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=20) as executor:
         futures = [executor.submit(fetch_and_save_bill_text, bill, legislature_ordinal, session_ordinal, download_dir) for bill in bills_data]
         for future in as_completed(futures):
             future.result()

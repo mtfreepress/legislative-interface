@@ -73,7 +73,7 @@ def main():
     download_dir = get_download_dir(legislative_session)
     bills = load_bills(LIST_BILLS_PATH)
 
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=20) as executor:
         futures = [executor.submit(
             fetch_and_save_executive_actions_data, bill, download_dir) for bill in bills]
         for future in as_completed(futures):
