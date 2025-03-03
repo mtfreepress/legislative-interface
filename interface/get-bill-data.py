@@ -16,7 +16,8 @@ import time
 #     "Referer": "https://bills.legmt.gov/",
 # }
 
-# --- 2025 API is different --- 
+# --- 2025 API is different ---
+
 
 def fetch_bills(session_id, max_retries=5):
     bills_url = "https://api.legmt.gov/bills/v1/bills/search?includeCounts=true&sort=billType.code,desc&sort=billNumber,asc&sort=draft.draftNumber,asc&limit=9999&offset=0"
@@ -31,7 +32,7 @@ def fetch_bills(session_id, max_retries=5):
 
     # Wrap session_id in a list
     payload = {"sessionIds": [session_id]}
-    
+
     # Try preflight first (CORS handling)
     try:
         print("Performing preflight OPTIONS request...")
@@ -41,16 +42,17 @@ def fetch_bills(session_id, max_retries=5):
             "Origin": "https://bills.legmt.gov",
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
         }
-        preflight = requests.options(bills_url, headers=options_headers, timeout=10)
+        preflight = requests.options(
+            bills_url, headers=options_headers, timeout=10)
         print(f"Preflight status: {preflight.status_code}")
     except Exception as e:
         print(f"Preflight request failed (this is often normal): {e}")
-    
+
     # Try API request with retries
     for attempt in range(1, max_retries + 1):
         try:
             print(f"API Request attempt {attempt}/{max_retries}")
-            
+
             # Try adding more browser-like headers to bypass WAF
             if attempt > 1:
                 headers.update({
@@ -62,36 +64,48 @@ def fetch_bills(session_id, max_retries=5):
                     "sec-ch-ua-mobile": "?0",
                     "sec-ch-ua-platform": '"macOS"'
                 })
-            
+
+            response = requests.post(
+                bills_url, json=payload, headers=headers, timeout=30)
+
             response = requests.post(bills_url, json=payload, headers=headers, timeout=30)
-            
+
             print(f"Status Code: {response.status_code}")
             print(f"Content-Type: {response.headers.get('Content-Type', 'Not specified')}")
-            
+
+            print(f"ERROR RESPONSE CONTENT:\n{response.text}\n")
+
+            print(f"Status Code: {response.status_code}")
+            print(
+                f"Content-Type: {response.headers.get('Content-Type', 'Not specified')}")
+
             # Always save the full response for inspection
-            error_log_dir = os.path.join(os.path.dirname(__file__), "error_logs")
+            error_log_dir = os.path.join(
+                os.path.dirname(__file__), "error_logs")
             os.makedirs(error_log_dir, exist_ok=True)
-            error_log_path = os.path.join(error_log_dir, f"api_response_{attempt}.html")
-            
+            error_log_path = os.path.join(
+                error_log_dir, f"api_response_{attempt}.html")
+
             with open(error_log_path, 'w') as f:
                 f.write(response.text)
             print(f"Full response saved to {error_log_path}")
-            
+
             # Check if response is HTML instead of JSON
             if "text/html" in response.headers.get('Content-Type', ''):
-                print(f"WARNING: Received HTML instead of JSON - see {error_log_path}")
+                print(
+                    f"WARNING: Received HTML instead of JSON - see {error_log_path}")
                 # Continue to next attempt
             elif response.status_code == 200 and response.text.strip():
                 try:
                     return response.json()
                 except json.JSONDecodeError as e:
                     print(f"JSON decode error: {e}")
-            
+
             if attempt < max_retries:
                 delay = 2 ** attempt
                 print(f"Retrying in {delay} seconds...")
                 time.sleep(delay)
-                
+
         except requests.RequestException as e:
             print(f"Request failed: {e}")
             if attempt < max_retries:
