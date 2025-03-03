@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import sys
+import time
 
 # NOTE: 2023 and older use this endpoint
 
@@ -17,25 +18,77 @@ import sys
 
 # --- 2025 API is different --- 
 
-def fetch_bills(session_id):
+def fetch_bills(session_id, max_retries=5):
     bills_url = "https://api.legmt.gov/bills/v1/bills/search?includeCounts=true&sort=billType.code,desc&sort=billNumber,asc&sort=draft.draftNumber,asc&limit=9999&offset=0"
     headers = {
         "Accept": "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.9",
         "Content-Type": "application/json",
         "Origin": "https://bills.legmt.gov",
         "Referer": "https://bills.legmt.gov/",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
     }
 
-    # Wrap session_id in a list, use format that for some reason changed
+    # Wrap session_id in a list
     payload = {"sessionIds": [session_id]}
-
-    response = requests.post(bills_url, json=payload, headers=headers)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        print(f"Failed to fetch bills. HTTP Status Code: {response.status_code}")
-        print(f"Response: {response.text}")
-        return None
+    
+    # Try preflight first (CORS handling)
+    try:
+        print("Performing preflight OPTIONS request...")
+        options_headers = {
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type",
+            "Origin": "https://bills.legmt.gov",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+        }
+        preflight = requests.options(bills_url, headers=options_headers, timeout=10)
+        print(f"Preflight status: {preflight.status_code}")
+    except Exception as e:
+        print(f"Preflight request failed (this is often normal): {e}")
+    
+    # Try API request with retries
+    for attempt in range(1, max_retries + 1):
+        try:
+            print(f"API Request attempt {attempt}/{max_retries}")
+            print(f"URL: {bills_url}")
+            print(f"Headers: {headers}")
+            print(f"Payload: {payload}")
+            
+            response = requests.post(bills_url, json=payload, headers=headers, timeout=30)
+            
+            print(f"Status Code: {response.status_code}")
+            print(f"Response Headers: {dict(response.headers)}")
+            print(f"Response Length: {len(response.text)}")
+            
+            if response.text:
+                if len(response.text) < 100:
+                    print(f"Response Text: {repr(response.text)}")
+                else:
+                    print(f"Response Preview: {repr(response.text[:100])}...")
+            else:
+                print("Response body is empty")
+            
+            if response.status_code == 200 and response.text.strip():
+                try:
+                    return response.json()
+                except json.JSONDecodeError as e:
+                    print(f"JSON decode error: {e}")
+            
+            if attempt < max_retries:
+                delay = 2 ** attempt
+                print(f"Retrying in {delay} seconds...")
+                time.sleep(delay)
+                
+        except requests.RequestException as e:
+            print(f"Request failed: {e}")
+            if attempt < max_retries:
+                delay = 2 ** attempt
+                print(f"Retrying in {delay} seconds...")
+                time.sleep(delay)
+    
+    # If we get here, all attempts failed
+    print("All API attempts failed")
+    return None
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -59,3 +112,50 @@ if __name__ == "__main__":
         print(f"Bills data saved to '{output_file}'.")
     else:
         print("No data to save.")
+
+
+
+
+# TODO: This is the old version keeping it just in case
+# def fetch_bills(session_id):
+#     bills_url = "https://api.legmt.gov/bills/v1/bills/search?includeCounts=true&sort=billType.code,desc&sort=billNumber,asc&sort=draft.draftNumber,asc&limit=9999&offset=0"
+#     headers = {
+#         "Accept": "application/json, text/plain, */*",
+#         "Content-Type": "application/json",
+#         "Origin": "https://bills.legmt.gov",
+#         "Referer": "https://bills.legmt.gov/",
+#     }
+
+#     # Wrap session_id in a list, use format that for some reason changed
+#     payload = {"sessionIds": [session_id]}
+
+#     response = requests.post(bills_url, json=payload, headers=headers)
+#     if response.status_code == 200:
+#         return response.json()
+#     else:
+#         print(f"Failed to fetch bills. HTTP Status Code: {response.status_code}")
+#         print(f"Response: {response.text}")
+#         return None
+
+# if __name__ == "__main__":
+#     if len(sys.argv) != 2:
+#         print("Usage: python get-bill-data.py <session_id>")
+#         sys.exit(1)
+
+#     # Get session_id from command-line arguments
+#     session_id = int(sys.argv[1])
+
+#     # Create downloads directory if it doesn't exist
+#     downloads_dir = os.path.join(os.path.dirname(__file__), "downloads")
+#     os.makedirs(downloads_dir, exist_ok=True)
+
+#     # Fetch bills data
+#     bills_data = fetch_bills(session_id)
+#     if bills_data is not None:
+#         # Save bills to downloads folder
+#         output_file = os.path.join(downloads_dir, f"raw-{session_id}-bills.json")
+#         with open(output_file, "w") as bills_file:
+#             json.dump(bills_data, bills_file, indent=4)
+#         print(f"Bills data saved to '{output_file}'.")
+#     else:
+#         print("No data to save.")
