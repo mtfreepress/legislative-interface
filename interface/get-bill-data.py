@@ -73,7 +73,8 @@ def fetch_bills(session_id, max_retries=5):
             print(f"Status Code: {response.status_code}")
             print(f"Content-Type: {response.headers.get('Content-Type', 'Not specified')}")
 
-            print(f"ERROR RESPONSE CONTENT:\n{response.text}\n")
+            # print(f"ERROR RESPONSE CONTENT:\n{response.text}\n")
+            print(f"ERROR RESPONSE CONTENT (first 500 chars):\n{response.text[:500]}\n")
 
             print(f"Status Code: {response.status_code}")
             print(
