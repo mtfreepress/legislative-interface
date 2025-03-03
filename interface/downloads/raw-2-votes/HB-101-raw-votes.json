@@ -367,48 +367,6 @@
                         }
                     },
                     {
-                        "id": 25885,
-                        "timeStamp": "2025-01-23T19:14:34.183762",
-                        "standingCommitteeId": 9,
-                        "billStatusCode": {
-                            "id": 307,
-                            "code": "524",
-                            "name": "(H) Tabled in Committee",
-                            "actionWeight": "HARD",
-                            "chamber": "HOUSE",
-                            "billProgressCategory": {
-                                "id": 4,
-                                "code": "25",
-                                "description": "In First House Committee--Tabled"
-                            },
-                            "standingCommitteeStatusGrouping": {
-                                "id": 1,
-                                "name": "test_name"
-                            }
-                        }
-                    },
-                    {
-                        "id": 29665,
-                        "timeStamp": "2025-01-30T17:45:48.375756",
-                        "standingCommitteeId": 9,
-                        "billStatusCode": {
-                            "id": 307,
-                            "code": "524",
-                            "name": "(H) Tabled in Committee",
-                            "actionWeight": "HARD",
-                            "chamber": "HOUSE",
-                            "billProgressCategory": {
-                                "id": 4,
-                                "code": "25",
-                                "description": "In First House Committee--Tabled"
-                            },
-                            "standingCommitteeStatusGrouping": {
-                                "id": 1,
-                                "name": "test_name"
-                            }
-                        }
-                    },
-                    {
                         "id": 29666,
                         "timeStamp": "2025-01-30T17:46:36.766633",
                         "standingCommitteeId": 9,
@@ -422,6 +380,27 @@
                                 "id": 4,
                                 "code": "25",
                                 "description": "In First House Committee--Tabled"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 50061,
+                        "timeStamp": "2025-03-01T09:44:00",
+                        "standingCommitteeId": 9,
+                        "billStatusCode": {
+                            "id": 332,
+                            "code": "550",
+                            "name": "(H) Taken from Committee; Placed on 2nd Reading",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 12,
+                                "code": "90",
+                                "description": "In Second House--Out of Committee"
                             },
                             "standingCommitteeStatusGrouping": {
                                 "id": 1,
@@ -1062,7 +1041,27 @@
                 "votingMemberStatus": null
             }
         ],
-        "billStatus": null,
+        "billStatus": {
+            "id": 50061,
+            "timeStamp": "2025-03-01T09:44:00",
+            "standingCommitteeId": 9,
+            "billStatusCode": {
+                "id": 332,
+                "code": "550",
+                "name": "(H) Taken from Committee; Placed on 2nd Reading",
+                "actionWeight": "HARD",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 12,
+                    "code": "90",
+                    "description": "In Second House--Out of Committee"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
+        },
         "systemId": {
             "chamber": "HOUSE",
             "sequence": 869
