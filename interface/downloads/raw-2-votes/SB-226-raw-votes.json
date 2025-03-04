@@ -1,1 +1,754 @@
-[]
+[
+    {
+        "id": 1532,
+        "motion": "Do Pass",
+        "orderOfBusinessId": 25,
+        "dateTime": "2025-03-04T13:42:00",
+        "sessionId": 2,
+        "amendmentNumber": null,
+        "bill": {
+            "id": 2575,
+            "deadlineCodeId": 3,
+            "billNumber": 226,
+            "sessionLawChapterNumber": null,
+            "sponsorId": 88,
+            "carrierId": null,
+            "drafterStaffMemberId": 80,
+            "billType": {
+                "id": 4,
+                "description": "Senate Bill",
+                "code": "SB",
+                "sortOrder": 3,
+                "chamber": "SENATE"
+            },
+            "draft": {
+                "id": 2575,
+                "draftNumber": "LC2577",
+                "date": "2025-01-29T15:37:53",
+                "shortTitle": "Require petition submittals be dropped off within a specific timeframe",
+                "description": null,
+                "requesterId": 88,
+                "requesterType": "LEGISLATOR",
+                "billStatuses": [
+                    {
+                        "id": 7187,
+                        "timeStamp": "2024-12-08T15:53:17.077442",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 5,
+                            "code": "1",
+                            "name": "(LC) Drafter Assigned",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 2,
+                                "code": "10",
+                                "description": "In Drafting Process"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 17065,
+                        "timeStamp": "2025-01-13T15:16:07.067517",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 14,
+                            "code": "12",
+                            "name": "(LC) Draft in Legal Review",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 2,
+                                "code": "10",
+                                "description": "In Drafting Process"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 26830,
+                        "timeStamp": "2025-01-27T09:18:58.330746",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 15,
+                            "code": "13",
+                            "name": "(LC) Draft in Edit",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 2,
+                                "code": "10",
+                                "description": "In Drafting Process"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 27027,
+                        "timeStamp": "2025-01-27T13:03:04.680153",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 19,
+                            "code": "17",
+                            "name": "(LC) Draft in Input/Proofing",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 2,
+                                "code": "10",
+                                "description": "In Drafting Process"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 27237,
+                        "timeStamp": "2025-01-27T14:14:59.568757",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 20,
+                            "code": "18",
+                            "name": "(LC) Draft in Final Drafter Review",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 2,
+                                "code": "10",
+                                "description": "In Drafting Process"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 27549,
+                        "timeStamp": "2025-01-27T20:30:05.154203",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 26,
+                            "code": "24",
+                            "name": "(LC) Draft in Assembly",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 2,
+                                "code": "10",
+                                "description": "In Drafting Process"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 27693,
+                        "timeStamp": "2025-01-28T09:51:22.105693",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 24,
+                            "code": "22",
+                            "name": "(LC) Draft Ready for Delivery",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 2,
+                                "code": "10",
+                                "description": "In Drafting Process"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 27760,
+                        "timeStamp": "2025-01-28T12:14:13.803259",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 25,
+                            "code": "23",
+                            "name": "(LC) Draft Delivered to Requester",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 2,
+                                "code": "10",
+                                "description": "In Drafting Process"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 27894,
+                        "timeStamp": "2025-01-28T13:33:51.294174",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 52,
+                            "code": "100",
+                            "name": "(S) Introduced",
+                            "actionWeight": "HARD",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 3,
+                                "code": "20",
+                                "description": "In First House--Introduced"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 28676,
+                        "timeStamp": "2025-01-28T13:36:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 53,
+                            "code": "101",
+                            "name": "(S) First Reading",
+                            "actionWeight": "SOFT",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 3,
+                                "code": "20",
+                                "description": "In First House--Introduced"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 28714,
+                        "timeStamp": "2025-01-29T13:52:00.112235",
+                        "standingCommitteeId": 20,
+                        "billStatusCode": {
+                            "id": 54,
+                            "code": "102",
+                            "name": "(S) Referred to Committee",
+                            "actionWeight": "HARD",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 5,
+                                "code": "30",
+                                "description": "In First House Committee--Nontabled"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 31584,
+                        "timeStamp": "2025-02-04T13:54:11.07405",
+                        "standingCommitteeId": 20,
+                        "billStatusCode": {
+                            "id": 66,
+                            "code": "114",
+                            "name": "(S) Hearing Canceled",
+                            "actionWeight": "SOFT",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 5,
+                                "code": "30",
+                                "description": "In First House Committee--Nontabled"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 38143,
+                        "timeStamp": "2025-02-17T10:48:31.867838",
+                        "standingCommitteeId": 20,
+                        "billStatusCode": {
+                            "id": 64,
+                            "code": "112",
+                            "name": "(S) Hearing",
+                            "actionWeight": "HARD",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 5,
+                                "code": "30",
+                                "description": "In First House Committee--Nontabled"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 49152,
+                        "timeStamp": "2025-02-28T19:50:23.82",
+                        "standingCommitteeId": 20,
+                        "billStatusCode": {
+                            "id": 70,
+                            "code": "118",
+                            "name": "(S) Committee Executive Action--Bill Passed as Amended",
+                            "actionWeight": "HARD",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 5,
+                                "code": "30",
+                                "description": "In First House Committee--Nontabled"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 49406,
+                        "timeStamp": "2025-03-01T11:37:00",
+                        "standingCommitteeId": 20,
+                        "billStatusCode": {
+                            "id": 84,
+                            "code": "132",
+                            "name": "(S) Committee Report--Bill Passed as Amended",
+                            "actionWeight": "HARD",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 6,
+                                "code": "40",
+                                "description": "In First House--Out of Committee"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 50586,
+                        "timeStamp": "2025-03-04T13:00:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 104,
+                            "code": "153",
+                            "name": "(S) Scheduled for 2nd Reading",
+                            "actionWeight": "SOFT",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 51335,
+                        "timeStamp": "2025-03-04T13:42:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 107,
+                            "code": "156",
+                            "name": "(S) 2nd Reading Passed",
+                            "actionWeight": "HARD",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 7,
+                                "code": "50",
+                                "description": "In First House--Through 2nd Reading"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    }
+                ],
+                "legalNote": false,
+                "sessionId": 2,
+                "fiscalNote": false,
+                "fiscalAnalystId": null,
+                "preIntroRequired": false,
+                "subjects": [
+                    {
+                        "id": 40251,
+                        "subjectCode": {
+                            "id": 50,
+                            "code": "ELEC",
+                            "description": "Elections  (see also: Ballot Issues)",
+                            "revenueAndAprops": null,
+                            "voteMajorityType": "SIMPLE",
+                            "primary": true
+                        }
+                    },
+                    {
+                        "id": 84445,
+                        "subjectCode": {
+                            "id": 17,
+                            "code": "BAL",
+                            "description": "Ballot Issues  (see also: Elections)",
+                            "revenueAndAprops": null,
+                            "voteMajorityType": "SIMPLE",
+                            "primary": true
+                        }
+                    }
+                ],
+                "byRequestOfs": []
+            },
+            "enrolled": null,
+            "versionNumber": 2,
+            "sessionId": 2
+        },
+        "legislatorVotes": [
+            {
+                "id": 115464,
+                "legislatorId": 8,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115476,
+                "legislatorId": 9,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115500,
+                "legislatorId": 15,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115471,
+                "legislatorId": 17,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115470,
+                "legislatorId": 18,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115495,
+                "legislatorId": 22,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115452,
+                "legislatorId": 23,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115489,
+                "legislatorId": 24,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115494,
+                "legislatorId": 26,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115474,
+                "legislatorId": 28,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115475,
+                "legislatorId": 29,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115498,
+                "legislatorId": 31,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115481,
+                "legislatorId": 32,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115477,
+                "legislatorId": 33,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115483,
+                "legislatorId": 34,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115482,
+                "legislatorId": 37,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115487,
+                "legislatorId": 39,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115465,
+                "legislatorId": 42,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115455,
+                "legislatorId": 44,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115453,
+                "legislatorId": 45,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115478,
+                "legislatorId": 48,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115466,
+                "legislatorId": 76,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115463,
+                "legislatorId": 87,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115451,
+                "legislatorId": 88,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115479,
+                "legislatorId": 89,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115469,
+                "legislatorId": 90,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115484,
+                "legislatorId": 91,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115496,
+                "legislatorId": 92,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115467,
+                "legislatorId": 94,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115454,
+                "legislatorId": 97,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115486,
+                "legislatorId": 101,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115468,
+                "legislatorId": 110,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115459,
+                "legislatorId": 113,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115497,
+                "legislatorId": 118,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115492,
+                "legislatorId": 122,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115460,
+                "legislatorId": 124,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115458,
+                "legislatorId": 125,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115488,
+                "legislatorId": 126,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115472,
+                "legislatorId": 128,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115456,
+                "legislatorId": 135,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115491,
+                "legislatorId": 145,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115485,
+                "legislatorId": 150,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115462,
+                "legislatorId": 152,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115473,
+                "legislatorId": 154,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115457,
+                "legislatorId": 155,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115461,
+                "legislatorId": 160,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115480,
+                "legislatorId": 161,
+                "voteType": "YES",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115493,
+                "legislatorId": 162,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115499,
+                "legislatorId": 229,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            },
+            {
+                "id": 115490,
+                "legislatorId": 239,
+                "voteType": "NO",
+                "votingMemberStatus": null
+            }
+        ],
+        "billStatus": {
+            "id": 51335,
+            "timeStamp": "2025-03-04T13:42:00",
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 107,
+                "code": "156",
+                "name": "(S) 2nd Reading Passed",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 7,
+                    "code": "50",
+                    "description": "In First House--Through 2nd Reading"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
+        },
+        "systemId": {
+            "chamber": "SENATE",
+            "sequence": 754
+        }
+    }
+]
