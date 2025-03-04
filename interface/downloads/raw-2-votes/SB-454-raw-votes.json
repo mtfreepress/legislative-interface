@@ -449,6 +449,27 @@
                                 "name": "test_name"
                             }
                         }
+                    },
+                    {
+                        "id": 51543,
+                        "timeStamp": "2025-03-04T15:42:00",
+                        "standingCommitteeId": 30,
+                        "billStatusCode": {
+                            "id": 100,
+                            "code": "149",
+                            "name": "(S) Taken from Committee; Placed on 2nd Reading",
+                            "actionWeight": "HARD",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 6,
+                                "code": "40",
+                                "description": "In First House--Out of Committee"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
                     }
                 ],
                 "legalNote": false,
@@ -777,7 +798,27 @@
                 "votingMemberStatus": null
             }
         ],
-        "billStatus": null,
+        "billStatus": {
+            "id": 51543,
+            "timeStamp": "2025-03-04T15:42:00",
+            "standingCommitteeId": 30,
+            "billStatusCode": {
+                "id": 100,
+                "code": "149",
+                "name": "(S) Taken from Committee; Placed on 2nd Reading",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 6,
+                    "code": "40",
+                    "description": "In First House--Out of Committee"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
+        },
         "systemId": {
             "chamber": "SENATE",
             "sequence": 780
