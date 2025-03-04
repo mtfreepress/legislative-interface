@@ -365,6 +365,27 @@
                                 "name": "test_name"
                             }
                         }
+                    },
+                    {
+                        "id": 51553,
+                        "timeStamp": "2025-03-04T15:49:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 211,
+                            "code": "262",
+                            "name": "(S) Motion Failed",
+                            "actionWeight": "SOFT",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
                     }
                 ],
                 "legalNote": false,
@@ -693,7 +714,27 @@
                 "votingMemberStatus": null
             }
         ],
-        "billStatus": null,
+        "billStatus": {
+            "id": 51553,
+            "timeStamp": "2025-03-04T15:49:00",
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 211,
+                "code": "262",
+                "name": "(S) Motion Failed",
+                "actionWeight": "SOFT",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
+        },
         "systemId": {
             "chamber": "SENATE",
             "sequence": 784
