@@ -50,8 +50,12 @@ def analyze_transmittals(session_id, cutoff_date_str="03/06/2025"):
         bill_number = bill_data.get("billNumber", "?")
         bill_identifier = f"{bill_type} {bill_number}"
         
+        # Targeted debug print for HB 23
+        if bill_identifier == "HB 23":
+            print(f"Processing {bill_identifier}")
+        
         # Check if bill has any of the specified actions before the cutoff date
-        has_specific_action_before_cutoff = check_for_specific_actions(bill_data, cutoff_date)
+        has_specific_action_before_cutoff = check_for_specific_actions(bill_data, cutoff_date, bill_identifier)
         
         # If no specific action before cutoff, add to appropriate list
         if not has_specific_action_before_cutoff:
@@ -61,12 +65,16 @@ def analyze_transmittals(session_id, cutoff_date_str="03/06/2025"):
             elif bill_type == "SB":
                 senate_bills_not_meeting_criteria.append(bill_identifier)
                 senate_count += 1
+        else:
+            if bill_identifier == "HB 23":
+                print(f"HB 23 was excluded correctly.")
     
     # Sort the lists for better readability
     house_bills_not_meeting_criteria.sort(key=natural_sort_key)
     senate_bills_not_meeting_criteria.sort(key=natural_sort_key)
     
     # Write results to files
+    print("Writing results to files...")
     write_results("transmittal-house", house_bills_not_meeting_criteria)
     write_results("transmittal-senate", senate_bills_not_meeting_criteria)
     
@@ -79,7 +87,7 @@ def analyze_transmittals(session_id, cutoff_date_str="03/06/2025"):
     
     print(f"Analysis complete. Found {house_count} House bills and {senate_count} Senate bills missing specific actions.")
 
-def check_for_specific_actions(bill_data, cutoff_date):
+def check_for_specific_actions(bill_data, cutoff_date, bill_identifier):
     """Check if bill has any of the specified actions before cutoff date."""
     specific_actions = [
         'Tabled in Committee',
