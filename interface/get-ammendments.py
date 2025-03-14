@@ -156,7 +156,7 @@ def main():
     amendment_updates = []
     processed_bills = set()
 
-    with ThreadPoolExecutor(max_workers=20) as executor:
+    with ThreadPoolExecutor(max_workers=10) as executor:
         futures = [executor.submit(fetch_and_save_amendments, bill, legislature_ordinal, session_ordinal, download_dir, amendments, amendment_updates, processed_bills) for bill in bills_data]
         for future in as_completed(futures):
             future.result()
