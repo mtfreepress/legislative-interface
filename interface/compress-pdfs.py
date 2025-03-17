@@ -197,8 +197,6 @@ def compress_pdf_directory(directory, tracking_file, quality='ebook', workers=No
     # default workers to CPU count
     if workers is None:
         workers = os.cpu_count()
-        print ("We have this many workers")
-        print(workers)
     
     # create output directory if specified
     if output_dir:
