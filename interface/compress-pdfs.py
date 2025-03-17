@@ -34,7 +34,7 @@ def needs_compression(file_path, tracking_data):
     current_hash = get_file_hash(file_path)
     
     if file_path in tracking_data:
-        # If hash matches, file hasn't changed
+        # if hash matches, file hasn't changed
         if tracking_data[file_path]["hash"] == current_hash:
             return False
     
@@ -52,11 +52,11 @@ def load_update_files(update_files):
                     
                 for update in updates:
                     if "billType" in update and "billNumber" in update:
-                        # Extract bill info
+                        # extract bill info
                         bill_type = update["billType"]
                         bill_number = update["billNumber"]
                         
-                        # Add potential paths to the set
+                        # add potential paths to the set
                         update_paths.add((bill_type, bill_number))
                         
                 print(f"Loaded {len(updates)} updates from {update_file}")
@@ -91,20 +91,19 @@ def should_process_file(file_path, update_paths, force_all):
 
 def compress_pdf(args):
     """Compress a single PDF file"""
-    # Update to unpack all arguments
+    # update to unpack all arguments
     file_path, tracking_data, quality, dryrun, output_dir, directory, update_paths, force_all = args
     
-    # Skip files not in update paths (if filtering is active)
+    # skip files not in update paths (if filtering is active)
     if not should_process_file(file_path, update_paths, force_all):
         return False, file_path, "Not in update list"
     
     if not needs_compression(file_path, tracking_data):
         return False, file_path, "Unchanged"
         
-    # Determine output path - either replace original or create in output dir
+    # determine output path - either replace original or create in output dir
     if output_dir:
-        # Create path relative to input directory root
-        rel_path = os.path.relpath(file_path, directory)  # Use directory parameter directly
+        rel_path = os.path.relpath(file_path, directory)
         new_output_path = os.path.join(output_dir, rel_path)
         os.makedirs(os.path.dirname(new_output_path), exist_ok=True)
         temp_output = new_output_path
@@ -134,20 +133,19 @@ def compress_pdf(args):
         if result.returncode != 0:
             return False, file_path, f"Error: {result.stderr}"
             
-        # Check if compression was successful and worthwhile
+        # check if compression was successful and worthwhile
         original_size = os.path.getsize(file_path)
         compressed_size = os.path.getsize(temp_output)
         
-        if compressed_size < original_size * 0.95:  # At least 5% smaller
-            # If not using output directory, replace original
+        if compressed_size < original_size * 0.95:  # file must be at least 5% smaller or it is skipped
+            # if not using output directory, replace original
             if not output_dir:
-                # UNCOMMENT THIS LINE FOR IN-PLACE COMPRESSION:
                 os.replace(temp_output, file_path)
             
-            # Get hash of compressed file
+            # get hash
             compressed_hash = get_file_hash(temp_output if output_dir else file_path)
             
-            # Update tracking data
+            # update tracking data
             tracking_data[file_path] = {
                 "hash": compressed_hash,
                 "original_size": original_size,
@@ -165,8 +163,8 @@ def compress_pdf(args):
                 "output_path": temp_output if output_dir else file_path
             }
         else:
-            # Compression not worth it
-            if not output_dir:  # Only delete temp file if using in-place replacement
+            # compression not worth it
+            if not output_dir:  # only delete temp file if size change isn't worth it
                 os.remove(temp_output)
             
             # track the file so we don't try again
@@ -196,32 +194,30 @@ def find_pdf_files(directory):
 def compress_pdf_directory(directory, tracking_file, quality='ebook', workers=None, 
                           dryrun=False, output_dir=None, update_files=None, force_all=False):
     """Compress all PDF files in the directory using multiple processes"""
-    # Default workers to CPU count
+    # default workers to CPU count
     if workers is None:
         workers = os.cpu_count()
+        print ("We have this many workers")
+        print(workers)
     
-    # Create output directory if specified
+    # create output directory if specified
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
-        print(f"Compressed files will be saved to: {output_dir}")
+        # print(f"Compressed files will be saved to: {output_dir}")
     
-    # Load tracking data
+    # load tracking data
     tracking_data = load_tracking_data(tracking_file)
     
-    # Load update files if specified
+    # load update files if specified
     update_paths = set()
     if update_files and not force_all:
         update_paths = load_update_files(update_files)
-        print(f"Will only process files for {len(update_paths)} bills from update files")
-    
-    # Find all PDFs
+
     all_pdf_files = find_pdf_files(directory)
     
     if not all_pdf_files:
-        print(f"No PDF files found in {directory}")
         return
-    
-    print(f"Found {len(all_pdf_files)} PDF files. Processing with {workers} workers...")
+
     
     # Prepare arguments for the worker function
     work_args = [(pdf_file, tracking_data, quality, dryrun, output_dir, directory, update_paths, force_all) 
@@ -235,7 +231,6 @@ def compress_pdf_directory(directory, tracking_file, quality='ebook', workers=No
     
     # Process files in parallel
     with ProcessPoolExecutor(max_workers=workers) as executor:
-        # Submit all compression tasks
         futures = [executor.submit(compress_pdf, args) for args in work_args]
         
         # Process results as they complete
@@ -246,26 +241,13 @@ def compress_pdf_directory(directory, tracking_file, quality='ebook', workers=No
                 compressed_count += 1
                 savings = result["savings"]
                 total_savings += savings
-                print(f"Compressed {os.path.basename(file_path)}: "
-                      f"{result['original_size']/1024:.1f}KB → {result['compressed_size']/1024:.1f}KB "
-                      f"({result['percent']:.1f}% reduction)")
             else:
-                if result == "Unchanged":
-                    unchanged_count += 1
-                    if unchanged_count % 10 == 0:  # Only print occasionally
-                        print(f"Skipped {unchanged_count} unchanged files so far...")
-                elif result == "Not in update list":
-                    skipped_count += 1
-                    if skipped_count == 1:  # Just print once
-                        print(f"Skipping files not in update list...")
-                else:
-                    print(f"Skipping {os.path.basename(file_path)}: {result}")
-    
-    # Only save tracking data if not in dry run mode
+                pass
+    # only save tracking data if not in dry run mode
     if not dryrun:
         save_tracking_data(tracking_data, tracking_file)
     
-    # Print summary
+    # print summary
     print(f"\nCompression Summary:")
     print(f"- Total PDFs found: {len(all_pdf_files)}")
     print(f"- Compressed: {compressed_count} files")

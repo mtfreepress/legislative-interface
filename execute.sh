@@ -45,6 +45,15 @@ measure_time python ./interface/get-fiscal-review-notes.py "$sessionId" "$legisl
 # get ammendments
 measure_time python ./interface/get-amendments.py "$sessionId" "$legislatureOrdinal" "$sessionOrdinal"
 
+# compress fiscal notes:
+measure_time python interface/compress-pdfs.py interface/downloads/legal-note-pdfs-$sessionId
+
+### These two don't seem worth doing. Take awhile and save less than 3MB
+# compress legal notes:
+# measure_time python interface/compress-pdfs.py interface/downloads/fiscal-note-pdfs-$sessionId
+# compress amendments:
+# measure_time python interface/compress-pdfs.py interface/downloads/amendment-pdfs-$sessionId
+
 # get committee hearings data
 measure_time python ./interface/get-bill-hearings.py $sessionId
 
