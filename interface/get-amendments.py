@@ -33,10 +33,10 @@ def download_file(url, dest_folder, file_name):
         file_path = os.path.join(dest_folder, file_name)
         with open(file_path, "wb") as f:
             f.write(response.content)
-        print(f"Downloaded: {file_path}")
+        # print(f"Downloaded: {file_path}")
         return True
     else:
-        print(f"Failed to download: {url}")
+        # print(f"Failed to download: {url}")
         return False
 
 
@@ -147,8 +147,7 @@ def fetch_and_save_amendments(bill, legislature_ordinal, session_ordinal, downlo
         amendments.extend(bill_amendments)
         amendment_updates.extend(bill_amendment_updates)
         processed_bills.add((bill_type, bill_number))
-        print(
-            f"Processed {len(bill_amendments)} amendments for {bill_type} {bill_number}")
+        # print(f"Processed {len(bill_amendments)} amendments for {bill_type} {bill_number}")
 
 
 def sort_amendments(amendments_list):
@@ -174,7 +173,7 @@ def main():
 
     download_dir = os.path.join(
         BASE_DIR, f"downloads/amendment-pdfs-{session_id}")
-    print(f"Download directory: {download_dir}")
+    # print(f"Download directory: {download_dir}")
 
     amendments = []
     amendment_updates = []
@@ -192,14 +191,13 @@ def main():
 
     # Save amendments.json
     save_json(sorted_amendments, AMENDMENTS_FILE)
-    print(
-        f"Saved {len(sorted_amendments)} amendments to {AMENDMENTS_FILE} (sorted by bill type and number)")
+    # print(f"Saved {len(sorted_amendments)} amendments to {AMENDMENTS_FILE} (sorted by bill type and number)")
 
     # Save amendment-updates.json
     save_json(sorted_updates, AMENDMENT_UPDATES_FILE)
-    print(f"Saved {len(sorted_updates)} amendment updates to {AMENDMENT_UPDATES_FILE} (sorted by bill type and number)")
+    # print(f"Saved {len(sorted_updates)} amendment updates to {AMENDMENT_UPDATES_FILE} (sorted by bill type and number)")
 
-    print(f"Processed amendments for {len(processed_bills)} bills")
+    # print(f"Processed amendments for {len(processed_bills)} bills")
 
 
 if __name__ == "__main__":
