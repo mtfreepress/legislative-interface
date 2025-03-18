@@ -87,6 +87,42 @@ def fetch_pdf_url(session, document_id):
         print(
             f"Error fetching PDF URL for document {document_id}: {response.status_code}")
         return None
+    
+def get_base_filename(filename):
+    """Extract base filename without the (N) suffix"""
+    import re
+    # Match pattern like "filename(1).pdf" or "filename(2).pdf"
+    pattern = r'^(.+?)(?:\([0-9]+\))?(\.[^.]+)$'
+    match = re.match(pattern, filename)
+    if match:
+        base_name = match.group(1)
+        extension = match.group(2)
+        return base_name + extension
+    return filename
+
+def group_amendments_by_base_name(amendments):
+    """Group amendments by their base filename and select primary version"""
+    grouped = {}
+    
+    for amendment in amendments:
+        file_name = amendment["fileName"]
+        base_name = get_base_filename(file_name)
+        
+        if base_name not in grouped:
+            grouped[base_name] = []
+        grouped[base_name].append(amendment)
+    
+    # Select primary version for each group
+    primary_amendments = []
+    for base_name, versions in grouped.items():
+        # Prefer the one without a number suffix
+        primary = next((v for v in versions if v["fileName"] == base_name), None)
+        if not primary:
+            # If no clean version, take the highest ID (latest version)
+            primary = max(versions, key=lambda x: x["id"])
+        primary_amendments.append(primary)
+    
+    return primary_amendments
 
 
 def fetch_and_save_amendments(bill, legislature_ordinal, session_ordinal, download_dir, amendments, amendment_updates, processed_bills):
@@ -100,20 +136,16 @@ def fetch_and_save_amendments(bill, legislature_ordinal, session_ordinal, downlo
     if not amendment_documents:
         return
 
+    # Filter out duplicate amendments - ADDED THIS LINE
+    unique_amendments = group_amendments_by_base_name(amendment_documents)
+    
     bill_amendments = []
     bill_amendment_updates = []
-
-    # Sort documents into full and condensed versions
-    full_amendments = [doc for doc in amendment_documents if not doc["fileName"].lower(
-    ).endswith("-condensed.pdf")]
-    condensed_amendments = [
-        doc for doc in amendment_documents if doc["fileName"].lower().endswith("-condensed.pdf")]
 
     dest_folder = os.path.join(download_dir, f"{bill_type}-{bill_number}")
     existing_files = list_files_in_directory(dest_folder)
 
-    # Process all amendments (both full and condensed)
-    for amendment in amendment_documents:
+    for amendment in unique_amendments:
         document_id = amendment["id"]
         file_name = amendment["fileName"]
 
