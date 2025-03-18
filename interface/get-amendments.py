@@ -91,7 +91,7 @@ def fetch_pdf_url(session, document_id):
 def get_base_filename(filename):
     """Extract base filename without the (N) suffix"""
     import re
-    # Match pattern like "filename(1).pdf" or "filename(2).pdf"
+    # Match pattern like "filename(1).pdf" or "filename(2).pdf" to get duplicates
     pattern = r'^(.+?)(?:\([0-9]+\))?(\.[^.]+)$'
     match = re.match(pattern, filename)
     if match:
@@ -115,7 +115,7 @@ def group_amendments_by_base_name(amendments):
     # Select primary version for each group
     primary_amendments = []
     for base_name, versions in grouped.items():
-        # Prefer the one without a number suffix
+        # prefer the one without a number suffix
         primary = next((v for v in versions if v["fileName"] == base_name), None)
         if not primary:
             # If no clean version, take the highest ID (latest version)
@@ -136,7 +136,6 @@ def fetch_and_save_amendments(bill, legislature_ordinal, session_ordinal, downlo
     if not amendment_documents:
         return
 
-    # Filter out duplicate amendments - ADDED THIS LINE
     unique_amendments = group_amendments_by_base_name(amendment_documents)
     
     bill_amendments = []
