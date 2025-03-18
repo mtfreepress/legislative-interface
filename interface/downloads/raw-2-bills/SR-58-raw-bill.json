@@ -233,13 +233,55 @@
                 }
             },
             {
-                "id": 57118,
-                "timeStamp": "2025-03-18T07:54:39.134727",
+                "id": 57329,
+                "timeStamp": "2025-03-18T13:14:05",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 53,
+                    "code": "101",
+                    "name": "(S) First Reading",
+                    "actionWeight": "SOFT",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 3,
+                        "code": "20",
+                        "description": "In First House--Introduced"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 57330,
+                "timeStamp": "2025-03-18T13:15:00",
                 "standingCommitteeId": 25,
                 "billStatusCode": {
                     "id": 54,
                     "code": "102",
                     "name": "(S) Referred to Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 57347,
+                "timeStamp": "2025-03-18T13:17:05.558624",
+                "standingCommitteeId": 25,
+                "billStatusCode": {
+                    "id": 64,
+                    "code": "112",
+                    "name": "(S) Hearing",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
                     "billProgressCategory": {
