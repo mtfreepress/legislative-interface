@@ -57,6 +57,22 @@ def process_bills(session_id):
     # create map for lookup by legislatorId
     legislator_map = {legislator["id"]: legislator for legislator in legislators_data}
 
+    # Load agencies data
+    agencies_file = os.path.join(script_dir, "../interface/agencies.json")
+    agencies_map = {}
+    if os.path.exists(agencies_file):
+        with open(agencies_file, "r") as f:
+            agencies_data = json.load(f)
+        agencies_map = {agency["id"]: agency for agency in agencies_data}
+
+    # Load committees data
+    committees_file = os.path.join(script_dir, "../interface/committees.json")
+    committees_map = {}
+    if os.path.exists(committees_file):
+        with open(committees_file, "r") as f:
+            committees_data = json.load(f)
+        committees_map = {committee["id"]: committee for committee in committees_data}
+
     # load bill json (adjust the path to be relative to the script)
     json_file = os.path.join(script_dir, f"../interface/downloads/raw-{session_id}-bills.json")
     with open(json_file, "r") as f:
@@ -110,12 +126,30 @@ def process_bills(session_id):
 
         # bill details
         chamber = "house" if bill_type == "HB" else "senate" if bill_type == "SB" else "undefined"
-        requester_id = draft_data.get("requesterId", [])
-        requester = legislator_map.get(requester_id)
-        requester_first_name = requester.get("firstName")
-        requester_last_name = requester.get("lastName")
-    # Bill requestor is a committee or council. Not a lawmaker
-        bill_requester = f"{requester_first_name} {requester_last_name}"
+        
+        # Determine the bill requester based on requesterType and requesterId
+        requester_id = draft_data.get("requesterId")
+        requester_type = draft_data.get("requesterType", {}).get("code", "")
+        bill_requester = "undefined"
+        
+        if requester_type == "M" and requester_id in legislator_map:
+            # Member (Legislator)
+            requester = legislator_map.get(requester_id, {})
+            requester_first_name = requester.get("firstName", "")
+            requester_last_name = requester.get("lastName", "")
+            bill_requester = f"{requester_first_name} {requester_last_name}".strip()
+        elif requester_type == "A" and requester_id in agencies_map:
+            # Agency
+            requester = agencies_map.get(requester_id, {})
+            bill_requester = requester.get("name", "Unknown Agency")
+        elif requester_type == "C" and requester_id in committees_map:
+            # Committee
+            requester = committees_map.get(requester_id, {})
+            bill_requester = requester.get("name", "Unknown Committee")
+        elif requester_type:
+            # Other requester types: use type description if available
+            requester_type_desc = draft_data.get("requesterType", {}).get("description", "")
+            bill_requester = f"{requester_type_desc} (ID: {requester_id})" if requester_type_desc else f"Unknown Requester (ID: {requester_id})"
 
         subjects = [
             {
@@ -167,16 +201,7 @@ def process_bills(session_id):
             "transmittalDeadline": formatted_date(safe_get(bill, ["deadlineCategory", "transmittalDate"])),
             "amendedReturnDeadline": formatted_date(safe_get(bill, ["deadlineCategory", "returnDate"])),
         }
-
-        sanitized_key = sanitize_filename(processed_bill["key"])
-        bill_file_path = os.path.join(cleaned_dir, f"{bill_type.upper()}-{bill_number}-data.json")
-        with open(bill_file_path, "w") as bill_file:
-            json.dump(processed_bill, bill_file, indent=2)
-        # verbose output - not needed in production but handy for debugging
-        # print(f"Saved bill '{processed_bill['key']}' to '{bill_file_path}'.")
-
-    print(f"All processed bills saved to '{cleaned_dir}'.")
-
+        
 # main function to handle argument parsing
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process bills by session ID")
