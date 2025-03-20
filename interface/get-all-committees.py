@@ -6,6 +6,7 @@ import re
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
+LOOKUP_DIR = os.path.join(BASE_DIR, "requester-lookup")
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Fetch and save committee data by session ID.")
@@ -27,7 +28,11 @@ def fetch_non_standing_committees(legislature_id):
     data = {"legislatureIds": [legislature_id]}
     response = requests.post(url, json=data)
     if response.status_code == 200:
-        return response.json()
+        # Extract committees from content array - FIX IS HERE
+        response_data = response.json()
+        if isinstance(response_data, dict) and "content" in response_data:
+            return response_data["content"]
+        return []
     else:
         print(f"Failed to fetch non-standing committees: {response.status_code}")
         return []
@@ -67,8 +72,6 @@ def save_standing_committee(committee, session_id, all_committees):
     # Add key to the committee and append to all_committees list
     committee_with_key = committee.copy()
     committee_with_key["key"] = sanitized_name
-    # Move the key field after the id field
-    committee_with_key = {k: committee_with_key[k] for k in ["id", "key"] + [k for k in committee_with_key if k not in ["id", "key"]]}
     all_committees.append(committee_with_key)
     
     # Return committee lookup data
@@ -78,7 +81,12 @@ def save_standing_committee(committee, session_id, all_committees):
     }
 
 def save_non_standing_committee(committee, legislature_id, all_non_standing_committees):
-    committee_name = committee["name"]
+    # FIX IS HERE - Handle correct non-standing committee structure
+    if "committeeDetails" in committee and "committeeCode" in committee["committeeDetails"]:
+        committee_name = committee["committeeDetails"]["committeeCode"]["name"]
+    else:
+        committee_name = f"Unknown Committee {committee.get('id', 'NO_ID')}"
+    
     sanitized_name = sanitize_filename(committee_name)
     file_path = os.path.join(DOWNLOAD_DIR, f"non-standing-committees-{legislature_id}", f"{sanitized_name}.json")
     
@@ -91,8 +99,6 @@ def save_non_standing_committee(committee, legislature_id, all_non_standing_comm
     # Add key to the committee and append to all_committees list
     committee_with_key = committee.copy()
     committee_with_key["key"] = sanitized_name
-    # Move the key field after the id field
-    committee_with_key = {k: committee_with_key[k] for k in ["id", "key"] + [k for k in committee_with_key if k not in ["id", "key"]]}
     all_non_standing_committees.append(committee_with_key)
     
     # Return committee lookup data
@@ -105,6 +111,9 @@ def main():
     args = parse_arguments()
     session_id = args.sessionId
     legislature_id = args.legislature_id
+    
+    # Create lookup directory if it doesn't exist
+    os.makedirs(LOOKUP_DIR, exist_ok=True)
 
     # Process standing committees
     standing_committees = fetch_standing_committees(session_id)
@@ -115,14 +124,14 @@ def main():
         lookup_data = save_standing_committee(committee, session_id, all_standing_committees)
         standing_lookup[lookup_data["id"]] = lookup_data
     
-    # Save all standing committees to a single file
+    # Save all standing committees to a single file (keep in original location)
     all_standing_file_path = os.path.join(DOWNLOAD_DIR, f"all-standing-committees-{session_id}.json")
     with open(all_standing_file_path, "w") as f:
         json.dump(all_standing_committees, f, indent=2)
     print(f"Saved: {all_standing_file_path}")
     
-    # Save standing committee lookup
-    standing_lookup_file_path = os.path.join(DOWNLOAD_DIR, f"standing-committees-lookup.json")
+    # Save standing committee lookup to new location
+    standing_lookup_file_path = os.path.join(LOOKUP_DIR, "standing-committees-lookup.json")
     with open(standing_lookup_file_path, "w") as f:
         json.dump(standing_lookup, f, indent=2)
     print(f"Saved: {standing_lookup_file_path}")
@@ -136,17 +145,17 @@ def main():
         lookup_data = save_non_standing_committee(committee, legislature_id, all_non_standing_committees)
         non_standing_lookup[lookup_data["id"]] = lookup_data
     
-    # Save all non-standing committees to a single file
+    # Save all non-standing committees to a single file (keep in original location)
     all_non_standing_file_path = os.path.join(DOWNLOAD_DIR, f"all-non-standing-committees-{legislature_id}.json")
     with open(all_non_standing_file_path, "w") as f:
         json.dump(all_non_standing_committees, f, indent=2)
     print(f"Saved: {all_non_standing_file_path}")
     
-    # Save non-standing committee lookup
-    non_standing_lookup_file_path = os.path.join(DOWNLOAD_DIR, f"non-standing-committees-lookup.json")
+    # Save non-standing committee lookup to new location
+    non_standing_lookup_file_path = os.path.join(LOOKUP_DIR, "non-standing-committees-lookup.json")
     with open(non_standing_lookup_file_path, "w") as f:
         json.dump(non_standing_lookup, f, indent=2)
     print(f"Saved: {non_standing_lookup_file_path}")
-
+    
 if __name__ == "__main__":
     main()

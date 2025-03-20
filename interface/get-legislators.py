@@ -10,20 +10,25 @@ roster_url = "https://raw.githubusercontent.com/mtfreepress/capitol-tracker-2025
 # Get the directory of the script
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 directory_path = os.path.join(BASE_DIR, "./downloads/legislators")
+# Add new directory for lookup files
+LOOKUP_DIR = os.path.join(BASE_DIR, "requester-lookup")
+
+# Create both directories
 os.makedirs(directory_path, exist_ok=True)
+os.makedirs(LOOKUP_DIR, exist_ok=True)
 
 # Fetch and save legislators.json
 response = requests.get(state_api_url)
 if response.status_code == 200:
     legislators_data = response.json()
     
-    # Save full legislators data
+    # Save full legislators data (keep in original location)
     file_path = os.path.join(directory_path, "legislators.json")
     with open(file_path, "w") as json_file:
         json.dump(legislators_data, json_file, indent=2)
     print(f"Data saved to {file_path}")
     
-    # Create and save lookup file
+    # Create and save lookup file to new location
     lookup_data = {}
     for legislator in legislators_data:
         legislator_id = legislator.get("id")
@@ -36,7 +41,7 @@ if response.status_code == 200:
                 "legislatorName": f"{first_name} {last_name}".strip()
             }
     
-    lookup_path = os.path.join(directory_path, "legislators-lookup.json")
+    lookup_path = os.path.join(LOOKUP_DIR, "legislators-lookup.json")
     with open(lookup_path, "w") as lookup_file:
         json.dump(lookup_data, lookup_file, indent=2)
     print(f"Lookup data saved to {lookup_path}")
