@@ -15,10 +15,31 @@ os.makedirs(directory_path, exist_ok=True)
 # Fetch and save legislators.json
 response = requests.get(state_api_url)
 if response.status_code == 200:
+    legislators_data = response.json()
+    
+    # Save full legislators data
     file_path = os.path.join(directory_path, "legislators.json")
     with open(file_path, "w") as json_file:
-        json.dump(response.json(), json_file, indent=2)
+        json.dump(legislators_data, json_file, indent=2)
     print(f"Data saved to {file_path}")
+    
+    # Create and save lookup file
+    lookup_data = {}
+    for legislator in legislators_data:
+        legislator_id = legislator.get("id")
+        first_name = legislator.get("firstName", "")
+        last_name = legislator.get("lastName", "")
+        
+        if legislator_id:
+            lookup_data[legislator_id] = {
+                "id": legislator_id,
+                "legislatorName": f"{first_name} {last_name}".strip()
+            }
+    
+    lookup_path = os.path.join(directory_path, "legislators-lookup.json")
+    with open(lookup_path, "w") as lookup_file:
+        json.dump(lookup_data, lookup_file, indent=2)
+    print(f"Lookup data saved to {lookup_path}")
 else:
     print(f"Failed to fetch data from API. Status code: {response.status_code}")
 
