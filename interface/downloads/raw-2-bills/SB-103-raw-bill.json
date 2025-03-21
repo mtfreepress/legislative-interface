@@ -4,7 +4,7 @@
     "billNumber": 103,
     "sessionLawChapterNumber": null,
     "sponsorId": 32,
-    "carrierId": 104,
+    "carrierId": null,
     "drafterStaffMemberId": 64,
     "billType": {
         "id": 4,
@@ -16,7 +16,7 @@
     "draft": {
         "id": 939,
         "draftNumber": "LC0939",
-        "date": "2025-01-15T14:36:46",
+        "date": "2025-03-21T13:54:30",
         "shortTitle": "Revise fee for issuing an execution or order of sale on foreclosure of lien",
         "description": null,
         "requesterId": 32,
@@ -588,6 +588,27 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 59203,
+                "timeStamp": "2025-03-21T13:46:00",
+                "standingCommitteeId": 24,
+                "billStatusCode": {
+                    "id": 316,
+                    "code": "533",
+                    "name": "(H) Committee Report--Bill Concurred as Amended",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 12,
+                        "code": "90",
+                        "description": "In Second House--Out of Committee"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -633,6 +654,6 @@
         "byRequestOfs": []
     },
     "enrolled": null,
-    "versionNumber": 1,
+    "versionNumber": 2,
     "sessionId": 2
 }
