@@ -67,7 +67,7 @@ def save_standing_committee(committee, session_id, all_committees):
     
     with open(file_path, "w") as f:
         json.dump(committee, f, indent=2)
-    print(f"Saved standing committee: {file_path}")
+    # print(f"Saved standing committee: {file_path}")
     
     # Add key to the committee and append to all_committees list
     committee_with_key = committee.copy()
@@ -94,7 +94,7 @@ def save_non_standing_committee(committee, legislature_id, all_non_standing_comm
     
     with open(file_path, "w") as f:
         json.dump(committee, f, indent=2)
-    print(f"Saved non-standing committee: {file_path}")
+    # print(f"Saved non-standing committee: {file_path}")
     
     # Add key to the committee and append to all_committees list
     committee_with_key = committee.copy()
@@ -128,13 +128,13 @@ def main():
     all_standing_file_path = os.path.join(DOWNLOAD_DIR, f"all-standing-committees-{session_id}.json")
     with open(all_standing_file_path, "w") as f:
         json.dump(all_standing_committees, f, indent=2)
-    print(f"Saved: {all_standing_file_path}")
+    # print(f"Saved: {all_standing_file_path}")
     
     # Save standing committee lookup to new location
     standing_lookup_file_path = os.path.join(LOOKUP_DIR, "standing-committees-lookup.json")
     with open(standing_lookup_file_path, "w") as f:
         json.dump(standing_lookup, f, indent=2)
-    print(f"Saved: {standing_lookup_file_path}")
+    # print(f"Saved: {standing_lookup_file_path}")
     
     # Process non-standing committees
     non_standing_committees = fetch_non_standing_committees(legislature_id)
@@ -149,13 +149,13 @@ def main():
     all_non_standing_file_path = os.path.join(DOWNLOAD_DIR, f"all-non-standing-committees-{legislature_id}.json")
     with open(all_non_standing_file_path, "w") as f:
         json.dump(all_non_standing_committees, f, indent=2)
-    print(f"Saved: {all_non_standing_file_path}")
+    # print(f"Saved: {all_non_standing_file_path}")
     
     # Save non-standing committee lookup to new location
     non_standing_lookup_file_path = os.path.join(LOOKUP_DIR, "non-standing-committees-lookup.json")
     with open(non_standing_lookup_file_path, "w") as f:
         json.dump(non_standing_lookup, f, indent=2)
-    print(f"Saved: {non_standing_lookup_file_path}")
+    # print(f"Saved: {non_standing_lookup_file_path}")
     
 if __name__ == "__main__":
     main()

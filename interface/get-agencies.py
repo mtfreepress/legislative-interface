@@ -25,7 +25,7 @@ def load_bill_data(session_id):
     
     if os.path.exists(bills_dir):
         bill_files = glob.glob(bill_pattern)
-        print(f"Found {len(bill_files)} bill files in {bills_dir}")
+        # print(f"Found {len(bill_files)} bill files in {bills_dir}")   
         
         for bill_file in bill_files:
             try:
@@ -43,7 +43,7 @@ def load_bill_data(session_id):
         # fallback to consolidated JSON file — should never happen but just in case
         raw_bills_file = os.path.join(BASE_DIR, "..", f"raw-{session_id}-bills.json")
         if os.path.exists(raw_bills_file):
-            print(f"Bills directory not found. Loading from consolidated file: {raw_bills_file}")
+            # print(f"Bills directory not found. Loading from consolidated file: {raw_bills_file}")
             with open(raw_bills_file, 'r') as f:
                 bills = json.load(f)
                 for bill in bills:
@@ -70,7 +70,7 @@ def fetch_agency(agency_id):
                 "agency": agency_data.get("name", "Unknown Agency")
             }
         else:
-            print(f"Failed to fetch agency {agency_id}: {response.status_code}")
+            # print(f"Failed to fetch agency {agency_id}: {response.status_code}")
             return None
     except Exception as e:
         print(f"Error fetching agency {agency_id}: {e}")
@@ -92,20 +92,20 @@ def main():
         try:
             with open(agencies_lookup_file, 'r') as f:
                 existing_agency_lookup = json.load(f)
-            print(f"Loaded {len(existing_agency_lookup)} existing agencies from {agencies_lookup_file}")
+            # print(f"Loaded {len(existing_agency_lookup)} existing agencies from {agencies_lookup_file}")
         except json.JSONDecodeError:
             print(f"Error parsing existing agency file: {agencies_lookup_file}")
     
     # get agency IDs and byRequestOf IDs from bill data
     agency_ids, by_request_of_ids = load_bill_data(session_id)
-    print(f"Found {len(agency_ids)} agency IDs and {len(by_request_of_ids)} byRequestOf IDs in bills for session {session_id}")
+    # print(f"Found {len(agency_ids)} agency IDs and {len(by_request_of_ids)} byRequestOf IDs in bills for session {session_id}")
     
     # combine both sets of IDs
     all_ids = set(agency_ids + by_request_of_ids)
     
     # filter IDs that are already in our lookup
     new_ids = [id for id in all_ids if str(id) not in existing_agency_lookup]
-    print(f"Of which {len(new_ids)} are new agencies to fetch")
+    # print(f"Of which {len(new_ids)} are new agencies to fetch")
     
     # get details for new agencies
     new_agencies = {}
@@ -118,7 +118,7 @@ def main():
                     agency = future.result()
                     if agency:  # Only add if we successfully fetched the agency
                         new_agencies[str(agency_id)] = agency
-                        print(f"Added new agency: {agency['agency']}")
+                        # print(f"Added new agency: {agency['agency']}")
                 except Exception as e:
                     print(f"Error processing agency {agency_id}: {e}")
     
@@ -129,7 +129,7 @@ def main():
     if len(merged_agency_lookup) > len(existing_agency_lookup):
         with open(agencies_lookup_file, 'w') as f:
             json.dump(merged_agency_lookup, f, indent=2)
-        print(f"Updated agency lookup saved to {agencies_lookup_file} with {len(merged_agency_lookup)} agencies")
+        # print(f"Updated agency lookup saved to {agencies_lookup_file} with {len(merged_agency_lookup)} agencies")
     else:
         print(f"No new agencies found. Keeping existing file with {len(existing_agency_lookup)} agencies.")
 
