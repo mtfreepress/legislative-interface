@@ -200,8 +200,6 @@ def process_bills(session_id):
             # Unknown requester type but we have an ID
             bill_requester = f"Unknown Requester Type: {requester_type} (ID: {requester_id})"
 
-        print(bill_requester)
-
         subjects = [
             {
                 "subject": safe_get(raw_subjects, ["subjectCode", "description"]),
