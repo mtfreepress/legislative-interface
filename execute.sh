@@ -33,6 +33,12 @@ measure_time python ./interface/split-bills.py $sessionId
 # get legislators
 measure_time python ./interface/get-legislators.py
 
+# get all committees 
+measure_time python ./interface/get-all-committees.py $sessionId
+
+# get agencies 
+measure_time python ./interface/get-agencies.py $sessionId
+
 # generate list of bills for input into other scripts
 measure_time python ./interface/generate-bill-list.py $sessionId
 
