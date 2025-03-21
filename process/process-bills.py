@@ -53,7 +53,7 @@ def process_bills(session_id):
     legislators_file = os.path.join(script_dir, "../inputs/legislators/legislators.json")
     with open(legislators_file, "r") as f:
         legislators_data = json.load(f)
-    
+
     # create map for lookup by legislatorId
     legislator_map = {legislator["id"]: legislator for legislator in legislators_data}
 
@@ -90,7 +90,7 @@ def process_bills(session_id):
     fiscal_notes_set = {(note["billType"], note["billNumber"]) for note in fiscal_notes_data}
 
     processed_bills = []
-    bills = json_data.get("content", []) 
+    bills = json_data.get("content", [])
 
     # define the cleaned directory (adjust the path to be relative to the script)
     cleaned_dir = os.path.join(script_dir, "cleaned", f"bills-{session_id}")
@@ -106,7 +106,7 @@ def process_bills(session_id):
         draft_number = safe_get(draft_data, ["draftNumber"])
         bill_number = bill.get("billNumber", "undefined")
         bill_actions = bill.get("billActions", [])
-        
+
         if not bill_type or not bill_number:
             continue
 
@@ -118,7 +118,7 @@ def process_bills(session_id):
         sponsor_roles = bill.get("primarySponsorBillRoles", [])
         sponsor_data = safe_get(sponsor_roles[0], ["legislator"], {}) if sponsor_roles else {}
 
-        # get sponsor information via sponsorId 
+        # get sponsor information via sponsorId
         sponsor_id = bill.get("sponsorId", None)
         sponsor = legislator_map.get(sponsor_id, {})
         party = safe_get(sponsor, ["politicalParty", "name"])
@@ -126,30 +126,81 @@ def process_bills(session_id):
 
         # bill details
         chamber = "house" if bill_type == "HB" else "senate" if bill_type == "SB" else "undefined"
-        
+
         # Determine the bill requester based on requesterType and requesterId
         requester_id = draft_data.get("requesterId")
-        requester_type = draft_data.get("requesterType", {}).get("code", "")
+        requester_type = draft_data.get("requesterType", "")
         bill_requester = "undefined"
-        
-        if requester_type == "M" and requester_id in legislator_map:
-            # Member (Legislator)
-            requester = legislator_map.get(requester_id, {})
-            requester_first_name = requester.get("firstName", "")
-            requester_last_name = requester.get("lastName", "")
-            bill_requester = f"{requester_first_name} {requester_last_name}".strip()
-        elif requester_type == "A" and requester_id in agencies_map:
-            # Agency
-            requester = agencies_map.get(requester_id, {})
-            bill_requester = requester.get("name", "Unknown Agency")
-        elif requester_type == "C" and requester_id in committees_map:
-            # Committee
-            requester = committees_map.get(requester_id, {})
-            bill_requester = requester.get("name", "Unknown Committee")
-        elif requester_type:
-            # Other requester types: use type description if available
-            requester_type_desc = draft_data.get("requesterType", {}).get("description", "")
-            bill_requester = f"{requester_type_desc} (ID: {requester_id})" if requester_type_desc else f"Unknown Requester (ID: {requester_id})"
+
+        # Convert requester_id to string for lookups
+        requester_id_str = str(requester_id) if requester_id is not None else ""
+
+        # Load all requester lookup files from the new directory
+        lookup_dir = os.path.join(script_dir, "../interface/requester-lookup")
+
+        # Load agency lookup
+        agencies_lookup_file = os.path.join(lookup_dir, "agencies-lookup.json")
+        agencies_lookup = {}
+        if os.path.exists(agencies_lookup_file):
+            try:
+                with open(agencies_lookup_file, 'r') as f:
+                    agencies_lookup = json.load(f)
+            except json.JSONDecodeError:
+                print(f"Error parsing agencies lookup file: {agencies_lookup_file}")
+
+        # Load legislators lookup
+        legislators_lookup_file = os.path.join(lookup_dir, "legislators-lookup.json")
+        legislators_lookup = {}
+        if os.path.exists(legislators_lookup_file):
+            try:
+                with open(legislators_lookup_file, 'r') as f:
+                    legislators_lookup = json.load(f)
+            except json.JSONDecodeError:
+                print(f"Error parsing legislators lookup file: {legislators_lookup_file}")
+
+        # Load standing committees lookup
+        standing_committees_lookup_file = os.path.join(lookup_dir, "standing-committees-lookup.json")
+        standing_committees_lookup = {}
+        if os.path.exists(standing_committees_lookup_file):
+            try:
+                with open(standing_committees_lookup_file, 'r') as f:
+                    standing_committees_lookup = json.load(f)
+            except json.JSONDecodeError:
+                print(f"Error parsing standing committees lookup file: {standing_committees_lookup_file}")
+
+        # Load non-standing committees lookup
+        non_standing_committees_lookup_file = os.path.join(lookup_dir, "non-standing-committees-lookup.json")
+        non_standing_committees_lookup = {}
+        if os.path.exists(non_standing_committees_lookup_file):
+            try:
+                with open(non_standing_committees_lookup_file, 'r') as f:
+                    non_standing_committees_lookup = json.load(f)
+            except json.JSONDecodeError:
+                print(f"Error parsing non-standing committees lookup file: {non_standing_committees_lookup_file}")
+
+        # Set bill requester based on type and ID
+        if requester_type == "LEGISLATOR" and requester_id_str in legislators_lookup:
+            bill_requester = legislators_lookup[requester_id_str].get("legislatorName", "Unknown Legislator")
+        elif requester_type == "AGENCY":
+            # Use byRequestOfId if available
+            by_request_of_id = None
+            if "byRequestOfs" in draft_data:
+                by_request_of_id = draft_data["byRequestOfs"][0].get("byRequestOfId")
+            if by_request_of_id and str(by_request_of_id) in agencies_lookup:
+                bill_requester = agencies_lookup[str(by_request_of_id)].get("agency", "Unknown Agency")
+            elif requester_id_str in agencies_lookup:
+                bill_requester = agencies_lookup[requester_id_str].get("agency", "Unknown Agency")
+            else:
+                bill_requester = "Unknown Agency"
+        elif requester_type == "STANDING_COMMITTEE" and requester_id_str in standing_committees_lookup:
+            bill_requester = standing_committees_lookup[requester_id_str].get("committee", "Unknown Committee")
+        elif requester_type == "NON_STANDING_COMMITTEE" and requester_id_str in non_standing_committees_lookup:
+            bill_requester = non_standing_committees_lookup[requester_id_str].get("committee", "Unknown Committee")
+        elif requester_id:
+            # Unknown requester type but we have an ID
+            bill_requester = f"Unknown Requester Type: {requester_type} (ID: {requester_id})"
+
+        print(bill_requester)
 
         subjects = [
             {
@@ -160,7 +211,7 @@ def process_bills(session_id):
             for raw_subjects in draft_data.get("subjects", [])
         ]
         vote_requirements = list({subject.get("voteReq", "undefined") for subject in subjects})
-        
+
         # handle dates
         most_recent_date_raw = safe_get(most_recent_action, ["date"])
         most_recent_date_formatted = formatted_date(most_recent_date_raw)
@@ -192,7 +243,7 @@ def process_bills(session_id):
             "fiscalNotesListUrl": f"/bills/fiscal-note/{hypen_bill_key}" if has_fiscal_note else None,
             "legalNoteUrl": f"/bills/legal-note/{hypen_bill_key}" if has_legal_note else None,
             "amendmentListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=amend",
-            "draftRequestor": None, # TODO: See if we have any of these in the data
+            "draftRequestor": None,  # TODO: See if we have any of these in the data
             "billRequestor": bill_requester,
             "primarySponsor": f"{safe_get(sponsor, ['firstName'])} {safe_get(sponsor, ['lastName'])}",
             "subjects": subjects,
@@ -201,7 +252,23 @@ def process_bills(session_id):
             "transmittalDeadline": formatted_date(safe_get(bill, ["deadlineCategory", "transmittalDate"])),
             "amendedReturnDeadline": formatted_date(safe_get(bill, ["deadlineCategory", "returnDate"])),
         }
+
+        # Add the processed bill to our list
+        processed_bills.append(processed_bill)
         
+        # Save individual bill file
+        bill_file_path = os.path.join(cleaned_dir, f"{bill_type}-{bill_number}-data.json")
+        with open(bill_file_path, "w") as f:
+            json.dump(processed_bill, f, indent=2)
+    
+    # Save all bills to a single file
+    all_bills_path = os.path.join(script_dir, "cleaned", f"all-bills-{session_id}.json")
+    with open(all_bills_path, "w") as f:
+        json.dump(processed_bills, f, indent=2)
+    
+    print(f"Processed {len(processed_bills)} bills for session {session_id}")
+    return processed_bills
+
 # main function to handle argument parsing
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process bills by session ID")
