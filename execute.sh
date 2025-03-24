@@ -35,12 +35,13 @@ if echo "$output" | grep -q 'json.decoder.JSONDecodeError'; then
   ip_address=$(curl -s ifconfig.me)
   # Write to failed-runs.txt
   echo "${timestamp} - ${ip_address}" >> failed-runs.txt
+  cat failed-runs.txt
   # Commit and push the changes
   git config user.name "Automated"
   git config user.email "actions@users.noreply.github.com"
   git add failed-runs.txt
   git commit -m "Failed run: ${timestamp}" || exit 0
-  git push
+  git push origin $TEST_BRANCH
   exit 1
 fi
 
