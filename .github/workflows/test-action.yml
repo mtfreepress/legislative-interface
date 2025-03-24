@@ -1,12 +1,15 @@
-name: Test Schedule on fix-404s
+name: Test Schedule on test-error-fixes
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: '*/20 * * * *'
+    - cron: '*/20 12-23,0-6 * * *'
   workflow_dispatch:
 
 env:
-  TEST_BRANCH: fix-errors
+  TEST_BRANCH: test-error-fixes
 
 jobs:
   test:
