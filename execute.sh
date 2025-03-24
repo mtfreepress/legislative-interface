@@ -14,6 +14,23 @@ sessionId=2
 sessionOrdinal=20251 
 legislatureOrdinal=69
 
+# Function to log errors
+log_error() {
+    echo "Error on line $1"
+    timestamp=$(date -u)
+    ip_address=$(curl -s ifconfig.me)
+    echo "${timestamp} - ${ip_address} - Error on line $1" >> failed-runs.txt
+    cat failed-runs.txt
+    git config user.name "Automated"
+    git config user.email "actions@users.noreply.github.com"
+    git add failed-runs.txt
+    git commit -m "Failed run: ${timestamp}" || exit 0
+    git push origin $TEST_BRANCH
+}
+
+# Trap errors and log them
+trap 'log_error $LINENO' ERR
+
 # measure time taken for a command
 measure_time() {
     local start_time=$(date +%s)
