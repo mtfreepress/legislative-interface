@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # 2023 arguments 
 # 2023 and older requires changing the api call in get-bill-data
 # Commented out at the top of the file
@@ -22,7 +24,27 @@ measure_time() {
     echo "Time taken: ${elapsed_time} seconds"
 }
 
-# get bill data json
+# Run the Python script and capture the output
+output=$(python ./interface/get-bill-data.py $sessionId 2>&1)
+
+# Check if the output contains JSONDecodeError
+if echo "$output" | grep -q 'json.decoder.JSONDecodeError'; then
+  echo "Error detected: JSONDecodeError"
+  # Get the current date/time and IP address
+  timestamp=$(date -u)
+  ip_address=$(curl -s ifconfig.me)
+  # Write to failed-runs.txt
+  echo "${timestamp} - ${ip_address}" >> failed-runs.txt
+  # Commit and push the changes
+  git config user.name "Automated"
+  git config user.email "actions@users.noreply.github.com"
+  git add failed-runs.txt
+  git commit -m "Failed run: ${timestamp}" || exit 0
+  git push
+  exit 1
+fi
+
+# If no error, continue with the rest of the script
 measure_time python ./interface/get-bill-data.py $sessionId
 
 # split into separate files for processing
@@ -48,7 +70,7 @@ measure_time python ./interface/get-legal-review-notes.py "$sessionId" "$legisla
 # get fiscal notices
 measure_time python ./interface/get-fiscal-review-notes.py "$sessionId" "$legislatureOrdinal" "$sessionOrdinal"
 
-# get ammendments
+# get amendments
 measure_time python ./interface/get-amendments.py "$sessionId" "$legislatureOrdinal" "$sessionOrdinal"
 
 # compress fiscal notes:
