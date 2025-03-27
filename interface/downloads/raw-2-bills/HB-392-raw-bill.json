@@ -4,8 +4,8 @@
     "billNumber": 392,
     "sessionLawChapterNumber": null,
     "sponsorId": 57,
-    "carrierId": 34,
-    "drafterStaffMemberId": 25,
+    "carrierId": null,
+    "drafterStaffMemberId": 179,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -567,6 +567,27 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 62522,
+                "timeStamp": "2025-03-27T13:28:00",
+                "standingCommitteeId": 25,
+                "billStatusCode": {
+                    "id": 85,
+                    "code": "133",
+                    "name": "(S) Committee Report--Bill Concurred as Amended",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 12,
+                        "code": "90",
+                        "description": "In Second House--Out of Committee"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -634,6 +655,6 @@
         "byRequestOfs": []
     },
     "enrolled": null,
-    "versionNumber": 2,
+    "versionNumber": 3,
     "sessionId": 2
 }
