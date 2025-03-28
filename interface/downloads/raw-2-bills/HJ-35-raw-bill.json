@@ -1,6 +1,6 @@
 {
     "id": 2196,
-    "deadlineCodeId": 3,
+    "deadlineCodeId": 5,
     "billNumber": 35,
     "sessionLawChapterNumber": null,
     "sponsorId": 27,
@@ -16,7 +16,7 @@
     "draft": {
         "id": 2196,
         "draftNumber": "LC2199",
-        "date": "2025-03-28T13:28:14",
+        "date": "2025-03-28T14:18:13",
         "shortTitle": "Joint resolution urging changes to federal wildfire policy",
         "description": null,
         "requesterId": 27,
@@ -296,27 +296,6 @@
                 }
             },
             {
-                "id": 63442,
-                "timeStamp": "2025-03-28T13:08:59.978807",
-                "standingCommitteeId": 8,
-                "billStatusCode": {
-                    "id": 295,
-                    "code": "512",
-                    "name": "(H) Hearing",
-                    "actionWeight": "HARD",
-                    "chamber": "HOUSE",
-                    "billProgressCategory": {
-                        "id": 5,
-                        "code": "30",
-                        "description": "In First House Committee--Nontabled"
-                    },
-                    "standingCommitteeStatusGrouping": {
-                        "id": 1,
-                        "name": "test_name"
-                    }
-                }
-            },
-            {
                 "id": 63451,
                 "timeStamp": "2025-03-28T13:19:00",
                 "standingCommitteeId": null,
@@ -330,6 +309,27 @@
                         "id": 3,
                         "code": "20",
                         "description": "In First House--Introduced"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 63608,
+                "timeStamp": "2025-03-28T14:04:30.358778",
+                "standingCommitteeId": 8,
+                "billStatusCode": {
+                    "id": 295,
+                    "code": "512",
+                    "name": "(H) Hearing",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
@@ -362,6 +362,17 @@
                     "code": "FIRE",
                     "description": "Fires and Fire Protection",
                     "revenueAndAprops": null,
+                    "voteMajorityType": "SIMPLE",
+                    "primary": true
+                }
+            },
+            {
+                "id": 86305,
+                "subjectCode": {
+                    "id": 180,
+                    "code": "GJR",
+                    "description": "General Joint Resolution",
+                    "revenueAndAprops": "REVENUE",
                     "voteMajorityType": "SIMPLE",
                     "primary": true
                 }
