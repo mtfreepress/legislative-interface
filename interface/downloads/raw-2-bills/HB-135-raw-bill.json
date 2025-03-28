@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 16,
     "carrierId": 76,
-    "drafterStaffMemberId": 127,
+    "drafterStaffMemberId": 64,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 1,
         "draftNumber": "LC0196",
-        "date": "2025-03-28T11:33:55",
+        "date": "2025-03-28T12:33:56",
         "shortTitle": "Create statutes of repose for claims against real estate appraisers",
         "description": null,
         "requesterId": 16,
@@ -681,6 +681,27 @@
                     "id": 431,
                     "code": "652",
                     "name": "(H) Sent to Enrolling",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 21,
+                        "code": "170",
+                        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 63366,
+                "timeStamp": "2025-03-28T12:34:09.798366",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 432,
+                    "code": "653",
+                    "name": "(H) Returned from Enrolling",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
