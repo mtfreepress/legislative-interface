@@ -325,6 +325,27 @@
                         }
                     },
                     {
+                        "id": 63787,
+                        "timeStamp": "2025-03-28T15:12:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 442,
+                            "code": "663",
+                            "name": "(H) Motion Carried",
+                            "actionWeight": "SOFT",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
                         "id": 63693,
                         "timeStamp": "2025-03-28T15:13:00",
                         "standingCommitteeId": 8,
@@ -1005,7 +1026,27 @@
                 "votingMemberStatus": null
             }
         ],
-        "billStatus": null,
+        "billStatus": {
+            "id": 63787,
+            "timeStamp": "2025-03-28T15:12:00",
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 442,
+                "code": "663",
+                "name": "(H) Motion Carried",
+                "actionWeight": "SOFT",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
+        },
         "systemId": {
             "chamber": "HOUSE",
             "sequence": 1628
