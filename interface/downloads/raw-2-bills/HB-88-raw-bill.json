@@ -16,7 +16,7 @@
     "draft": {
         "id": 129,
         "draftNumber": "LC0094",
-        "date": "2025-03-29T12:32:45",
+        "date": "2025-03-30T06:56:01",
         "shortTitle": "Allow for automatic return of certain unclaimed property",
         "description": null,
         "requesterId": 126,
@@ -681,6 +681,27 @@
                     "id": 431,
                     "code": "652",
                     "name": "(H) Sent to Enrolling",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 21,
+                        "code": "170",
+                        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 64646,
+                "timeStamp": "2025-03-30T06:56:25.164372",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 432,
+                    "code": "653",
+                    "name": "(H) Returned from Enrolling",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
