@@ -401,13 +401,118 @@
                 }
             },
             {
-                "id": 66247,
-                "timeStamp": "2025-04-01T12:52:08",
+                "id": 67861,
+                "timeStamp": "2025-04-01T06:44:00",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 291,
+                    "code": "507",
+                    "name": "(H) Fiscal Note Printed",
+                    "actionWeight": "SOFT",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 1,
+                        "code": "0",
+                        "description": "Probably Dead"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 67862,
+                "timeStamp": "2025-04-01T12:52:00",
                 "standingCommitteeId": 13,
                 "billStatusCode": {
                     "id": 309,
                     "code": "526",
                     "name": "(H) Taken from Table in Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 67863,
+                "timeStamp": "2025-04-01T12:54:00",
+                "standingCommitteeId": 13,
+                "billStatusCode": {
+                    "id": 299,
+                    "code": "516",
+                    "name": "(H) Committee Executive Action--Bill Passed",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 67864,
+                "timeStamp": "2025-04-01T14:46:00",
+                "standingCommitteeId": 13,
+                "billStatusCode": {
+                    "id": 313,
+                    "code": "530",
+                    "name": "(H) Committee Report--Bill Passed",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 6,
+                        "code": "40",
+                        "description": "In First House--Out of Committee"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 67865,
+                "timeStamp": "2025-04-01T15:36:45",
+                "standingCommitteeId": 4,
+                "billStatusCode": {
+                    "id": 311,
+                    "code": "528",
+                    "name": "(H) Rereferred to Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 67860,
+                "timeStamp": "2025-04-01T15:44:49.716425",
+                "standingCommitteeId": 4,
+                "billStatusCode": {
+                    "id": 295,
+                    "code": "512",
+                    "name": "(H) Hearing",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
