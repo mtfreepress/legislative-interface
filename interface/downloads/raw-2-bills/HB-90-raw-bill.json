@@ -2,7 +2,7 @@
     "id": 100,
     "deadlineCodeId": 5,
     "billNumber": 90,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 42,
     "sponsorId": 111,
     "carrierId": 125,
     "drafterStaffMemberId": 71,
@@ -16,7 +16,7 @@
     "draft": {
         "id": 100,
         "draftNumber": "LC0097",
-        "date": "2025-03-21T06:09:05",
+        "date": "2025-04-04T09:53:51",
         "shortTitle": "Provide two-year reappraisal cycle for all real property",
         "description": null,
         "requesterId": 126,
@@ -792,6 +792,27 @@
                         "id": 22,
                         "code": "180",
                         "description": "Transmitted to Governor"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 68838,
+                "timeStamp": "2025-04-03T09:53:12",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 437,
+                    "code": "658",
+                    "name": "Chapter Number Assigned",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
