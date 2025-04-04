@@ -2,10 +2,10 @@
     "id": 123,
     "deadlineCodeId": 3,
     "billNumber": 104,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 48,
     "sponsorId": 186,
     "carrierId": 160,
-    "drafterStaffMemberId": 50,
+    "drafterStaffMemberId": 129,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 123,
         "draftNumber": "LC0176",
-        "date": "2025-03-20T15:08:46",
+        "date": "2025-04-04T10:20:32",
         "shortTitle": "Generally revise power and duties of agents",
         "description": null,
         "requesterId": 121,
@@ -771,6 +771,27 @@
                         "id": 22,
                         "code": "180",
                         "description": "Transmitted to Governor"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 68867,
+                "timeStamp": "2025-04-03T10:20:33",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 437,
+                    "code": "658",
+                    "name": "Chapter Number Assigned",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
