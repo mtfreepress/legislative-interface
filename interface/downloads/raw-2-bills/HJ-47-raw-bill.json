@@ -1,6 +1,6 @@
 {
     "id": 2298,
-    "deadlineCodeId": 3,
+    "deadlineCodeId": 4,
     "billNumber": 47,
     "sessionLawChapterNumber": null,
     "sponsorId": 56,
@@ -16,7 +16,7 @@
     "draft": {
         "id": 2298,
         "draftNumber": "LC2299",
-        "date": "2025-04-07T07:49:43",
+        "date": "2025-04-07T10:56:03",
         "shortTitle": "Study resolution on local government entity cooperation",
         "description": null,
         "requesterId": 56,
@@ -273,6 +273,27 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 70207,
+                "timeStamp": "2025-04-07T10:53:33",
+                "standingCommitteeId": 24,
+                "billStatusCode": {
+                    "id": 286,
+                    "code": "502",
+                    "name": "(H) Referred to Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -331,6 +352,17 @@
                     "id": 86,
                     "code": "LG",
                     "description": "Local Government  (see also: City Subjects; County Subjects)",
+                    "revenueAndAprops": null,
+                    "voteMajorityType": "SIMPLE",
+                    "primary": true
+                }
+            },
+            {
+                "id": 86375,
+                "subjectCode": {
+                    "id": 90,
+                    "code": "LIS",
+                    "description": "Legislature, Interim Studies",
                     "revenueAndAprops": null,
                     "voteMajorityType": "SIMPLE",
                     "primary": true
