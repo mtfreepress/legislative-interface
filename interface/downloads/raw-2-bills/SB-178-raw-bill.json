@@ -4,7 +4,7 @@
     "billNumber": 178,
     "sessionLawChapterNumber": null,
     "sponsorId": 37,
-    "carrierId": 6,
+    "carrierId": null,
     "drafterStaffMemberId": 49,
     "billType": {
         "id": 4,
@@ -630,6 +630,27 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 71452,
+                "timeStamp": "2025-04-08T14:10:00",
+                "standingCommitteeId": 8,
+                "billStatusCode": {
+                    "id": 316,
+                    "code": "533",
+                    "name": "(H) Committee Report--Bill Concurred as Amended",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 12,
+                        "code": "90",
+                        "description": "In Second House--Out of Committee"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -664,6 +685,6 @@
         "byRequestOfs": []
     },
     "enrolled": null,
-    "versionNumber": 2,
+    "versionNumber": 3,
     "sessionId": 2
 }
