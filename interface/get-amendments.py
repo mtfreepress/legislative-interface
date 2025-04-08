@@ -143,13 +143,15 @@ def fetch_and_save_amendments(bill, legislature_ordinal, session_ordinal, downlo
 
     dest_folder = os.path.join(download_dir, f"{bill_type}-{bill_number}")
     existing_files = list_files_in_directory(dest_folder)
+    existing_base_files = {get_base_filename(file) for file in existing_files}
 
     for amendment in unique_amendments:
         document_id = amendment["id"]
         file_name = amendment["fileName"]
+        base_name = get_base_filename(file_name)
 
-        # Check if file already exists
-        if file_name not in existing_files:
+        # Check if any version of this file already exists
+        if base_name not in existing_base_files:
             pdf_url = fetch_pdf_url(session, document_id)
             if pdf_url:
                 if download_file(pdf_url, dest_folder, file_name):
