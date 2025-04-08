@@ -12,7 +12,7 @@
             "billNumber": 631,
             "sessionLawChapterNumber": null,
             "sponsorId": 232,
-            "carrierId": null,
+            "carrierId": 32,
             "drafterStaffMemberId": 67,
             "billType": {
                 "id": 1,
@@ -500,6 +500,27 @@
                             "id": 65,
                             "code": "113",
                             "name": "(S) Hearing",
+                            "actionWeight": "HARD",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 11,
+                                "code": "80",
+                                "description": "In Second House Committee--Nontabled"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 71912,
+                        "timeStamp": "2025-04-08T17:29:51",
+                        "standingCommitteeId": 32,
+                        "billStatusCode": {
+                            "id": 69,
+                            "code": "117",
+                            "name": "(S) Committee Executive Action--Bill Concurred",
                             "actionWeight": "HARD",
                             "chamber": "SENATE",
                             "billProgressCategory": {
@@ -1223,7 +1244,7 @@
             "billNumber": 631,
             "sessionLawChapterNumber": null,
             "sponsorId": 232,
-            "carrierId": null,
+            "carrierId": 32,
             "drafterStaffMemberId": 67,
             "billType": {
                 "id": 1,
@@ -1711,6 +1732,27 @@
                             "id": 65,
                             "code": "113",
                             "name": "(S) Hearing",
+                            "actionWeight": "HARD",
+                            "chamber": "SENATE",
+                            "billProgressCategory": {
+                                "id": 11,
+                                "code": "80",
+                                "description": "In Second House Committee--Nontabled"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 71912,
+                        "timeStamp": "2025-04-08T17:29:51",
+                        "standingCommitteeId": 32,
+                        "billStatusCode": {
+                            "id": 69,
+                            "code": "117",
+                            "name": "(S) Committee Executive Action--Bill Concurred",
                             "actionWeight": "HARD",
                             "chamber": "SENATE",
                             "billProgressCategory": {
