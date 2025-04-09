@@ -130,6 +130,7 @@ def process_bills(sessionId):
 
             action_data = {
                 "id": action_id,
+                "committee_id": standing_committee_id,
                 "bill": f"{bill_type} {bill_number}",
                 "date": action_date,
                 "yesVotes": yes_votes,
