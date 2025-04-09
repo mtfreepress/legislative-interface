@@ -4,7 +4,7 @@
     "billNumber": 31,
     "sessionLawChapterNumber": null,
     "sponsorId": 96,
-    "carrierId": 89,
+    "carrierId": null,
     "drafterStaffMemberId": 25,
     "billType": {
         "id": 1,
@@ -525,6 +525,27 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 72463,
+                "timeStamp": "2025-04-09T13:55:58.73407",
+                "standingCommitteeId": 8,
+                "billStatusCode": {
+                    "id": 286,
+                    "code": "502",
+                    "name": "(H) Referred to Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -565,6 +586,6 @@
         ]
     },
     "enrolled": null,
-    "versionNumber": 1,
+    "versionNumber": 2,
     "sessionId": 2
 }
