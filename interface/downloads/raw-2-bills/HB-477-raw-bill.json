@@ -4,7 +4,7 @@
     "billNumber": 477,
     "sessionLawChapterNumber": null,
     "sponsorId": 100,
-    "carrierId": 89,
+    "carrierId": null,
     "drafterStaffMemberId": 181,
     "billType": {
         "id": 1,
@@ -651,6 +651,27 @@
                         "name": "test_name"
                     }
                 }
+            },
+            {
+                "id": 73676,
+                "timeStamp": "2025-04-10T11:08:00",
+                "standingCommitteeId": 17,
+                "billStatusCode": {
+                    "id": 85,
+                    "code": "133",
+                    "name": "(S) Committee Report--Bill Concurred as Amended",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 12,
+                        "code": "90",
+                        "description": "In Second House--Out of Committee"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
             }
         ],
         "legalNote": false,
@@ -696,6 +717,6 @@
         "byRequestOfs": []
     },
     "enrolled": null,
-    "versionNumber": 3,
+    "versionNumber": 4,
     "sessionId": 2
 }
