@@ -2,10 +2,10 @@
     "id": 98,
     "deadlineCodeId": 5,
     "billNumber": 20,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 95,
     "sponsorId": 43,
     "carrierId": null,
-    "drafterStaffMemberId": 33,
+    "drafterStaffMemberId": 71,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 98,
         "draftNumber": "LC0088",
-        "date": "2025-03-25T22:52:43",
+        "date": "2025-04-10T14:36:02",
         "shortTitle": "Require voted levies to be in dollars rather than mills",
         "description": null,
         "requesterId": 26,
@@ -1038,6 +1038,27 @@
                     "id": 435,
                     "code": "656",
                     "name": "(H) Signed by Governor",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 74005,
+                "timeStamp": "2025-04-07T14:32:36",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 437,
+                    "code": "658",
+                    "name": "Chapter Number Assigned",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
