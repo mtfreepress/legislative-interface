@@ -174,7 +174,7 @@ def process_committees(session_id):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     committees_dir = os.path.join(script_dir, '../interface/downloads/all-committees-2')
     legislators_file = os.path.join(script_dir, '../interface/downloads/legislators/legislators.json')
-    roster_file = os.path.join(script_dir, '../interface/legislators/legislator-roster-2025.json')
+    roster_file = os.path.join(script_dir, '../interface/downloads/legislators/legislator-roster-2025.json')
     actions_dir = os.path.join(script_dir, '../process/cleaned')
     output_file = os.path.join(script_dir, '../interface/committees.json')
     
@@ -214,10 +214,17 @@ def process_committees(session_id):
         clean_name = re.sub(r'^\((H|S)\)\s*', '', committee_name).strip()
         
         # Process chamber
-        if committee_data['chamber'] == 'HOUSE':
-            chamber = 'house'
+        if "Joint" in clean_name:
+            chamber = "joint"
+            # joint committees, keep the name as is (without adding prefix)
+            formatted_name = clean_name
         else:
-            chamber = 'senate'
+            if committee_data['chamber'] == 'HOUSE':
+                chamber = 'house'
+                formatted_name = f"House {clean_name}"
+            else:
+                chamber = 'senate'
+                formatted_name = f"Senate {clean_name}"
         
         # Process time
         default_time = committee_data['committeeDetails'].get('defaultTime', None)
@@ -225,6 +232,19 @@ def process_committees(session_id):
         
         # Process committee type
         committee_type = get_committee_type(clean_name)
+
+        roster_lookup = {}
+    
+        for member in roster:
+            # Create lookup by full name
+            full_name = f"{member.get('first_name', '')} {member.get('last_name', '')}"
+            roster_lookup[full_name.strip()] = member
+            
+            # Also create lookup by last name only for fallback
+            last_name = member.get('last_name', '')
+            if last_name:
+                if last_name not in roster_lookup:
+                    roster_lookup[last_name] = member
         
         # Process members
         members = []
@@ -252,10 +272,13 @@ def process_committees(session_id):
                 
             full_name = ' '.join(part for part in full_name_parts if part)
             
-            # Try to get locale from roster
+            # Try to get locale from roster using full name
             locale = ""
-            if full_name in roster_by_name:
-                locale = roster_by_name[full_name].get('locale', '')
+            if full_name in roster_lookup:
+                locale = roster_lookup[full_name].get('locale', '')
+            # Try last name if full name doesn't match
+            elif last_name in roster_lookup:
+                locale = roster_lookup[last_name].get('locale', '')
             
             members.append({
                 "name": full_name,
@@ -264,9 +287,9 @@ def process_committees(session_id):
                 "role": role
             })
         
-        # Create committee object (without bill data for now)
+        # Create committee object
         committee = {
-            "name": clean_name,
+            "name": formatted_name,
             "key": committee_key,
             "chamber": chamber,
             "time": time,
