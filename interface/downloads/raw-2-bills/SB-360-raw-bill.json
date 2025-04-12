@@ -16,7 +16,7 @@
     "draft": {
         "id": 1963,
         "draftNumber": "LC1964",
-        "date": "2025-04-12T09:50:15",
+        "date": "2025-04-12T12:46:29",
         "shortTitle": "Revise election laws related to definitions",
         "description": null,
         "requesterId": 113,
@@ -618,6 +618,48 @@
                     "id": 201,
                     "code": "252",
                     "name": "(S) Sent to Enrolling",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 21,
+                        "code": "170",
+                        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 75720,
+                "timeStamp": "2025-04-12T12:46:29.673206",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 25,
+                    "code": "23",
+                    "name": "(LC) Draft Delivered to Requester",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 2,
+                        "code": "10",
+                        "description": "In Drafting Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 75721,
+                "timeStamp": "2025-04-12T12:46:50.130242",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 202,
+                    "code": "253",
+                    "name": "(S) Returned from Enrolling",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
                     "billProgressCategory": {
