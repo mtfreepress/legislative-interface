@@ -70,15 +70,22 @@ def process_legislator_votes(votes, legislators, roster):
                 seen_votes.add(vote_key)
     return processed_votes
 
-def match_committee_hearing(bill_status_id, committee_meetings, action_date):
+def match_committee_hearing(bill_status_id, committee_meetings, action_date, action_description=None):
     """Match committee hearings with bill actions."""
     if not committee_meetings:
         return None
         
-    # process all meetings
-    for i, meeting in enumerate(committee_meetings):
+    # First try exact date match (existing behavior)
+    exact_match = None
+    
+    # Track next scheduled hearing for fallback
+    next_hearing = None
+    next_hearing_date = None
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    
+    for meeting in committee_meetings:
         try:
-            # skip if missing key structures
+            # Skip if missing key structures
             if 'committeeMeeting' not in meeting:
                 continue
                 
@@ -90,58 +97,33 @@ def match_committee_hearing(bill_status_id, committee_meetings, action_date):
             if committee_id != bill_status_id:
                 continue
                 
-            # found matching committee - try to get dates safely
-            modified_date = None
-            
-            # dealing with... the many different names the state is using for some damn reason
-            date_sources = [
-                (meeting, 'modifiedDateTime'),
-                (cm, 'modifiedDateTime'),
-                (cm, 'meetingDateTime'),
-                (cm, 'meetingTime'), 
-                (cm, 'date')
-            ]
-
-            for obj, key in date_sources:
+            # Matching committee found - try to get meeting time
+            if 'meetingTime' in cm:
+                meeting_time = cm['meetingTime']
+                # Convert to date object for comparison
+                meeting_date = formatted_date(meeting_time)
+                
+                # If exact date match, use it immediately
+                if meeting_date == action_date:
+                    return formatted_date(meeting_time)
+                    
+                # Otherwise save as potential future meeting
                 try:
-                    if key in obj:
-                        modified_date = obj[key]
-                        break
-                except Exception:
-                    pass
-
-            # if no date skip
-            if not modified_date:
-                continue
-                
-            # format date and check if it matches
-            try:
-                meeting_date = formatted_date(modified_date)
-            except Exception:
-                continue
-                
-            if meeting_date != action_date:
-                continue
-                
-            # found match - get meeting time
-            time_sources = [
-                (cm, 'meetingTime'),
-                (cm, 'meetingDateTime')
-            ]
-            
-            for obj, key in time_sources:
-                try:
-                    if key in obj:
-                        return formatted_date(obj[key])
+                    meeting_date_obj = datetime.strptime(meeting_time.split('T')[0], '%Y-%m-%d')
+                    if meeting_date_obj >= today:
+                        if next_hearing_date is None or meeting_date_obj < next_hearing_date:
+                            next_hearing_date = meeting_date_obj
+                            next_hearing = formatted_date(meeting_time)
                 except Exception:
                     pass
                     
-            # no time, return date
-            return meeting_date
-            
         except Exception:
-            # catch - continue to next meeting
             continue
+    
+    # Return next hearing for certain action types (Hearing, Referred to Committee)
+    if next_hearing and action_description:
+        if "Hearing" in action_description or "Referred to Committee" in action_description:
+            return next_hearing
             
     return None
 
@@ -234,7 +216,8 @@ def main():
                 action_data["committeeHearingTime"] = match_committee_hearing(
                     standing_committee_id,
                     committee_meetings,
-                    action_date
+                    action_date,
+                    action_description
                 )
 
             matched_votes = []
