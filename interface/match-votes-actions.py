@@ -71,11 +71,78 @@ def process_legislator_votes(votes, legislators, roster):
     return processed_votes
 
 def match_committee_hearing(bill_status_id, committee_meetings, action_date):
-    for meeting in committee_meetings:
-        if meeting['committeeMeeting']['standingCommittee']['id'] == bill_status_id:
-            meeting_date = formatted_date(meeting['modifiedDateTime'])
-            if meeting_date == action_date:
-                return formatted_date(meeting['committeeMeeting']['meetingTime'])
+    """Match committee hearings with bill actions."""
+    if not committee_meetings:
+        return None
+        
+    # process all meetings
+    for i, meeting in enumerate(committee_meetings):
+        try:
+            # skip if missing key structures
+            if 'committeeMeeting' not in meeting:
+                continue
+                
+            cm = meeting['committeeMeeting']
+            if 'standingCommittee' not in cm or 'id' not in cm['standingCommittee']:
+                continue
+                
+            committee_id = cm['standingCommittee']['id']
+            if committee_id != bill_status_id:
+                continue
+                
+            # found matching committee - try to get dates safely
+            modified_date = None
+            
+            # dealing with... the many different names the state is using for some damn reason
+            date_sources = [
+                (meeting, 'modifiedDateTime'),
+                (cm, 'modifiedDateTime'),
+                (cm, 'meetingDateTime'),
+                (cm, 'meetingTime'), 
+                (cm, 'date')
+            ]
+
+            for obj, key in date_sources:
+                try:
+                    if key in obj:
+                        modified_date = obj[key]
+                        break
+                except Exception:
+                    pass
+
+            # if no date skip
+            if not modified_date:
+                continue
+                
+            # format date and check if it matches
+            try:
+                meeting_date = formatted_date(modified_date)
+            except Exception:
+                continue
+                
+            if meeting_date != action_date:
+                continue
+                
+            # found match - get meeting time
+            time_sources = [
+                (cm, 'meetingTime'),
+                (cm, 'meetingDateTime')
+            ]
+            
+            for obj, key in time_sources:
+                try:
+                    if key in obj:
+                        return formatted_date(obj[key])
+                except Exception:
+                    pass
+                    
+            # no time, return date
+            return meeting_date
+            
+        except Exception:
+            # catch - continue to next meeting
+            continue
+            
     return None
 
 def main():
