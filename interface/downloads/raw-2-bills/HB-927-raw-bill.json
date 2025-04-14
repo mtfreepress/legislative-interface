@@ -443,14 +443,35 @@
                 }
             },
             {
-                "id": 72124,
-                "timeStamp": "2025-04-09T12:15:19.900784",
+                "id": 76790,
+                "timeStamp": "2025-04-09T10:00:00",
                 "standingCommitteeId": null,
                 "billStatusCode": {
                     "id": 282,
                     "code": "448",
                     "name": "(H) Fiscal Note Unsigned",
                     "actionWeight": "SOFT",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 1,
+                        "code": "0",
+                        "description": "Probably Dead"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 76789,
+                "timeStamp": "2025-04-09T11:00:15",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 447,
+                    "code": "668",
+                    "name": "(H) Missed Deadline for Appropriation Bill Transmittal",
+                    "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
                         "id": 1,
