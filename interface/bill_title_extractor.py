@@ -4,6 +4,7 @@ import json
 import os
 import sys
 import argparse
+import csv
 
 def main():
     # Parse command-line arguments
@@ -110,7 +111,20 @@ def main():
     with open(output_file, 'w') as f:
         json.dump(bill_titles, f, indent=4)
     
+    # Add CSV output
+    csv_output_file = os.path.join(output_dir, f"bills-signed-{args.date}.csv")
+    with open(csv_output_file, 'w', newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        # Write header
+        csv_writer.writerow(['Bill Name', 'Bill Title'])
+        # Write data
+        for bill_code, title in bill_titles.items():
+            # Format bill name with a space (e.g., "HB 3" instead of "HB3")
+            bill_name = f"{bill_code[:2]} {bill_code[2:]}"
+            csv_writer.writerow([bill_name, title])
+    
     print(f"\nOutput written to {output_file}")
+    print(f"CSV also written to {csv_output_file}")
 
 if __name__ == "__main__":
     main()
