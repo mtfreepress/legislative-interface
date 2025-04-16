@@ -4,7 +4,7 @@
     "billNumber": 318,
     "sessionLawChapterNumber": null,
     "sponsorId": 90,
-    "carrierId": null,
+    "carrierId": 233,
     "drafterStaffMemberId": 179,
     "billType": {
         "id": 4,
@@ -744,6 +744,27 @@
                     "id": 296,
                     "code": "513",
                     "name": "(H) Hearing",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 11,
+                        "code": "80",
+                        "description": "In Second House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 78129,
+                "timeStamp": "2025-04-16T11:17:02",
+                "standingCommitteeId": 11,
+                "billStatusCode": {
+                    "id": 300,
+                    "code": "517",
+                    "name": "(H) Committee Executive Action--Bill Concurred",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
