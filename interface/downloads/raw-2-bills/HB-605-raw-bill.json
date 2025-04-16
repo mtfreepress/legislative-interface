@@ -4,7 +4,7 @@
     "billNumber": 605,
     "sessionLawChapterNumber": null,
     "sponsorId": 77,
-    "carrierId": null,
+    "carrierId": 128,
     "drafterStaffMemberId": 24,
     "billType": {
         "id": 1,
@@ -618,6 +618,27 @@
                     "id": 79,
                     "code": "127",
                     "name": "(S) Taken from Table in Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 11,
+                        "code": "80",
+                        "description": "In Second House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 78057,
+                "timeStamp": "2025-04-16T10:12:52",
+                "standingCommitteeId": 31,
+                "billStatusCode": {
+                    "id": 71,
+                    "code": "119",
+                    "name": "(S) Committee Executive Action--Bill Concurred as Amended",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
                     "billProgressCategory": {
