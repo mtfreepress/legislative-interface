@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 143,
     "carrierId": null,
-    "drafterStaffMemberId": 127,
+    "drafterStaffMemberId": 168,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 3425,
         "draftNumber": "LC3507",
-        "date": "2025-04-14T11:47:13",
+        "date": "2025-04-16T05:14:40",
         "shortTitle": "Generally revise laws related to physician assistants",
         "description": null,
         "requesterId": 143,
@@ -744,6 +744,27 @@
                     "id": 431,
                     "code": "652",
                     "name": "(H) Sent to Enrolling",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 21,
+                        "code": "170",
+                        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 77938,
+                "timeStamp": "2025-04-16T05:14:55.046374",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 432,
+                    "code": "653",
+                    "name": "(H) Returned from Enrolling",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
