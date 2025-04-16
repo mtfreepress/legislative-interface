@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 49,
     "carrierId": null,
-    "drafterStaffMemberId": 129,
+    "drafterStaffMemberId": 24,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -16,8 +16,8 @@
     "draft": {
         "id": 2977,
         "draftNumber": "LC3018",
-        "date": "2025-04-15T15:08:53",
-        "shortTitle": "Revise criminal laws.",
+        "date": "2025-04-15T22:10:31",
+        "shortTitle": "Revise criminal laws related to DUI",
         "description": null,
         "requesterId": 16,
         "requesterType": "LEGISLATOR",
@@ -870,6 +870,27 @@
                     "id": 431,
                     "code": "652",
                     "name": "(H) Sent to Enrolling",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 21,
+                        "code": "170",
+                        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 77929,
+                "timeStamp": "2025-04-15T22:10:44.094902",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 432,
+                    "code": "653",
+                    "name": "(H) Returned from Enrolling",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
