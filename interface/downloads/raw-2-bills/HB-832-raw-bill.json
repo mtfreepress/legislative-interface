@@ -4,7 +4,7 @@
     "billNumber": 832,
     "sessionLawChapterNumber": null,
     "sponsorId": 63,
-    "carrierId": null,
+    "carrierId": 17,
     "drafterStaffMemberId": 64,
     "billType": {
         "id": 1,
@@ -849,6 +849,27 @@
                     "id": 65,
                     "code": "113",
                     "name": "(S) Hearing",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 11,
+                        "code": "80",
+                        "description": "In Second House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 78146,
+                "timeStamp": "2025-04-16T11:23:54",
+                "standingCommitteeId": 23,
+                "billStatusCode": {
+                    "id": 69,
+                    "code": "117",
+                    "name": "(S) Committee Executive Action--Bill Concurred",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
                     "billProgressCategory": {
