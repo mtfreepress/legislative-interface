@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 18,
     "carrierId": null,
-    "drafterStaffMemberId": 64,
+    "drafterStaffMemberId": 49,
     "billType": {
         "id": 4,
         "description": "Senate Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 1030,
         "draftNumber": "LC1030",
-        "date": "2025-04-15T16:10:04",
+        "date": "2025-04-16T13:11:03",
         "shortTitle": "Revise impact fee laws",
         "description": null,
         "requesterId": 18,
@@ -681,6 +681,27 @@
                     "id": 201,
                     "code": "252",
                     "name": "(S) Sent to Enrolling",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 21,
+                        "code": "170",
+                        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 78193,
+                "timeStamp": "2025-04-16T13:11:42.819188",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 202,
+                    "code": "253",
+                    "name": "(S) Returned from Enrolling",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
                     "billProgressCategory": {
