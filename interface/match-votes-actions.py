@@ -326,7 +326,10 @@ def main():
             else:
                 action_data["vote"] = None
 
-            action_key = (action_data["bill"], action_data["date"], action_data["description"])
+            if matched_votes:
+                action_data["voteSeq"] = vote_seq
+
+            action_key = (action_data["bill"], action_data["date"], action_data["description"], action_data.get("voteSeq", ""))
             if action_key not in processed_action_ids:
                 actions.append(action_data)
                 processed_action_ids.add(action_key)

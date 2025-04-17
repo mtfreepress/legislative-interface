@@ -83,7 +83,7 @@ measure_time python ./interface/match-votes-actions.py $sessionId
 # measure_time python ./process/process-vote-pdfs.py $sessionId
 
 # merge actions and votes:
-measure_time python ./process/merge-actions.py $sessionId
+# measure_time python ./process/merge-actions.py $sessionId
 
 # Process committees data
 measure_time python ./process/process-committees.py $sessionId
