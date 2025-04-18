@@ -78,7 +78,6 @@ def process_bill_actions(actions_dir, session_id, committee_keys, committee_name
         "billsBlasted": set()
     })
     
-    
     # today's date for scheduling calculations
     today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     
@@ -216,6 +215,15 @@ def process_committees(session_id):
     committee_keys_to_ids = {}
     committee_names_to_keys = {}
     committee_key_mapping, display_name_mapping = load_csv_committee_mapping(csv_path)
+    key_remapping = {
+        "joint-appropriations-subcommittee-on-general-government-a": "joint-appropriations-section-a",
+        "joint-appropriations-subcommittee-on-health-and-human-services-b": "joint-appropriations-section-b",
+        "joint-appropriations-subcommittee-on-natural-resources-and-transportation-c": "joint-appropriations-section-c",
+        "joint-approps-subcom-on-judicial-branch-law-enforcement-and-justice-d": "joint-appropriations-section-d",
+        "joint-appropriations-subcommittee-on-education-e": "joint-appropriations-section-e",
+        "joint-appropriations-subcommittee-on-long-range-planning-f": "joint-appropriations-section-f"
+    }
+    
     
     # process committees
     committees = []
@@ -229,6 +237,11 @@ def process_committees(session_id):
         
         # grab committee ID and key
         committee_key = filename.replace('.json', '')
+
+        # key remapping to handle special cases
+        if committee_key in key_remapping:
+            committee_key = key_remapping[committee_key]
+
         committee_id = committee_data['id']
         committee_keys_to_ids[committee_key] = committee_id
         
