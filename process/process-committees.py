@@ -1,5 +1,6 @@
 import os
 import json
+import csv
 import re
 import argparse
 from datetime import datetime
@@ -12,6 +13,23 @@ def load_json_file(file_path):
     except Exception as e:
         print(f"Error loading {file_path}: {e}")
         return []
+
+def load_csv_committee_mapping(csv_path):
+    """Load committee names and keys from CSV file"""
+    mapping = {}
+    key_to_display = {}
+    try:
+        with open(csv_path, 'r', newline='') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                committee_key = row['committeeKey'].strip()
+                display_name = row['displayName'].strip()
+                # Store both mappings
+                mapping[committee_key] = display_name
+                key_to_display[committee_key] = display_name
+    except Exception as e:
+        print(f"Warning: Error loading committee CSV mapping: {e}")
+    return mapping, key_to_display
 
 def save_json_file(data, file_path):
     with open(file_path, 'w') as file:
@@ -177,7 +195,7 @@ def process_committees(session_id):
     
     output_dir = os.path.join(script_dir, 'cleaned/committees')
     output_file = os.path.join(output_dir, 'committees.json')
-    
+    csv_path = os.path.join(script_dir, '../interface/downloads/committee_mapping.csv')
     # check if output dir exists
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
@@ -197,6 +215,7 @@ def process_committees(session_id):
     # map committee keys to their IDs processing
     committee_keys_to_ids = {}
     committee_names_to_keys = {}
+    committee_key_mapping, display_name_mapping = load_csv_committee_mapping(csv_path)
     
     # process committees
     committees = []
@@ -233,6 +252,9 @@ def process_committees(session_id):
             else:
                 chamber = 'senate'
                 formatted_name = f"Senate {clean_name}"
+
+        if committee_key in display_name_mapping:
+            formatted_name = display_name_mapping[committee_key]
         
         # process time
         default_time = committee_data['committeeDetails'].get('defaultTime', None)
