@@ -5,7 +5,7 @@
     "sessionLawChapterNumber": null,
     "sponsorId": 29,
     "carrierId": null,
-    "drafterStaffMemberId": 64,
+    "drafterStaffMemberId": 49,
     "billType": {
         "id": 4,
         "description": "Senate Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 18,
         "draftNumber": "LC0015",
-        "date": "2025-04-17T18:48:49",
+        "date": "2025-04-19T16:48:49",
         "shortTitle": "Providing that recreational vehicles and mobile homes are reviewed as buildings for rent or lease",
         "description": null,
         "requesterId": 29,
@@ -723,6 +723,27 @@
                     "id": 201,
                     "code": "252",
                     "name": "(S) Sent to Enrolling",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 21,
+                        "code": "170",
+                        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 80770,
+                "timeStamp": "2025-04-19T16:49:06.862608",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 202,
+                    "code": "253",
+                    "name": "(S) Returned from Enrolling",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
                     "billProgressCategory": {
