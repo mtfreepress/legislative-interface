@@ -4,7 +4,7 @@
     "billNumber": 432,
     "sessionLawChapterNumber": null,
     "sponsorId": 38,
-    "carrierId": null,
+    "carrierId": 150,
     "drafterStaffMemberId": 107,
     "billType": {
         "id": 1,
@@ -666,6 +666,27 @@
                         "id": 10,
                         "code": "75",
                         "description": "In Second House Committee--Tabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 82319,
+                "timeStamp": "2025-04-23T15:59:05",
+                "standingCommitteeId": 17,
+                "billStatusCode": {
+                    "id": 69,
+                    "code": "117",
+                    "name": "(S) Committee Executive Action--Bill Concurred",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 11,
+                        "code": "80",
+                        "description": "In Second House Committee--Nontabled"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
