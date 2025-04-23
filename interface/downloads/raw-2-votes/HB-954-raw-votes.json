@@ -304,27 +304,6 @@
                         }
                     },
                     {
-                        "id": 82190,
-                        "timeStamp": "2025-04-23T13:00:00",
-                        "standingCommitteeId": null,
-                        "billStatusCode": {
-                            "id": 374,
-                            "code": "594",
-                            "name": "(H) Scheduled for 3rd Reading",
-                            "actionWeight": "SOFT",
-                            "chamber": "HOUSE",
-                            "billProgressCategory": {
-                                "id": 1,
-                                "code": "0",
-                                "description": "Probably Dead"
-                            },
-                            "standingCommitteeStatusGrouping": {
-                                "id": 1,
-                                "name": "test_name"
-                            }
-                        }
-                    },
-                    {
                         "id": 82010,
                         "timeStamp": "2025-04-23T13:29:00",
                         "standingCommitteeId": 4,
@@ -380,6 +359,48 @@
                                 "id": 7,
                                 "code": "50",
                                 "description": "In First House--Through 2nd Reading"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 82245,
+                        "timeStamp": "2025-04-23T16:50:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 374,
+                            "code": "594",
+                            "name": "(H) Scheduled for 3rd Reading",
+                            "actionWeight": "SOFT",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 82246,
+                        "timeStamp": "2025-04-23T16:54:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 376,
+                            "code": "596",
+                            "name": "(H) 3rd Reading Passed",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 8,
+                                "code": "60",
+                                "description": "In First House--Through 3rd Reading"
                             },
                             "standingCommitteeStatusGrouping": {
                                 "id": 1,
@@ -1378,27 +1399,6 @@
                         }
                     },
                     {
-                        "id": 82190,
-                        "timeStamp": "2025-04-23T13:00:00",
-                        "standingCommitteeId": null,
-                        "billStatusCode": {
-                            "id": 374,
-                            "code": "594",
-                            "name": "(H) Scheduled for 3rd Reading",
-                            "actionWeight": "SOFT",
-                            "chamber": "HOUSE",
-                            "billProgressCategory": {
-                                "id": 1,
-                                "code": "0",
-                                "description": "Probably Dead"
-                            },
-                            "standingCommitteeStatusGrouping": {
-                                "id": 1,
-                                "name": "test_name"
-                            }
-                        }
-                    },
-                    {
                         "id": 82010,
                         "timeStamp": "2025-04-23T13:29:00",
                         "standingCommitteeId": 4,
@@ -1454,6 +1454,48 @@
                                 "id": 7,
                                 "code": "50",
                                 "description": "In First House--Through 2nd Reading"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 82245,
+                        "timeStamp": "2025-04-23T16:50:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 374,
+                            "code": "594",
+                            "name": "(H) Scheduled for 3rd Reading",
+                            "actionWeight": "SOFT",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 1,
+                                "code": "0",
+                                "description": "Probably Dead"
+                            },
+                            "standingCommitteeStatusGrouping": {
+                                "id": 1,
+                                "name": "test_name"
+                            }
+                        }
+                    },
+                    {
+                        "id": 82246,
+                        "timeStamp": "2025-04-23T16:54:00",
+                        "standingCommitteeId": null,
+                        "billStatusCode": {
+                            "id": 376,
+                            "code": "596",
+                            "name": "(H) 3rd Reading Passed",
+                            "actionWeight": "HARD",
+                            "chamber": "HOUSE",
+                            "billProgressCategory": {
+                                "id": 8,
+                                "code": "60",
+                                "description": "In First House--Through 3rd Reading"
                             },
                             "standingCommitteeStatusGrouping": {
                                 "id": 1,
@@ -2121,7 +2163,27 @@
                 "votingMemberStatus": null
             }
         ],
-        "billStatus": null,
+        "billStatus": {
+            "id": 82246,
+            "timeStamp": "2025-04-23T16:54:00",
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 376,
+                "code": "596",
+                "name": "(H) 3rd Reading Passed",
+                "actionWeight": "HARD",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 8,
+                    "code": "60",
+                    "description": "In First House--Through 3rd Reading"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
+        },
         "systemId": {
             "chamber": "HOUSE",
             "sequence": 2702
