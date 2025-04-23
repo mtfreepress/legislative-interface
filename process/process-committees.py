@@ -78,10 +78,12 @@ def process_bill_actions(actions_dir, session_id, committee_keys, committee_name
         "billsBlasted": set()
     })
     
-    # today's date for scheduling calculations
     today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    # Track globally withdrawn bills
+    global_bill_withdrawals = set()
     
-    # process each bill's actions
+    # First pass: scan for global withdrawals
     actions_path = os.path.join(actions_dir, f"actions-{session_id}")
     if not os.path.exists(actions_path):
         print(f"Warning: Actions directory {actions_path} not found!")
@@ -91,7 +93,21 @@ def process_bill_actions(actions_dir, session_id, committee_keys, committee_name
         if not file_name.endswith('-actions.json'):
             continue
             
-        bill_id = file_name.replace('-actions.json', '')
+        bill_actions = load_json_file(os.path.join(actions_path, file_name))
+        bill = file_name.replace('-actions.json', '').replace('-', '')  # "HB-170" -> "HB170"
+        
+        # Check if bill was withdrawn or missed deadline
+        for action in bill_actions:
+            description = action.get('description', '').lower()
+            if ('withdrawn' in description):
+                global_bill_withdrawals.add(bill)
+                break
+    
+    # Regular processing pass
+    for file_name in os.listdir(actions_path):
+        if not file_name.endswith('-actions.json'):
+            continue
+            
         bill_actions = load_json_file(os.path.join(actions_path, file_name))
         
         # process actions
@@ -114,7 +130,7 @@ def process_bill_actions(actions_dir, session_id, committee_keys, committee_name
             committee_bills[committee_key].add(bill)
             committee_bill_actions[committee_key].append(action)
             
-            # check for specific action types
+            # check for specific action types (keep your existing code)
             description = action.get('description', '').lower()
             action_date_str = action.get('date', '')
             action_date = None
@@ -125,7 +141,10 @@ def process_bill_actions(actions_dir, session_id, committee_keys, committee_name
                 pass
             
             # withdrawals
-            if 'withdrawn' in description:
+            if 'withdrawn' in description.lower():
+                committee_stats[committee_key]["billsWithdrawn"].add(bill)
+
+            if 'missed deadline' in description.lower():
                 committee_stats[committee_key]["billsWithdrawn"].add(bill)
                 
             # hearings
@@ -151,6 +170,11 @@ def process_bill_actions(actions_dir, session_id, committee_keys, committee_name
                 for other_key in committee_bills:
                     if other_key != committee_key and bill in committee_bills[other_key]:
                         committee_stats[other_key]["billsReferredElsewhere"].add(bill)
+
+    for bill in global_bill_withdrawals:
+        for committee_key in committee_bills:
+            if bill in committee_bills[committee_key]:
+                committee_stats[committee_key]["billsWithdrawn"].add(bill)
     
     # unscheduled bills and awaiting vote bills
     for committee_key in committee_bills:
@@ -163,8 +187,8 @@ def process_bill_actions(actions_dir, session_id, committee_keys, committee_name
         
         # awaiting vote bills - remove referred elsewhere from the exclusion list
         stats["billsAwaitingVote"] = stats["billsHeard"] - stats["billsFailed"] - \
-                                    stats["billsAdvanced"] - stats["billsBlasted"] - \
-                                    stats["billsWithdrawn"]
+                            stats["billsAdvanced"] - stats["billsBlasted"] - \
+                            stats["billsWithdrawn"]
     
     # output format
     result = {}
