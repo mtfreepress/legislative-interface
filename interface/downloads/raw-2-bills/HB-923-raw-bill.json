@@ -16,7 +16,7 @@
     "draft": {
         "id": 1155,
         "draftNumber": "LC1155",
-        "date": "2025-04-22T10:08:42",
+        "date": "2025-04-24T10:04:16",
         "shortTitle": "Revise categorical exclusions from nondegradation authorization",
         "description": null,
         "requesterId": 119,
@@ -660,6 +660,27 @@
                     "id": 431,
                     "code": "652",
                     "name": "(H) Sent to Enrolling",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 21,
+                        "code": "170",
+                        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 82507,
+                "timeStamp": "2025-04-24T10:04:30.697906",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 432,
+                    "code": "653",
+                    "name": "(H) Returned from Enrolling",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
