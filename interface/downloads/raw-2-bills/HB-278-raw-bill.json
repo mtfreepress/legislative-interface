@@ -2,10 +2,10 @@
     "id": 3022,
     "deadlineCodeId": 3,
     "billNumber": 278,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 123,
     "sponsorId": 112,
     "carrierId": 9,
-    "drafterStaffMemberId": 129,
+    "drafterStaffMemberId": 64,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 3022,
         "draftNumber": "LC3071",
-        "date": "2025-04-03T08:16:23",
+        "date": "2025-04-24T11:01:37",
         "shortTitle": "Require peace officer to check and report immigration status during lawful stop",
         "description": null,
         "requesterId": 112,
@@ -723,6 +723,27 @@
                     "id": 435,
                     "code": "656",
                     "name": "(H) Signed by Governor",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 82559,
+                "timeStamp": "2025-04-17T10:57:42",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 437,
+                    "code": "658",
+                    "name": "Chapter Number Assigned",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
