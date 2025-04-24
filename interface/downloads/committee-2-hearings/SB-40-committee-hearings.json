@@ -1254,43 +1254,19 @@
                     }
                 },
                 "sessionId": 2,
-                "propylonUuid": "9023a925-9ecd-443e-aef2-830c01c88b75",
+                "propylonUuid": "335eec77-22ba-4839-bc7b-ff841124e2dd",
                 "chamber": "SENATE",
                 "memberships": [
                     {
-                        "id": 1188,
-                        "type": {
-                            "id": 2,
-                            "code": "CH",
-                            "name": "Chair"
-                        },
-                        "propylonUuid": "b5786899-8b43-48ae-a304-03b071e1ebd9",
-                        "legislatorId": 135,
-                        "startDate": "2025-04-23",
-                        "endDate": "2025-05-31"
-                    },
-                    {
-                        "id": 1189,
+                        "id": 1226,
                         "type": {
                             "id": 4,
                             "code": "ME",
                             "name": "Member"
                         },
-                        "propylonUuid": "fed134b5-4363-4816-b19b-cc0f4a188d9a",
+                        "propylonUuid": "831c6dcb-e5a8-4e69-b81a-1db62e324b21",
                         "legislatorId": 18,
-                        "startDate": "2025-04-23",
-                        "endDate": "2025-05-31"
-                    },
-                    {
-                        "id": 1190,
-                        "type": {
-                            "id": 4,
-                            "code": "ME",
-                            "name": "Member"
-                        },
-                        "propylonUuid": "a6ba205c-8a3c-41d5-9afd-e288e83bd3e8",
-                        "legislatorId": 122,
-                        "startDate": "2025-04-23",
+                        "startDate": "2025-04-24",
                         "endDate": "2025-05-31"
                     }
                 ],
@@ -1327,5 +1303,86 @@
         "billId": 614,
         "propylonUuid": "76f02356-f6c9-4e2f-9372-bc7b230030e2",
         "status": "SCHEDULED"
+    },
+    {
+        "id": 3768,
+        "committeeMeeting": {
+            "id": 1388,
+            "meetingTime": "2025-04-25T16:00:00",
+            "location": "Room 350",
+            "propylonUuid": "66df9261-af74-4cc1-a19d-f3e36fc4ce37",
+            "publicParticipation": false,
+            "billTestimony": true,
+            "status": "SCHEDULED",
+            "agendaItems": [],
+            "standingCommittee": {
+                "id": 68,
+                "committeeDetails": {
+                    "defaultRoom": "",
+                    "defaultDays": null,
+                    "defaultTime": "",
+                    "comEmail": null,
+                    "zoomEmail": null,
+                    "committeeCode": {
+                        "id": 252,
+                        "code": "FCS5",
+                        "name": "Free Conference Committee on SB 40",
+                        "committeeType": {
+                            "id": 4,
+                            "code": "FC",
+                            "description": "Free Conference Committee"
+                        }
+                    }
+                },
+                "sessionId": 2,
+                "propylonUuid": "335eec77-22ba-4839-bc7b-ff841124e2dd",
+                "chamber": "SENATE",
+                "memberships": [
+                    {
+                        "id": 1226,
+                        "type": {
+                            "id": 4,
+                            "code": "ME",
+                            "name": "Member"
+                        },
+                        "propylonUuid": "831c6dcb-e5a8-4e69-b81a-1db62e324b21",
+                        "legislatorId": 18,
+                        "startDate": "2025-04-24",
+                        "endDate": "2025-05-31"
+                    }
+                ],
+                "staffMemberships": [
+                    {
+                        "id": 150,
+                        "staffMembershipType": {
+                            "id": 4,
+                            "code": "RA",
+                            "name": "Research Analyst"
+                        },
+                        "propylonUuid": "3893b9bf-8999-4b19-84c4-dafc74083853",
+                        "staffId": 129,
+                        "startDate": "2025-04-23",
+                        "endDate": "2025-04-30"
+                    },
+                    {
+                        "id": 151,
+                        "staffMembershipType": {
+                            "id": 5,
+                            "code": "SE",
+                            "name": "Secretary"
+                        },
+                        "propylonUuid": "499fbb4f-dde9-4405-bcdf-2ef2634dcd82",
+                        "staffId": 390,
+                        "startDate": "2025-04-23",
+                        "endDate": "2025-04-30"
+                    }
+                ],
+                "defaultDays": []
+            },
+            "meetingEndTime": "2025-04-25T17:00:00"
+        },
+        "billId": 614,
+        "propylonUuid": "0f2742a6-08de-431e-b64c-f6998bd8dd0e",
+        "status": "CANCELED"
     }
 ]
