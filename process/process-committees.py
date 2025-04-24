@@ -162,7 +162,7 @@ def process_bill_actions(actions_dir, session_id, committee_keys, committee_name
             if any(term in description for term in ['passed', 'concurred']):
                 committee_stats[committee_key]["billsAdvanced"].add(bill)
                 
-            if 'blast' in description:
+            if 'taken from committee' in description.lower():
                 committee_stats[committee_key]["billsBlasted"].add(bill)
                 
             if 'referred to committee' in description and committee_bills[committee_key]:
