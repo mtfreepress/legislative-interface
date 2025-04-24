@@ -4,7 +4,7 @@
     "billNumber": 247,
     "sessionLawChapterNumber": null,
     "sponsorId": 49,
-    "carrierId": null,
+    "carrierId": 76,
     "drafterStaffMemberId": 24,
     "billType": {
         "id": 1,
@@ -540,6 +540,27 @@
                         "id": 10,
                         "code": "75",
                         "description": "In Second House Committee--Tabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 82520,
+                "timeStamp": "2025-04-24T10:34:32",
+                "standingCommitteeId": 31,
+                "billStatusCode": {
+                    "id": 78,
+                    "code": "126",
+                    "name": "(S) Taken from Table in Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
