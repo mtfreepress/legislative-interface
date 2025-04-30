@@ -16,7 +16,7 @@
     "draft": {
         "id": 5482,
         "draftNumber": "LC4495",
-        "date": "2025-04-29T13:55:08",
+        "date": "2025-04-29T22:43:59",
         "shortTitle": "Extend PL280 termination date",
         "description": null,
         "requesterId": 33,
@@ -597,6 +597,27 @@
                     "id": 431,
                     "code": "652",
                     "name": "(H) Sent to Enrolling",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 21,
+                        "code": "170",
+                        "description": "Passed By Legislature--Enrolling and Final Preparation Process"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 85764,
+                "timeStamp": "2025-04-29T22:44:12.349424",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 432,
+                    "code": "653",
+                    "name": "(H) Returned from Enrolling",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
