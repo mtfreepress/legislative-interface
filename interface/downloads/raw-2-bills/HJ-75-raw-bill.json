@@ -550,7 +550,7 @@
             {
                 "id": 85704,
                 "timeStamp": "2025-04-29T16:30:00",
-                "standingCommitteeId": 19,
+                "standingCommitteeId": null,
                 "billStatusCode": {
                     "id": 83,
                     "code": "131",
@@ -561,6 +561,48 @@
                         "id": 12,
                         "code": "90",
                         "description": "In Second House--Out of Committee"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 85721,
+                "timeStamp": "2025-04-29T18:22:00",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 111,
+                    "code": "160",
+                    "name": "(S) 2nd Reading Pass Motion Failed",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 1,
+                        "code": "0",
+                        "description": "Probably Dead"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 85720,
+                "timeStamp": "2025-04-29T18:23:00",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 125,
+                    "code": "174",
+                    "name": "(S) 2nd Reading Indefinitely Postponed",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 1,
+                        "code": "0",
+                        "description": "Probably Dead"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
