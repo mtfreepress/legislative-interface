@@ -5,8 +5,10 @@ on:
     branches:
       - main
   schedule:
-    - cron: '*/20 12-23,0-5 * * *'
-    # - cron: '*/20 * * * *'
+    # post session, run at 45 min after the hour since action is much lower
+    - cron: '45 12-23,0-5 * * *'
+    # During session, every 20 minutes from 12:00 to 05:59 UTC
+    # - cron: '*/20 12-23,0-5 * * *'
   workflow_dispatch:
 
 jobs:
