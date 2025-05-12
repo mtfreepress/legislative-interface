@@ -12,7 +12,7 @@ hearings_dir = os.path.join(BASE_DIR, "downloads/committee-{session_id}-hearings
 list_bills_file = os.path.join(BASE_DIR, "../list-bills-2.json")
 legislators_file = os.path.join(BASE_DIR, "downloads/legislators/legislators.json")
 roster_file = os.path.join(BASE_DIR, "downloads/legislators/legislator-roster-2025.json")
-committees_file = os.path.join(BASE_DIR, "downloads/committees-2.json")
+committees_file = os.path.join(BASE_DIR, "downloads/all-committees-2.json")
 output_dir = os.path.join(BASE_DIR, "../process/cleaned/actions-{session_id}")
 
 def parse_arguments():
@@ -136,9 +136,32 @@ def main():
     roster = load_json(roster_file)
     committees = load_json(committees_file)
 
-    committee_lookup = {committee['id']: committee['committeeDetails'] for committee in committees}
+    committee_lookup = {}
+    for committee in committees:
+        if 'id' not in committee:
+            continue
+            
+        committee_id = committee['id']
+        committee_name = 'undefined'
+        
+        # Try multiple paths to find committee name
+        if 'committeeDetails' in committee:
+            details = committee['committeeDetails']
+            if details and isinstance(details, dict):
+                # Direct name in committeeDetails
+                if 'name' in details:
+                    committee_name = details['name']
+                # Name in committeeCode
+                elif 'committeeCode' in details and 'name' in details['committeeCode']:
+                    committee_name = details['committeeCode']['name']
+        
+        # Fallback to 'key' if name still not found
+        if committee_name == 'undefined' and 'key' in committee:
+            committee_name = committee['key'].replace('-', ' ').title()
+            
+        committee_lookup[committee_id] = {'name': committee_name}
 
-    os.makedirs(output_dir.format(session_id=session_id), exist_ok=True)
+        os.makedirs(output_dir.format(session_id=session_id), exist_ok=True)
 
     for bill in list_bills:
         bill_type = bill['billType']
