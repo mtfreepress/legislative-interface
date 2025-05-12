@@ -2,10 +2,10 @@
     "id": 3093,
     "deadlineCodeId": 3,
     "billNumber": 333,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 261,
     "sponsorId": 142,
     "carrierId": 122,
-    "drafterStaffMemberId": 49,
+    "drafterStaffMemberId": 112,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 3093,
         "draftNumber": "LC3148",
-        "date": "2025-04-11T12:28:14",
+        "date": "2025-05-12T08:32:19",
         "shortTitle": "Generally revise local law enforcement laws",
         "description": null,
         "requesterId": 142,
@@ -828,6 +828,27 @@
                     "id": 435,
                     "code": "656",
                     "name": "(H) Signed by Governor",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 87566,
+                "timeStamp": "2025-05-05T08:31:33",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 437,
+                    "code": "658",
+                    "name": "Chapter Number Assigned",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {

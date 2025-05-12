@@ -2,10 +2,10 @@
     "id": 1516,
     "deadlineCodeId": 3,
     "billNumber": 387,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 268,
     "sponsorId": 82,
     "carrierId": 23,
-    "drafterStaffMemberId": 131,
+    "drafterStaffMemberId": 181,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 1516,
         "draftNumber": "LC1517",
-        "date": "2025-04-15T15:56:24",
+        "date": "2025-05-12T08:48:42",
         "shortTitle": "Revise laws related to highway reconstruction",
         "description": null,
         "requesterId": 135,
@@ -765,6 +765,27 @@
                     "id": 435,
                     "code": "656",
                     "name": "(H) Signed by Governor",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 87573,
+                "timeStamp": "2025-05-05T08:47:54",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 437,
+                    "code": "658",
+                    "name": "Chapter Number Assigned",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {

@@ -23,9 +23,9 @@
     {
       "id": 1047,
       "type": {
-        "id": 2,
-        "code": "CH",
-        "name": "Chair"
+        "id": 4,
+        "code": "ME",
+        "name": "Member"
       },
       "propylonUuid": "550c5500-8b36-4d7a-9501-9d62b2d23179",
       "legislatorId": 119,
@@ -35,9 +35,9 @@
     {
       "id": 1048,
       "type": {
-        "id": 9,
-        "code": "VC",
-        "name": "Vice Chair"
+        "id": 4,
+        "code": "ME",
+        "name": "Member"
       },
       "propylonUuid": "1695d968-ecda-415f-81f4-93a5265eacac",
       "legislatorId": 24,
@@ -261,5 +261,42 @@
       "endDate": "2027-01-08"
     }
   ],
-  "staffMemberships": []
+  "staffMemberships": [
+    {
+      "id": 180,
+      "staffMembershipType": {
+        "id": 5,
+        "code": "SE",
+        "name": "Secretary"
+      },
+      "propylonUuid": "6370bcd7-73fd-4f57-9861-b3a4b8d718e4",
+      "staffId": 130,
+      "startDate": "2023-01-02",
+      "endDate": "2027-01-08"
+    },
+    {
+      "id": 181,
+      "staffMembershipType": {
+        "id": 8,
+        "code": "AT",
+        "name": "Attorney"
+      },
+      "propylonUuid": "2204b9b1-9491-433b-90a6-1840d51a779e",
+      "staffId": 58,
+      "startDate": "2023-01-02",
+      "endDate": "2027-01-08"
+    },
+    {
+      "id": 182,
+      "staffMembershipType": {
+        "id": 14,
+        "code": "LFA",
+        "name": "Legislative Fiscal Analyst"
+      },
+      "propylonUuid": "4a878497-1bc8-4769-8de2-5c30a40d3204",
+      "staffId": 29,
+      "startDate": "2023-01-02",
+      "endDate": "2027-01-08"
+    }
+  ]
 }

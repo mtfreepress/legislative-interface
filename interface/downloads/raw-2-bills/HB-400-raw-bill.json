@@ -2,10 +2,10 @@
     "id": 1521,
     "deadlineCodeId": 3,
     "billNumber": 400,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 275,
     "sponsorId": 49,
     "carrierId": 128,
-    "drafterStaffMemberId": 129,
+    "drafterStaffMemberId": 108,
     "billType": {
         "id": 1,
         "description": "House Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 1521,
         "draftNumber": "LC1522",
-        "date": "2025-04-15T08:53:32",
+        "date": "2025-05-12T09:18:26",
         "shortTitle": "Enact the \"Free to Speak Act\"",
         "description": null,
         "requesterId": 49,
@@ -723,6 +723,27 @@
                     "id": 435,
                     "code": "656",
                     "name": "(H) Signed by Governor",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 87580,
+                "timeStamp": "2025-05-05T09:17:34",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 437,
+                    "code": "658",
+                    "name": "Chapter Number Assigned",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
