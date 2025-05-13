@@ -102,6 +102,8 @@ def calculate_sponsor_stats():
             
             # check if bill passed or failed
             bill_passed = False
+            transmitted_to_governor = False
+            vetoed = False
             
             # navigate through the nested structure to get to bill statuses
             draft_data = bill_data.get("draft", {})
@@ -116,7 +118,15 @@ def calculate_sponsor_stats():
                 if "Became Law" in bill_progress or "Signed by Governor" in status_name or "Chapter Number Assigned" in status_name:
                     bill_passed = True
                     break
+                elif "Transmitted to Governor" in status_name or "(H) Transmitted to Governor" in status_name or "(S) Transmitted to Governor" in status_name:
+                    transmitted_to_governor = True
+                elif "Vetoed by Governor" in status_name:
+                    vetoed = True
             
+            # A bill is considered passed if it became law OR was transmitted to governor but not vetoed
+            if bill_passed or (transmitted_to_governor and not vetoed):
+                bill_passed = True
+                
             # update passed or failed count for individual sponsor
             if bill_passed:
                 sponsor_stats[sponsor_name]["billsPassed"] += 1
