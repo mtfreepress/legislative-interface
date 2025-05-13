@@ -2,10 +2,10 @@
     "id": 412,
     "deadlineCodeId": 3,
     "billNumber": 213,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 368,
     "sponsorId": 89,
     "carrierId": 142,
-    "drafterStaffMemberId": 64,
+    "drafterStaffMemberId": 49,
     "billType": {
         "id": 4,
         "description": "Senate Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 412,
         "draftNumber": "LC0412",
-        "date": "2025-04-12T11:40:09",
+        "date": "2025-05-13T10:52:40",
         "shortTitle": "Revise the state building code to allow single stairwells in certain buildings",
         "description": null,
         "requesterId": 89,
@@ -725,6 +725,27 @@
                     "name": "(S) Signed by Governor",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 87730,
+                "timeStamp": "2025-05-08T10:51:47",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 207,
+                    "code": "258",
+                    "name": "Chapter Number Assigned",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
                     "billProgressCategory": {
                         "id": 23,
                         "code": "190",
