@@ -136,7 +136,74 @@ def analyze_committee_bills(session_id):
         for row in results:
             writer.writerow(row)
     
+    committee_output_dir = output_dir / "by-committee"
+    committee_output_dir.mkdir(exist_ok=True)
+
+    json_dir = committee_output_dir / "json"
+    json_dir.mkdir(exist_ok=True)
+
+    csv_dir = committee_output_dir / "csv"
+    csv_dir.mkdir(exist_ok=True)
+
+    bills_csv_dir = committee_output_dir / "bills-csv"
+    bills_csv_dir.mkdir(exist_ok=True)
+
+    print(f"Creating individual committee files for {len(results)} committees...")
+
+    # Process each committee and create separate files
+    for committee_data in results:
+        committee = committee_data["committee"]
+        
+        # Format committee name for filename (replace spaces, slashes, etc. with underscores)
+        safe_committee_name = committee.lower().replace(" ", "_").replace("/", "_").replace("(", "").replace(")", "")
+        safe_committee_name = ''.join(c if c.isalnum() or c == '_' else '' for c in safe_committee_name)
+        
+        # Skip empty committee names
+        if not safe_committee_name:
+            print(f"Skipping committee with empty name: {committee}")
+            continue
+            
+        try:
+            # Save to individual JSON file
+            json_path = json_dir / f"{safe_committee_name}.json"
+            with open(json_path, "w") as f:
+                json.dump(committee_data, f, indent=2)
+            
+            # Save to individual CSV file (key-value format)
+            csv_path = csv_dir / f"{safe_committee_name}.csv"
+            with open(csv_path, "w", newline="") as f:
+                writer = csv.writer(f)
+                # Write headers and data as rows
+                writer.writerow(["Metric", "Value"])
+                for key, value in committee_data.items():
+                    writer.writerow([key, value])
+                
+            # Create a bills-only CSV which is easier to work with in Excel
+            bills_csv_path = bills_csv_dir / f"{safe_committee_name}_bills.csv"
+            with open(bills_csv_path, "w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerow(["Bill", "Status"])
+                
+                # Split the comma-separated lists back into individual bills
+                if committee_data["passedBills"]:
+                    passed_bills = committee_data["passedBills"].split(", ") if isinstance(committee_data["passedBills"], str) else committee_data["passedBills"]
+                    for bill in passed_bills:
+                        writer.writerow([bill, "Passed"])
+                
+                if committee_data["failedBills"]:
+                    failed_bills = committee_data["failedBills"].split(", ") if isinstance(committee_data["failedBills"], str) else committee_data["failedBills"]
+                    for bill in failed_bills:
+                        writer.writerow([bill, "Failed"])
+        
+        except Exception as e:
+            print(f"Error creating files for committee '{committee}': {e}")
+
+    
+
     print(f"Committee statistics saved to {json_output_path} and {csv_output_path}")
+    print(f"Individual committee JSON files saved in {json_dir}")
+    print(f"Individual committee CSV files saved in {csv_dir}")
+    print(f"Individual committee bill lists saved in {bills_csv_dir}")
     print(f"Processed {len(action_files)} bill files for {len(results)} committees")
 
 if __name__ == "__main__":
