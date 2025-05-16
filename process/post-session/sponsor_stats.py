@@ -3,6 +3,7 @@ import sys
 import json
 import glob
 import csv
+import re
 from pathlib import Path
 
 
@@ -287,9 +288,237 @@ def calculate_sponsor_stats():
         else:
             average_stats[f"overallPassRate{group_key}"] = 0
 
+    # add missing legislators with no bills sponsored
+    missing_legislators = [
+        {
+            "sponsorId": "missing-1", 
+            "sponsor": "Sidney Fitzpatrick", 
+            "party": "Democrat", 
+            "chamber": "HOUSE", 
+            "district": "HD 42",
+            "billsSponsored": 0,
+            "billsPassed": 0,
+            "billsFailed": 0,
+            "passPercentage": 0
+        },
+        {
+            "sponsorId": "missing-2", 
+            "sponsor": "Mike Fox", 
+            "party": "Democrat", 
+            "chamber": "HOUSE", 
+            "district": "HD 32",
+            "billsSponsored": 0,
+            "billsPassed": 0,
+            "billsFailed": 0,
+            "passPercentage": 0
+        },
+        {
+            "sponsorId": "missing-3", 
+            "sponsor": "Denise Hayman", 
+            "party": "Democrat", 
+            "chamber": "SENATE", 
+            "district": "SD 32",
+            "billsSponsored": 0,
+            "billsPassed": 0,
+            "billsFailed": 0,
+            "passPercentage": 0
+        },
+        {
+            "sponsorId": "missing-4", 
+            "sponsor": "Jacinda Morigeau", 
+            "party": "Democrat", 
+            "chamber": "SENATE", 
+            "district": "SD 46",
+            "billsSponsored": 0,
+            "billsPassed": 0,
+            "billsFailed": 0,
+            "passPercentage": 0
+        }
+    ]
+    
+    # add them to the sponsor_stats dictionary
+    for legislator in missing_legislators:
+        sponsor_name = legislator["sponsor"]
+        if sponsor_name not in sponsor_stats:
+            sponsor_stats[sponsor_name] = legislator
+            
+            # update the appropriate group member counts
+            group_stats["all"]["members"].add(legislator["sponsorId"])
+            
+            if legislator["party"] == "Democrat":
+                group_stats["democrats"]["members"].add(legislator["sponsorId"])
+                if legislator["chamber"] == "HOUSE":
+                    group_stats["houseDemocrats"]["members"].add(legislator["sponsorId"])
+                    group_stats["house"]["members"].add(legislator["sponsorId"])
+                elif legislator["chamber"] == "SENATE":
+                    group_stats["senateDemocrats"]["members"].add(legislator["sponsorId"])
+                    group_stats["senate"]["members"].add(legislator["sponsorId"])
+            elif legislator["party"] == "Republican":
+                group_stats["republicans"]["members"].add(legislator["sponsorId"])
+                if legislator["chamber"] == "HOUSE":
+                    group_stats["houseRepublicans"]["members"].add(legislator["sponsorId"])
+                    group_stats["house"]["members"].add(legislator["sponsorId"])
+                elif legislator["chamber"] == "SENATE":
+                    group_stats["senateRepublicans"]["members"].add(legislator["sponsorId"])
+                    group_stats["senate"]["members"].add(legislator["sponsorId"])
+
     # sort the individual results by number of bills sponsored (descending)
     sorted_stats = sorted(sponsor_stats.values(),
                           key=lambda x: x["billsSponsored"], reverse=True)
+    
+    legislators_dir = output_dir / "legislators"
+    legislators_dir.mkdir(exist_ok=True)
+    
+    # Create separate directories for CSV and JSON files
+    legislators_json_dir = legislators_dir / "json"
+    legislators_csv_dir = legislators_dir / "csv"
+    legislators_json_dir.mkdir(exist_ok=True)
+    legislators_csv_dir.mkdir(exist_ok=True)
+    
+    # Collect bill details for each legislator during processing
+    legislator_bills = {}
+    
+    # Second pass through bill files to collect bill titles and details
+    print(f"Collecting detailed bill information for individual legislator reports...")
+    for bill_file in bill_files:
+        try:
+            with open(bill_file, "r") as f:
+                bill_data = json.load(f)
+                
+            # get sponsor ID and basic bill info
+            sponsor_id = bill_data.get("sponsorId")
+            if not sponsor_id or sponsor_id not in legislator_map:
+                continue
+                
+            # Find sponsor name
+            sponsor = legislator_map[sponsor_id]
+            sponsor_name = f"{sponsor.get('firstName', '')} {sponsor.get('lastName', '')}".strip()
+            
+            # Extract bill details
+            bill_number = bill_data.get("billNumber", "Unknown")
+            bill_type_obj = bill_data.get("billType", {})
+            bill_type = bill_type_obj.get("description", "") 
+            
+            # Get title from draft.shortTitle instead of title
+            draft_data = bill_data.get("draft", {})
+            bill_title = draft_data.get("shortTitle", "Untitled Bill")
+            bill_statuses = draft_data.get("billStatuses", [])
+            
+            # Check bill status
+            bill_passed = False
+            transmitted_to_governor = False
+            vetoed = False
+            
+            for status in bill_statuses:
+                status_code = status.get("billStatusCode", {})
+                bill_progress = status_code.get("billProgressCategory", {}).get("description", "")
+                status_name = status_code.get("name", "")
+                
+                # Check bill passage
+                if "Became Law" in bill_progress or "Signed by Governor" in status_name or "Chapter Number Assigned" in status_name:
+                    bill_passed = True
+                elif "Transmitted to Governor" in status_name or "(H) Transmitted to Governor" in status_name or "(S) Transmitted to Governor" in status_name:
+                    transmitted_to_governor = True
+                elif "Vetoed by Governor" in status_name:
+                    vetoed = True
+            
+            # A bill is considered passed if it became law OR was transmitted to governor but not vetoed
+            if bill_passed or (transmitted_to_governor and not vetoed):
+                bill_passed = True
+            
+            # Final bill status
+            bill_status = "Passed" if bill_passed else "Failed"
+            
+            # Clean up bill title
+            if bill_title:
+                bill_title = bill_title.replace("\n", " ").replace("  ", " ").strip()
+                if len(bill_title) > 300:
+                    bill_title = bill_title[:297] + "..."
+            
+            # Create bill entry - simplified without subjects and statusHistory
+            bill_entry = {
+                "billNumber": bill_number,
+                "billType": bill_type,
+                "title": bill_title,
+                "status": bill_status
+            }
+            
+            # Add to legislator's bill collection
+            if sponsor_name not in legislator_bills:
+                legislator_bills[sponsor_name] = []
+            
+            legislator_bills[sponsor_name].append(bill_entry)
+            
+        except Exception as e:
+            print(f"Error collecting bill details from {bill_file}: {e}")
+    
+    # Handle missing legislators
+    for legislator in missing_legislators:
+        sponsor_name = legislator["sponsor"]
+        if sponsor_name not in legislator_bills:
+            legislator_bills[sponsor_name] = []
+    
+    # Create individual files for each legislator
+    for sponsor_name, bills in legislator_bills.items():
+        # Create a sanitized filename from the sponsor name
+        safe_name = re.sub(r'[^\w\s-]', '', sponsor_name).lower().replace(' ', '-')
+        
+        # Get the sponsor stats
+        sponsor_stats_entry = sponsor_stats.get(sponsor_name, {
+            "sponsorId": "unknown",
+            "sponsor": sponsor_name,
+            "party": "Unknown", 
+            "chamber": "Unknown",
+            "district": "Unknown",
+            "billsSponsored": len(bills),
+            "billsPassed": sum(1 for bill in bills if bill["status"] == "Passed"),
+            "billsFailed": sum(1 for bill in bills if bill["status"] == "Failed"),
+            "passPercentage": 0
+        })
+        
+        # Calculate pass percentage
+        if sponsor_stats_entry["billsSponsored"] > 0:
+            sponsor_stats_entry["passPercentage"] = round(
+                (sponsor_stats_entry["billsPassed"] / sponsor_stats_entry["billsSponsored"]) * 100, 2)
+        
+        # Create the full legislator record with both stats and bill details
+        legislator_record = {
+            "sponsor": sponsor_name,
+            "party": sponsor_stats_entry["party"],
+            "chamber": sponsor_stats_entry["chamber"],
+            "district": sponsor_stats_entry["district"],
+            "summary": {
+                "billsSponsored": sponsor_stats_entry["billsSponsored"],
+                "billsPassed": sponsor_stats_entry["billsPassed"],
+                "billsFailed": sponsor_stats_entry["billsFailed"],
+                "passPercentage": sponsor_stats_entry["passPercentage"]
+            },
+            "bills": sorted(bills, key=lambda x: x["billNumber"])
+        }
+        
+        # Save JSON file
+        json_path = legislators_json_dir / f"{safe_name}.json"
+        with open(json_path, "w") as f:
+            json.dump(legislator_record, f, indent=2)
+        
+        # Save CSV file
+        csv_path = legislators_csv_dir / f"{safe_name}.csv"
+        with open(csv_path, "w", newline="") as f:
+            # Create header row - removed subjects
+            fieldnames = ["billNumber", "billType", "title", "status"]
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            
+            # Write bills
+            for bill in sorted(bills, key=lambda x: x["billNumber"]):
+                writer.writerow({
+                    "billNumber": bill["billNumber"],
+                    "billType": bill["billType"],
+                    "title": bill["title"],
+                    "status": bill["status"]
+                })
+    
+    print(f"Created individual bill reports for {len(legislator_bills)} legislators in {legislators_dir}")
 
     # convert party stats dict to list for JSON output
     party_stats_list = [{"category": key, **value}
