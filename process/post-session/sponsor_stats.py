@@ -98,14 +98,28 @@ def calculate_sponsor_stats():
                     "party": party,
                     "chamber": chamber,
                     "district": district,
+                    # track all legislation
+                    "legislationSponsored": 0,
+                    "legislationPassed": 0,
+                    "legislationFailed": 0,
+                    "legislationPassPercentage": 0,
+                    # track only HB/SB
                     "billsSponsored": 0,
                     "billsPassed": 0,
                     "billsFailed": 0,
-                    "passPercentage": 0
+                    "billsPassPercentage": 0
                 }
-
             # increment bills sponsored count
-            sponsor_stats[sponsor_name]["billsSponsored"] += 1
+           # Get the bill type code (HB, SB, etc.)
+            bill_type_code = bill_data.get("billType", {}).get("code", "")
+            
+            # Always increment legislation counts (all types)
+            sponsor_stats[sponsor_name]["legislationSponsored"] += 1
+
+            # Only increment bill counts for HB and SB
+            is_actual_bill = bill_type_code in ["HB", "SB"]
+            if is_actual_bill:
+                sponsor_stats[sponsor_name]["billsSponsored"] += 1
 
             # check if bill passed or failed
             bill_passed = False
@@ -131,15 +145,19 @@ def calculate_sponsor_stats():
                 elif "Vetoed by Governor" in status_name:
                     vetoed = True
 
-            # A bill is considered passed if it became law OR was transmitted to governor but not vetoed
+            # bill is considered passed if it became law OR was transmitted to governor but not vetoed
             if bill_passed or (transmitted_to_governor and not vetoed):
                 bill_passed = True
 
             # update passed or failed count for individual sponsor
             if bill_passed:
-                sponsor_stats[sponsor_name]["billsPassed"] += 1
+                sponsor_stats[sponsor_name]["legislationPassed"] += 1
+                if is_actual_bill:
+                    sponsor_stats[sponsor_name]["billsPassed"] += 1
             else:
-                sponsor_stats[sponsor_name]["billsFailed"] += 1
+                sponsor_stats[sponsor_name]["legislationFailed"] += 1
+                if is_actual_bill:
+                    sponsor_stats[sponsor_name]["billsFailed"] += 1
 
             # update party aggregation stats
             # first determine which party categories this bill belongs to
@@ -224,12 +242,19 @@ def calculate_sponsor_stats():
 
     # calculate pass percentage for each sponsor
     for sponsor_name, stats in sponsor_stats.items():
+        # calculate bill pass percentage (HB/SB only)
         if stats["billsSponsored"] > 0:
-            stats["passPercentage"] = round(
+            stats["billsPassPercentage"] = round(
                 (stats["billsPassed"] / stats["billsSponsored"]) * 100, 2)
+                
+        # calculate all legislation pass percentage
+        if stats["legislationSponsored"] > 0:
+            stats["legislationPassPercentage"] = round(
+                (stats["legislationPassed"] / stats["legislationSponsored"]) * 100, 2)
 
-            # add this sponsor's pass rate to the appropriate groups for averaging
-            pass_rate = stats["passPercentage"]
+        # add this sponsor's bill pass rate to the appropriate groups for averaging
+        if stats["billsSponsored"] > 0:
+            pass_rate = stats["billsPassPercentage"]
             group_stats["all"]["pass_rates"].append(pass_rate)
 
             if stats["party"] == "Republican":
@@ -299,7 +324,11 @@ def calculate_sponsor_stats():
             "billsSponsored": 0,
             "billsPassed": 0,
             "billsFailed": 0,
-            "passPercentage": 0
+            "billsPassPercentage": 0,
+            "legislationSponsored": 0,
+            "legislationPassed": 0,
+            "legislationFailed": 0,
+            "legislationPassPercentage": 0
         },
         {
             "sponsorId": "missing-2", 
@@ -310,7 +339,11 @@ def calculate_sponsor_stats():
             "billsSponsored": 0,
             "billsPassed": 0,
             "billsFailed": 0,
-            "passPercentage": 0
+            "billsPassPercentage": 0,
+            "legislationSponsored": 0,
+            "legislationPassed": 0,
+            "legislationFailed": 0,
+            "legislationPassPercentage": 0
         },
         {
             "sponsorId": "missing-3", 
@@ -321,7 +354,11 @@ def calculate_sponsor_stats():
             "billsSponsored": 0,
             "billsPassed": 0,
             "billsFailed": 0,
-            "passPercentage": 0
+            "billsPassPercentage": 0,
+            "legislationSponsored": 0,
+            "legislationPassed": 0,
+            "legislationFailed": 0,
+            "legislationPassPercentage": 0
         },
         {
             "sponsorId": "missing-4", 
@@ -332,7 +369,11 @@ def calculate_sponsor_stats():
             "billsSponsored": 0,
             "billsPassed": 0,
             "billsFailed": 0,
-            "passPercentage": 0
+            "billsPassPercentage": 0,
+            "legislationSponsored": 0,
+            "legislationPassed": 0,
+            "legislationFailed": 0,
+            "legislationPassPercentage": 0
         }
     ]
     
@@ -390,21 +431,20 @@ def calculate_sponsor_stats():
             if not sponsor_id or sponsor_id not in legislator_map:
                 continue
                 
-            # Find sponsor name
+            # find sponsor name
             sponsor = legislator_map[sponsor_id]
             sponsor_name = f"{sponsor.get('firstName', '')} {sponsor.get('lastName', '')}".strip()
             
-            # Extract bill details
+            # bill details
             bill_number = bill_data.get("billNumber", "Unknown")
             bill_type_obj = bill_data.get("billType", {})
             bill_type = bill_type_obj.get("description", "") 
             
-            # Get title from draft.shortTitle instead of title
             draft_data = bill_data.get("draft", {})
             bill_title = draft_data.get("shortTitle", "Untitled Bill")
             bill_statuses = draft_data.get("billStatuses", [])
             
-            # Check bill status
+            # check bill status
             bill_passed = False
             transmitted_to_governor = False
             vetoed = False
@@ -414,7 +454,7 @@ def calculate_sponsor_stats():
                 bill_progress = status_code.get("billProgressCategory", {}).get("description", "")
                 status_name = status_code.get("name", "")
                 
-                # Check bill passage
+                # check bill passage
                 if "Became Law" in bill_progress or "Signed by Governor" in status_name or "Chapter Number Assigned" in status_name:
                     bill_passed = True
                 elif "Transmitted to Governor" in status_name or "(H) Transmitted to Governor" in status_name or "(S) Transmitted to Governor" in status_name:
@@ -422,28 +462,33 @@ def calculate_sponsor_stats():
                 elif "Vetoed by Governor" in status_name:
                     vetoed = True
             
-            # A bill is considered passed if it became law OR was transmitted to governor but not vetoed
+            # bill is considered passed if it became law OR was transmitted to governor but not vetoed
             if bill_passed or (transmitted_to_governor and not vetoed):
                 bill_passed = True
             
-            # Final bill status
+            #  final status
             bill_status = "Passed" if bill_passed else "Failed"
             
-            # Clean up bill title
+            # Clean up title
             if bill_title:
                 bill_title = bill_title.replace("\n", " ").replace("  ", " ").strip()
                 if len(bill_title) > 300:
                     bill_title = bill_title[:297] + "..."
             
-            # Create bill entry - simplified without subjects and statusHistory
+            # bill entry
+            bill_type_code = bill_data.get("billType", {}).get("code", "")
+            bill_type = bill_data.get("billType", {}).get("description", "") 
+            
+            # bill entry
             bill_entry = {
                 "billNumber": bill_number,
                 "billType": bill_type,
+                "billTypeCode": bill_type_code,  # Add the code for filtering
                 "title": bill_title,
                 "status": bill_status
             }
             
-            # Add to legislator's bill collection
+            # add to legislator
             if sponsor_name not in legislator_bills:
                 legislator_bills[sponsor_name] = []
             
@@ -452,15 +497,15 @@ def calculate_sponsor_stats():
         except Exception as e:
             print(f"Error collecting bill details from {bill_file}: {e}")
     
-    # Handle missing legislators
+    # missing legislators
     for legislator in missing_legislators:
         sponsor_name = legislator["sponsor"]
         if sponsor_name not in legislator_bills:
             legislator_bills[sponsor_name] = []
     
-    # Create individual files for each legislator
+    # individual files for each legislator
     for sponsor_name, bills in legislator_bills.items():
-        # Create a sanitized filename from the sponsor name
+        # sanitized filename from the sponsor name
         safe_name = re.sub(r'[^\w\s-]', '', sponsor_name).lower().replace(' ', '-')
         
         # Get the sponsor stats
@@ -470,18 +515,27 @@ def calculate_sponsor_stats():
             "party": "Unknown", 
             "chamber": "Unknown",
             "district": "Unknown",
-            "billsSponsored": len(bills),
-            "billsPassed": sum(1 for bill in bills if bill["status"] == "Passed"),
-            "billsFailed": sum(1 for bill in bills if bill["status"] == "Failed"),
-            "passPercentage": 0
+            "billsSponsored": len([bill for bill in bills if bill.get("billTypeCode") in ["HB", "SB"]]),
+            "billsPassed": sum(1 for bill in bills if bill["status"] == "Passed" and bill.get("billTypeCode") in ["HB", "SB"]),
+            "billsFailed": sum(1 for bill in bills if bill["status"] == "Failed" and bill.get("billTypeCode") in ["HB", "SB"]),
+            "billsPassPercentage": 0,
+            "legislationSponsored": len(bills),
+            "legislationPassed": sum(1 for bill in bills if bill["status"] == "Passed"),
+            "legislationFailed": sum(1 for bill in bills if bill["status"] == "Failed"),
+            "legislationPassPercentage": 0
         })
         
-        # Calculate pass percentage
+        # pass percentage for HB/SB bills
         if sponsor_stats_entry["billsSponsored"] > 0:
-            sponsor_stats_entry["passPercentage"] = round(
+            sponsor_stats_entry["billsPassPercentage"] = round(
                 (sponsor_stats_entry["billsPassed"] / sponsor_stats_entry["billsSponsored"]) * 100, 2)
+                
+        # pass percentage for all legislation
+        if sponsor_stats_entry["legislationSponsored"] > 0:
+            sponsor_stats_entry["legislationPassPercentage"] = round(
+                (sponsor_stats_entry["legislationPassed"] / sponsor_stats_entry["legislationSponsored"]) * 100, 2)
         
-        # Create the full legislator record with both stats and bill details
+        # full legislator record
         legislator_record = {
             "sponsor": sponsor_name,
             "party": sponsor_stats_entry["party"],
@@ -491,7 +545,11 @@ def calculate_sponsor_stats():
                 "billsSponsored": sponsor_stats_entry["billsSponsored"],
                 "billsPassed": sponsor_stats_entry["billsPassed"],
                 "billsFailed": sponsor_stats_entry["billsFailed"],
-                "passPercentage": sponsor_stats_entry["passPercentage"]
+                "billsPassPercentage": sponsor_stats_entry["billsPassPercentage"],
+                "legislationSponsored": sponsor_stats_entry["legislationSponsored"],
+                "legislationPassed": sponsor_stats_entry["legislationPassed"],
+                "legislationFailed": sponsor_stats_entry["legislationFailed"],
+                "legislationPassPercentage": sponsor_stats_entry["legislationPassPercentage"]
             },
             "bills": sorted(bills, key=lambda x: x["billNumber"])
         }
@@ -531,12 +589,13 @@ def calculate_sponsor_stats():
     # save individual sponsor stats to CSV
     with open(csv_output_path, "w", newline="") as f:
         fieldnames = ["sponsor", "party", "chamber", "district",
-                      "billsSponsored", "billsPassed", "billsFailed", "passPercentage"]
+                      "billsSponsored", "billsPassed", "billsFailed", "billsPassPercentage",
+                      "legislationSponsored", "legislationPassed", "legislationFailed", "legislationPassPercentage"]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for stat in sorted_stats:
             # Create a new dict with just the fields we want
-            row = {field: stat[field] for field in fieldnames}
+            row = {field: stat.get(field, 0) for field in fieldnames}
             writer.writerow(row)
 
     # save party aggregation stats to JSON
