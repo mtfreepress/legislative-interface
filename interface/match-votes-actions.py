@@ -327,11 +327,21 @@ def main():
                         action_data["committee"] = f"{action_data['voteChamber']} {committee_name}"
 
             if matched_votes:
+                # Determine if this is a blast motion (should be floor vote even with committee)
+                is_blast_motion = "Taken from Committee" in action_description
+                
+                # Normal committee check, but override for blast motions
+                is_committee_vote = (
+                    action_data.get("committee") and 
+                    action_data.get("committee") != "undefined" and
+                    not is_blast_motion  # Override for blast motions
+                )
+                
                 action_data["vote"] = {
                     "action": action_data["id"],
                     "bill": action_data["bill"],
                     "date": action_data["date"],
-                    "type": "committee" if action_data.get("committee") and action_data.get("committee") != "undefined" else "floor",
+                    "type": "committee" if is_committee_vote else "floor",
                     "seqNumber": vote_seq,
                     "voteChamber": action_type.get('chamber', 'unknown').lower(),
                     "voteUrl": None,
