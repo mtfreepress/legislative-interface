@@ -331,7 +331,7 @@ def main():
                     "action": action_data["id"],
                     "bill": action_data["bill"],
                     "date": action_data["date"],
-                    "type": "committee" if action_data.get("committee") else "floor",
+                    "type": "committee" if action_data.get("committee") and action_data.get("committee") != "undefined" else "floor",
                     "seqNumber": vote_seq,
                     "voteChamber": action_type.get('chamber', 'unknown').lower(),
                     "voteUrl": None,
