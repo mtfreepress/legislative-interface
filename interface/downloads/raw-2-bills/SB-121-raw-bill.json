@@ -2,10 +2,10 @@
     "id": 19,
     "deadlineCodeId": 3,
     "billNumber": 121,
-    "sessionLawChapterNumber": null,
+    "sessionLawChapterNumber": 555,
     "sponsorId": 29,
     "carrierId": null,
-    "drafterStaffMemberId": 64,
+    "drafterStaffMemberId": 49,
     "billType": {
         "id": 4,
         "description": "Senate Bill",
@@ -16,7 +16,7 @@
     "draft": {
         "id": 19,
         "draftNumber": "LC0016",
-        "date": "2025-04-16T12:59:20",
+        "date": "2025-05-21T14:34:13",
         "shortTitle": "Revise the land use and planning act",
         "description": null,
         "requesterId": 29,
@@ -809,6 +809,27 @@
                     "name": "(S) Signed by Governor",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 23,
+                        "code": "190",
+                        "description": "Became Law"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 88283,
+                "timeStamp": "2025-05-13T14:33:14",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 207,
+                    "code": "258",
+                    "name": "Chapter Number Assigned",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
                     "billProgressCategory": {
                         "id": 23,
                         "code": "190",
