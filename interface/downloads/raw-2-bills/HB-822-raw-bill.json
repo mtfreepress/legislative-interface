@@ -590,15 +590,36 @@
                 }
             },
             {
-                "id": 85143,
+                "id": 89645,
                 "timeStamp": "2025-04-28T16:26:00",
                 "standingCommitteeId": null,
                 "billStatusCode": {
-                    "id": 148,
-                    "code": "198",
-                    "name": "(S) 3rd Reading Failed",
+                    "id": 245,
+                    "code": "296",
+                    "name": "(S) 3rd Reading Failed; 2nd House Vote Required",
                     "actionWeight": "HARD",
                     "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 8,
+                        "code": "60",
+                        "description": "In First House--Through 3rd Reading"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 89644,
+                "timeStamp": "2025-05-22T15:03:34",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 454,
+                    "code": "675",
+                    "name": "(H) Died in Process",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
                     "billProgressCategory": {
                         "id": 1,
                         "code": "0",
