@@ -886,7 +886,7 @@
             {
                 "id": 83864,
                 "timeStamp": "2025-04-25T10:37:24.685819",
-                "standingCommitteeId": 70,
+                "standingCommitteeId": null,
                 "billStatusCode": {
                     "id": 64,
                     "code": "112",
@@ -907,7 +907,7 @@
             {
                 "id": 84151,
                 "timeStamp": "2025-04-25T12:49:20.903244",
-                "standingCommitteeId": 70,
+                "standingCommitteeId": null,
                 "billStatusCode": {
                     "id": 66,
                     "code": "114",
@@ -918,6 +918,27 @@
                         "id": 5,
                         "code": "30",
                         "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 92109,
+                "timeStamp": "2025-05-23T09:00:08",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 223,
+                    "code": "274",
+                    "name": "(S) Died in Standing Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 1,
+                        "code": "0",
+                        "description": "Probably Dead"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
