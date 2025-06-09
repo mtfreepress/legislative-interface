@@ -1010,19 +1010,103 @@
                 }
             },
             {
-                "id": 74097,
-                "timeStamp": "2025-04-09T18:51:30",
+                "id": 94372,
+                "timeStamp": "2025-04-09T18:51:19",
                 "standingCommitteeId": 4,
                 "billStatusCode": {
-                    "id": 308,
-                    "code": "525",
+                    "id": 307,
+                    "code": "524",
                     "name": "(H) Tabled in Committee",
                     "actionWeight": "HARD",
                     "chamber": "HOUSE",
                     "billProgressCategory": {
-                        "id": 10,
-                        "code": "75",
-                        "description": "In Second House Committee--Tabled"
+                        "id": 4,
+                        "code": "25",
+                        "description": "In First House Committee--Tabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 94373,
+                "timeStamp": "2025-04-23T17:37:58",
+                "standingCommitteeId": 4,
+                "billStatusCode": {
+                    "id": 309,
+                    "code": "526",
+                    "name": "(H) Taken from Table in Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 5,
+                        "code": "30",
+                        "description": "In First House Committee--Nontabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 94374,
+                "timeStamp": "2025-04-24T17:26:24",
+                "standingCommitteeId": 4,
+                "billStatusCode": {
+                    "id": 307,
+                    "code": "524",
+                    "name": "(H) Tabled in Committee",
+                    "actionWeight": "HARD",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 4,
+                        "code": "25",
+                        "description": "In First House Committee--Tabled"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 94375,
+                "timeStamp": "2025-04-25T10:43:00",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 441,
+                    "code": "662",
+                    "name": "(H) Motion Failed",
+                    "actionWeight": "SOFT",
+                    "chamber": "HOUSE",
+                    "billProgressCategory": {
+                        "id": 1,
+                        "code": "0",
+                        "description": "Probably Dead"
+                    },
+                    "standingCommitteeStatusGrouping": {
+                        "id": 1,
+                        "name": "test_name"
+                    }
+                }
+            },
+            {
+                "id": 94371,
+                "timeStamp": "2025-05-23T13:58:58",
+                "standingCommitteeId": null,
+                "billStatusCode": {
+                    "id": 224,
+                    "code": "275",
+                    "name": "(S) Died in Process",
+                    "actionWeight": "HARD",
+                    "chamber": "SENATE",
+                    "billProgressCategory": {
+                        "id": 1,
+                        "code": "0",
+                        "description": "Probably Dead"
                     },
                     "standingCommitteeStatusGrouping": {
                         "id": 1,
