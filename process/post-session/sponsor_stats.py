@@ -39,7 +39,7 @@ def calculate_sponsor_stats():
         legislators_data = json.load(f)
 
     # create legislator lookup by ID
-    legislator_map = {legislator["id"]                      : legislator for legislator in legislators_data}
+    legislator_map = {legislator["id"]: legislator for legislator in legislators_data}
 
     # dictionary to store statistics for each sponsor
     sponsor_stats = {}
@@ -112,7 +112,7 @@ def calculate_sponsor_stats():
             # increment bills sponsored count
            # Get the bill type code (HB, SB, etc.)
             bill_type_code = bill_data.get("billType", {}).get("code", "")
-            
+
             # Always increment legislation counts (all types)
             sponsor_stats[sponsor_name]["legislationSponsored"] += 1
 
@@ -246,7 +246,7 @@ def calculate_sponsor_stats():
         if stats["billsSponsored"] > 0:
             stats["billsPassPercentage"] = round(
                 (stats["billsPassed"] / stats["billsSponsored"]) * 100, 2)
-                
+
         # calculate all legislation pass percentage
         if stats["legislationSponsored"] > 0:
             stats["legislationPassPercentage"] = round(
@@ -316,10 +316,10 @@ def calculate_sponsor_stats():
     # add missing legislators with no bills sponsored
     missing_legislators = [
         {
-            "sponsorId": "missing-1", 
-            "sponsor": "Sidney Fitzpatrick", 
-            "party": "Democrat", 
-            "chamber": "HOUSE", 
+            "sponsorId": "missing-1",
+            "sponsor": "Sidney Fitzpatrick",
+            "party": "Democrat",
+            "chamber": "HOUSE",
             "district": "House District 42",
             "billsSponsored": 0,
             "billsPassed": 0,
@@ -331,10 +331,10 @@ def calculate_sponsor_stats():
             "legislationPassPercentage": 0
         },
         {
-            "sponsorId": "missing-2", 
-            "sponsor": "Mike Fox", 
-            "party": "Democrat", 
-            "chamber": "HOUSE", 
+            "sponsorId": "missing-2",
+            "sponsor": "Mike Fox",
+            "party": "Democrat",
+            "chamber": "HOUSE",
             "district": "House District 32",
             "billsSponsored": 0,
             "billsPassed": 0,
@@ -346,10 +346,10 @@ def calculate_sponsor_stats():
             "legislationPassPercentage": 0
         },
         {
-            "sponsorId": "missing-3", 
-            "sponsor": "Denise Hayman", 
-            "party": "Democrat", 
-            "chamber": "SENATE", 
+            "sponsorId": "missing-3",
+            "sponsor": "Denise Hayman",
+            "party": "Democrat",
+            "chamber": "SENATE",
             "district": "Senate District 32",
             "billsSponsored": 0,
             "billsPassed": 0,
@@ -361,10 +361,10 @@ def calculate_sponsor_stats():
             "legislationPassPercentage": 0
         },
         {
-            "sponsorId": "missing-4", 
-            "sponsor": "Jacinda Morigeau", 
-            "party": "Democrat", 
-            "chamber": "SENATE", 
+            "sponsorId": "missing-4",
+            "sponsor": "Jacinda Morigeau",
+            "party": "Democrat",
+            "chamber": "SENATE",
             "district": "Senate District 46",
             "billsSponsored": 0,
             "billsPassed": 0,
@@ -376,84 +376,96 @@ def calculate_sponsor_stats():
             "legislationPassPercentage": 0
         }
     ]
-    
+
     # add them to the sponsor_stats dictionary
     for legislator in missing_legislators:
         sponsor_name = legislator["sponsor"]
         if sponsor_name not in sponsor_stats:
             sponsor_stats[sponsor_name] = legislator
-            
+
             # update the appropriate group member counts
             group_stats["all"]["members"].add(legislator["sponsorId"])
-            
+
             if legislator["party"] == "Democrat":
-                group_stats["democrats"]["members"].add(legislator["sponsorId"])
+                group_stats["democrats"]["members"].add(
+                    legislator["sponsorId"])
                 if legislator["chamber"] == "HOUSE":
-                    group_stats["houseDemocrats"]["members"].add(legislator["sponsorId"])
-                    group_stats["house"]["members"].add(legislator["sponsorId"])
+                    group_stats["houseDemocrats"]["members"].add(
+                        legislator["sponsorId"])
+                    group_stats["house"]["members"].add(
+                        legislator["sponsorId"])
                 elif legislator["chamber"] == "SENATE":
-                    group_stats["senateDemocrats"]["members"].add(legislator["sponsorId"])
-                    group_stats["senate"]["members"].add(legislator["sponsorId"])
+                    group_stats["senateDemocrats"]["members"].add(
+                        legislator["sponsorId"])
+                    group_stats["senate"]["members"].add(
+                        legislator["sponsorId"])
             elif legislator["party"] == "Republican":
-                group_stats["republicans"]["members"].add(legislator["sponsorId"])
+                group_stats["republicans"]["members"].add(
+                    legislator["sponsorId"])
                 if legislator["chamber"] == "HOUSE":
-                    group_stats["houseRepublicans"]["members"].add(legislator["sponsorId"])
-                    group_stats["house"]["members"].add(legislator["sponsorId"])
+                    group_stats["houseRepublicans"]["members"].add(
+                        legislator["sponsorId"])
+                    group_stats["house"]["members"].add(
+                        legislator["sponsorId"])
                 elif legislator["chamber"] == "SENATE":
-                    group_stats["senateRepublicans"]["members"].add(legislator["sponsorId"])
-                    group_stats["senate"]["members"].add(legislator["sponsorId"])
+                    group_stats["senateRepublicans"]["members"].add(
+                        legislator["sponsorId"])
+                    group_stats["senate"]["members"].add(
+                        legislator["sponsorId"])
 
     # sort the individual results by number of bills sponsored (descending)
     sorted_stats = sorted(sponsor_stats.values(),
                           key=lambda x: x["billsSponsored"], reverse=True)
-    
+
     legislators_dir = output_dir / "legislators"
     legislators_dir.mkdir(exist_ok=True)
-    
+
     # Create separate directories for CSV and JSON files
     legislators_json_dir = legislators_dir / "json"
     legislators_csv_dir = legislators_dir / "csv"
     legislators_json_dir.mkdir(exist_ok=True)
     legislators_csv_dir.mkdir(exist_ok=True)
-    
+
     # Collect bill details for each legislator during processing
     legislator_bills = {}
-    
+
     # Second pass through bill files to collect bill titles and details
     print(f"Collecting detailed bill information for individual legislator reports...")
     for bill_file in bill_files:
         try:
             with open(bill_file, "r") as f:
                 bill_data = json.load(f)
-                
+
             # get sponsor ID and basic bill info
             sponsor_id = bill_data.get("sponsorId")
             if not sponsor_id or sponsor_id not in legislator_map:
                 continue
-                
+
             # find sponsor name
             sponsor = legislator_map[sponsor_id]
-            sponsor_name = f"{sponsor.get('firstName', '')} {sponsor.get('lastName', '')}".strip()
-            
+            sponsor_name = f"{sponsor.get('firstName', '')} {sponsor.get('lastName', '')}".strip(
+            )
+
             # bill details
             bill_number = bill_data.get("billNumber", "Unknown")
             bill_type_obj = bill_data.get("billType", {})
-            bill_type = bill_type_obj.get("description", "") 
-            
+            bill_type = bill_type_obj.get("description", "")
+
             draft_data = bill_data.get("draft", {})
             bill_title = draft_data.get("shortTitle", "Untitled Bill")
             bill_statuses = draft_data.get("billStatuses", [])
-            
+
             # check bill status
             bill_passed = False
             transmitted_to_governor = False
             vetoed = False
-            
+
             for status in bill_statuses:
                 status_code = status.get("billStatusCode", {})
-                bill_progress = status_code.get("billProgressCategory", {}).get("description", "")
+                bill_progress = status_code.get(
+                    "billProgressCategory", {}).get("description", "")
                 status_name = status_code.get("name", "")
-                
+
                 # check bill passage
                 if "Became Law" in bill_progress or "Signed by Governor" in status_name or "Chapter Number Assigned" in status_name:
                     bill_passed = True
@@ -461,24 +473,25 @@ def calculate_sponsor_stats():
                     transmitted_to_governor = True
                 elif "Vetoed by Governor" in status_name:
                     vetoed = True
-            
+
             # bill is considered passed if it became law OR was transmitted to governor but not vetoed
             if bill_passed or (transmitted_to_governor and not vetoed):
                 bill_passed = True
-            
+
             #  final status
             bill_status = "Passed" if bill_passed else "Failed"
-            
+
             # Clean up title
             if bill_title:
-                bill_title = bill_title.replace("\n", " ").replace("  ", " ").strip()
+                bill_title = bill_title.replace(
+                    "\n", " ").replace("  ", " ").strip()
                 if len(bill_title) > 300:
                     bill_title = bill_title[:297] + "..."
-            
+
             # bill entry
             bill_type_code = bill_data.get("billType", {}).get("code", "")
-            bill_type = bill_data.get("billType", {}).get("description", "") 
-            
+            bill_type = bill_data.get("billType", {}).get("description", "")
+
             # bill entry
             bill_entry = {
                 "billNumber": bill_number,
@@ -487,32 +500,33 @@ def calculate_sponsor_stats():
                 "title": bill_title,
                 "status": bill_status
             }
-            
+
             # add to legislator
             if sponsor_name not in legislator_bills:
                 legislator_bills[sponsor_name] = []
-            
+
             legislator_bills[sponsor_name].append(bill_entry)
-            
+
         except Exception as e:
             print(f"Error collecting bill details from {bill_file}: {e}")
-    
+
     # missing legislators
     for legislator in missing_legislators:
         sponsor_name = legislator["sponsor"]
         if sponsor_name not in legislator_bills:
             legislator_bills[sponsor_name] = []
-    
+
     # individual files for each legislator
     for sponsor_name, bills in legislator_bills.items():
         # sanitized filename from the sponsor name
-        safe_name = re.sub(r'[^\w\s-]', '', sponsor_name).lower().replace(' ', '-')
-        
+        safe_name = re.sub(
+            r'[^\w\s-]', '', sponsor_name).lower().replace(' ', '-')
+
         # Get the sponsor stats
         sponsor_stats_entry = sponsor_stats.get(sponsor_name, {
             "sponsorId": "unknown",
             "sponsor": sponsor_name,
-            "party": "Unknown", 
+            "party": "Unknown",
             "chamber": "Unknown",
             "district": "Unknown",
             "billsSponsored": len([bill for bill in bills if bill.get("billTypeCode") in ["HB", "SB"]]),
@@ -524,17 +538,17 @@ def calculate_sponsor_stats():
             "legislationFailed": sum(1 for bill in bills if bill["status"] == "Failed"),
             "legislationPassPercentage": 0
         })
-        
+
         # pass percentage for HB/SB bills
         if sponsor_stats_entry["billsSponsored"] > 0:
             sponsor_stats_entry["billsPassPercentage"] = round(
                 (sponsor_stats_entry["billsPassed"] / sponsor_stats_entry["billsSponsored"]) * 100, 2)
-                
+
         # pass percentage for all legislation
         if sponsor_stats_entry["legislationSponsored"] > 0:
             sponsor_stats_entry["legislationPassPercentage"] = round(
                 (sponsor_stats_entry["legislationPassed"] / sponsor_stats_entry["legislationSponsored"]) * 100, 2)
-        
+
         # full legislator record
         legislator_record = {
             "sponsor": sponsor_name,
@@ -553,12 +567,12 @@ def calculate_sponsor_stats():
             },
             "bills": sorted(bills, key=lambda x: x["billNumber"])
         }
-        
+
         # Save JSON file
         json_path = legislators_json_dir / f"{safe_name}.json"
         with open(json_path, "w") as f:
             json.dump(legislator_record, f, indent=2)
-        
+
         # Save CSV file
         csv_path = legislators_csv_dir / f"{safe_name}.csv"
         with open(csv_path, "w", newline="") as f:
@@ -566,7 +580,7 @@ def calculate_sponsor_stats():
             fieldnames = ["billNumber", "billType", "title", "status"]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
-            
+
             # Write bills
             for bill in sorted(bills, key=lambda x: x["billNumber"]):
                 writer.writerow({
@@ -575,8 +589,9 @@ def calculate_sponsor_stats():
                     "title": bill["title"],
                     "status": bill["status"]
                 })
-    
-    print(f"Created individual bill reports for {len(legislator_bills)} legislators in {legislators_dir}")
+
+    print(
+        f"Created individual bill reports for {len(legislator_bills)} legislators in {legislators_dir}")
 
     # convert party stats dict to list for JSON output
     party_stats_list = [{"category": key, **value}
@@ -630,6 +645,78 @@ def calculate_sponsor_stats():
         # Add any other metrics to count_stats by default
         else:
             count_stats[key] = value
+
+    roster_path = script_dir / "../../inputs/legislators/legislator-roster-2025.json"
+    locale_lookup = {}
+    
+    try:
+        with open(roster_path, "r") as f:
+            roster_data = json.load(f)
+            
+        # Create lookup by full name
+        for legislator in roster_data:
+            if all(key in legislator for key in ['first_name', 'last_name', 'locale']):
+                full_name = f"{legislator['first_name']} {legislator['last_name']}"
+                locale_lookup[full_name] = legislator['locale']
+                
+        print(f"Loaded locale data for {len(locale_lookup)} legislators")
+        
+    except Exception as e:
+        print(f"Warning: Could not load roster data: {e}")
+        
+    # Create simplified graphics output
+    graphics_stats = []
+    
+    for stat in sorted_stats:
+        # Look up locale
+        sponsor_name = stat["sponsor"]
+        locale = locale_lookup.get(sponsor_name, "Unknown")
+        
+        # Determine title based on chamber
+        if stat["chamber"] == "SENATE":
+            title = "Sen."
+        elif stat["chamber"] == "HOUSE":
+            title = "Rep."
+        else:
+            title = ""
+            
+        # Simplify party
+        party_short = "R" if stat["party"] == "Republican" else "D" if stat["party"] == "Democrat" else stat["party"]
+        
+        # Create simplified record with separate title field
+        graphics_record = {
+            "title": title,
+            "sponsor": sponsor_name,
+            "party": party_short,
+            "locale": locale,
+            "billsSponsored": stat["billsSponsored"],
+            "billsPassed": stat["billsPassed"],
+            "billsFailed": stat["billsFailed"],
+            "billsPassPercentage": stat["billsPassPercentage"]
+        }
+        
+        graphics_stats.append(graphics_record)
+    
+    # Output paths for graphics files
+    graphics_json_path = output_dir / "sponsor_stats_graphics.json"
+    graphics_csv_path = output_dir / "sponsor_stats_graphics.csv"
+    
+    # Save graphics JSON
+    with open(graphics_json_path, "w") as f:
+        json.dump(graphics_stats, f, indent=2)
+    
+    # Save graphics CSV
+    with open(graphics_csv_path, "w", newline="") as f:
+        fieldnames = ["title", "sponsor", "party", "locale", "billsSponsored", "billsPassed", "billsFailed", "billsPassPercentage"]
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        for stat in graphics_stats:
+            writer.writerow(stat)
+    
+    print(f"Graphics output saved:")
+    print(f"  - JSON: {graphics_json_path}")
+    print(f"  - CSV: {graphics_csv_path}")
+    print(f"  - {len(graphics_stats)} legislators included")
 
     # Save percentage stats to JSON
     with open(percentage_json_path, "w") as f:
