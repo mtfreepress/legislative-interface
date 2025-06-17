@@ -330,7 +330,23 @@
         "billStatus": {
             "id": 65368,
             "timeStamp": "2025-03-31T13:30:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 107,
+                "code": "156",
+                "name": "(S) 2nd Reading Passed",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 7,
+                    "code": "50",
+                    "description": "In First House--Through 2nd Reading"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",
@@ -668,7 +684,23 @@
         "billStatus": {
             "id": 66454,
             "timeStamp": "2025-04-01T15:07:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 148,
+                "code": "198",
+                "name": "(S) 3rd Reading Failed",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",
@@ -1006,7 +1038,23 @@
         "billStatus": {
             "id": 67399,
             "timeStamp": "2025-04-02T16:46:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 211,
+                "code": "262",
+                "name": "(S) Motion Failed",
+                "actionWeight": "SOFT",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",

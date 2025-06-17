@@ -330,7 +330,23 @@
         "billStatus": {
             "id": 41488,
             "timeStamp": "2025-02-20T15:11:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 107,
+                "code": "156",
+                "name": "(S) 2nd Reading Passed",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 7,
+                    "code": "50",
+                    "description": "In First House--Through 2nd Reading"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",

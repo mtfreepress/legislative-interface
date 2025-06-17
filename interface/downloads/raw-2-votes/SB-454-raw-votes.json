@@ -330,7 +330,23 @@
         "billStatus": {
             "id": 51543,
             "timeStamp": "2025-03-04T15:42:00",
-            "standingCommitteeId": 30
+            "standingCommitteeId": 30,
+            "billStatusCode": {
+                "id": 100,
+                "code": "149",
+                "name": "(S) Taken from Committee; Placed on 2nd Reading",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 6,
+                    "code": "40",
+                    "description": "In First House--Out of Committee"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",
@@ -668,7 +684,23 @@
         "billStatus": {
             "id": 52530,
             "timeStamp": "2025-03-05T19:25:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 263,
+                "code": "314",
+                "name": "(S) 2nd Reading Motion to Amend Carried",
+                "actionWeight": "SOFT",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",
@@ -1006,7 +1038,23 @@
         "billStatus": {
             "id": 52532,
             "timeStamp": "2025-03-05T19:34:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 111,
+                "code": "160",
+                "name": "(S) 2nd Reading Pass Motion Failed",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",
@@ -1344,7 +1392,23 @@
         "billStatus": {
             "id": 52534,
             "timeStamp": "2025-03-05T19:36:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 125,
+                "code": "174",
+                "name": "(S) 2nd Reading Indefinitely Postponed",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",

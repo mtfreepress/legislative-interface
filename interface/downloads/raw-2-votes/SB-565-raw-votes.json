@@ -330,7 +330,23 @@
         "billStatus": {
             "id": 68391,
             "timeStamp": "2025-04-03T16:16:00",
-            "standingCommitteeId": 19
+            "standingCommitteeId": 19,
+            "billStatusCode": {
+                "id": 100,
+                "code": "149",
+                "name": "(S) Taken from Committee; Placed on 2nd Reading",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 6,
+                    "code": "40",
+                    "description": "In First House--Out of Committee"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",
@@ -668,7 +684,23 @@
         "billStatus": {
             "id": 69290,
             "timeStamp": "2025-04-04T19:01:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 107,
+                "code": "156",
+                "name": "(S) 2nd Reading Passed",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 7,
+                    "code": "50",
+                    "description": "In First House--Through 2nd Reading"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",
@@ -1006,7 +1038,23 @@
         "billStatus": {
             "id": 69843,
             "timeStamp": "2025-04-05T11:06:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 146,
+                "code": "196",
+                "name": "(S) 3rd Reading Passed",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 8,
+                    "code": "60",
+                    "description": "In First House--Through 3rd Reading"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",

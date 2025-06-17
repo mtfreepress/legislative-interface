@@ -630,7 +630,23 @@
         "billStatus": {
             "id": 34226,
             "timeStamp": "2025-02-10T13:52:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 337,
+                "code": "556",
+                "name": "(H) 2nd Reading Passed",
+                "actionWeight": "HARD",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 7,
+                    "code": "50",
+                    "description": "In First House--Through 2nd Reading"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "HOUSE",
@@ -1268,7 +1284,23 @@
         "billStatus": {
             "id": 40317,
             "timeStamp": "2025-02-19T14:37:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 378,
+                "code": "598",
+                "name": "(H) 3rd Reading Failed",
+                "actionWeight": "HARD",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "HOUSE",

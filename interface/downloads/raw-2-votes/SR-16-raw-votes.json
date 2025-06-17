@@ -330,7 +330,23 @@
         "billStatus": {
             "id": 74251,
             "timeStamp": "2025-04-10T17:54:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 123,
+                "code": "172",
+                "name": "(S) Resolution Adopted",
+                "actionWeight": "HARD",
+                "chamber": "SENATE",
+                "billProgressCategory": {
+                    "id": 23,
+                    "code": "190",
+                    "description": "Became Law"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "SENATE",

@@ -630,7 +630,23 @@
         "billStatus": {
             "id": 29312,
             "timeStamp": "2025-01-30T14:02:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 485,
+                "code": "714",
+                "name": "(H) 2nd Reading Motion to Amend Carried",
+                "actionWeight": "SOFT",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "HOUSE",
@@ -1268,7 +1284,23 @@
         "billStatus": {
             "id": 29314,
             "timeStamp": "2025-01-30T14:17:00",
-            "standingCommitteeId": null
+            "standingCommitteeId": null,
+            "billStatusCode": {
+                "id": 345,
+                "code": "564",
+                "name": "(H) 2nd Reading Not Passed",
+                "actionWeight": "HARD",
+                "chamber": "HOUSE",
+                "billProgressCategory": {
+                    "id": 1,
+                    "code": "0",
+                    "description": "Probably Dead"
+                },
+                "standingCommitteeStatusGrouping": {
+                    "id": 1,
+                    "name": "test_name"
+                }
+            }
         },
         "systemId": {
             "chamber": "HOUSE",
