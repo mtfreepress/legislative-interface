@@ -696,7 +696,199 @@ def calculate_sponsor_stats():
         }
         
         graphics_stats.append(graphics_record)
-    
+
+
+    # List of the nine senators (last names, lowercased for matching)
+    nine_senators = [
+    "Jason Ellsworth",
+    "Wendy McKamey", 
+    "Gayle Lammers",
+    "Josh Kassmier",
+    "Butch Gillespie",
+    "Gregg Hunter",
+    "Denley Loge",
+    "Russ Tempel",
+    "Shelley Vance"
+]
+
+    # Extract last names and convert to lowercase for matching
+    nine_senators_last = [name.split()[-1].lower() for name in nine_senators]
+
+    def extract_last_name(full_name):
+        """Extract last name from various name formats"""
+        if not full_name:
+            return ""
+        # Handle "Last, First" format
+        if ',' in full_name:
+            return full_name.split(',')[0].strip().lower()
+        # Handle "First Last" format
+        parts = full_name.strip().split()
+        return parts[-1].lower() if parts else ""
+
+    # Find all matched action files
+    matched_actions_dir = script_dir / "../../interface/downloads/matched-2-votes"
+    matched_action_files = []
+
+    # Use different glob patterns to ensure we get all files
+    patterns = [
+        str(matched_actions_dir / "*-matched-actions.json"),
+        str(matched_actions_dir / "**/*-matched-actions.json")
+    ]
+
+    for pattern in patterns:
+        files = glob.glob(pattern, recursive=True)
+        matched_action_files.extend(files)
+
+    # Remove duplicates
+    matched_action_files = list(set(matched_action_files))
+
+    print(f"Found {len(matched_action_files)} matched action files to process")
+
+    # Build veto lookup from raw bills
+    bill_veto_lookup = {}
+    for bill_file in bill_files:  # Reuse the bill_files from earlier
+        try:
+            with open(bill_file, "r") as f:
+                bill_data = json.load(f)
+            
+            bill_number = bill_data.get("billNumber", "Unknown")
+            bill_type = bill_data.get("billType", {}).get("code", "")
+            bill_name = f"{bill_type} {bill_number}"
+            
+            # Check for veto
+            draft = bill_data.get("draft", {})
+            bill_statuses = draft.get("billStatuses", [])
+            vetoed = False
+            
+            for status in bill_statuses:
+                status_name = status.get("billStatusCode", {}).get("name", "")
+                if "Vetoed by Governor" in status_name:
+                    vetoed = True
+                    break
+                    
+            bill_veto_lookup[bill_name] = "Y" if vetoed else "N"
+            
+        except Exception as e:
+            print(f"Error processing {bill_file} for veto lookup: {e}")
+
+    print(f"Built veto lookup for {len(bill_veto_lookup)} bills")
+
+    # Process matched action files for Senate 3rd reading votes
+    senate_3rd_results = []
+    processed_bills = set()  # Avoid duplicates
+
+    for action_file in matched_action_files:
+        try:
+            with open(action_file, "r") as f:
+                actions = json.load(f)
+            
+            bill_name = None
+            
+            for action in actions:
+                # Get bill name from any action that has it
+                if bill_name is None and action.get("bill"):
+                    bill_name = action["bill"]
+                
+                description = action.get("description", "")
+                
+                # Look for Senate 3rd reading actions (case insensitive, flexible matching)
+                if ("(s) 3rd reading" in description.lower() and 
+                    "passed" in description.lower() and 
+                    action.get("vote")):
+                    
+                    # Skip if we already processed this bill
+                    if bill_name in processed_bills:
+                        continue
+                        
+                    vote_data = action["vote"]
+                    votes = vote_data.get("votes", [])
+                    
+                    if not votes:
+                        continue
+                    
+                    # Count total Yes votes
+                    total_yes = sum(1 for v in votes if v.get("option") == "Y")
+                    
+                    # Only process if 34 or fewer yes votes
+                    if total_yes <= 34:
+                        # Count how many of the nine senators voted Yes
+                        yes_nine = 0
+                        
+                        for vote in votes:
+                            if vote.get("option") == "Y":
+                                voter_name = vote.get("name", "")
+                                last_name = extract_last_name(voter_name)
+                                
+                                if last_name in nine_senators_last:
+                                    yes_nine += 1
+                        
+                        # Get veto status
+                        veto_status = bill_veto_lookup.get(bill_name, "N")
+                        
+                        # Add to results
+                        senate_3rd_results.append({
+                            "billName": bill_name,
+                            # "totalYes": total_yes,
+                            "numOfNine": yes_nine,
+                            "veto": veto_status,
+                            # "description": description
+                        })
+                        
+                        processed_bills.add(bill_name)
+                        
+                        print(f"Found: {bill_name} - {total_yes} total yes, {yes_nine} of nine - {description}")
+                    
+                    break  # Only process first matching action per bill
+                    
+        except Exception as e:
+            print(f"Error processing {action_file}: {e}")
+
+    print(f"Found {len(senate_3rd_results)} Senate 3rd reading votes with ≤34 yes votes")
+
+    # Filter for bills where at least 7 of the nine voted yes (if that's still your criteria)
+    filtered_results = [r for r in senate_3rd_results if r["numOfNine"] >= 7]
+    print(f"Found {len(filtered_results)} bills where 7+ of the nine senators voted yes")
+
+    # Save all results (not just filtered) so you can see the full picture
+    # Save all results with explicit field control
+    senate_3rd_csv_path = output_dir / "senate_3rd_reading_nine.csv"
+    # with open(senate_3rd_csv_path, "w", newline="") as f:
+    #     writer = csv.DictWriter(f, fieldnames=["billName", "totalYes", "numOfNine", "veto", "description"])
+    #     writer.writeheader()
+    #     for row in sorted(senate_3rd_results, key=lambda x: x["totalYes"]):
+    #         # Explicitly write only the fields we want
+    #         writer.writerow({
+    #             "billName": row["billName"],
+    #             "totalYes": row["totalYes"],
+    #             "numOfNine": row["numOfNine"],
+    #             "veto": row["veto"],
+    #             "description": row["description"]
+    #         })
+
+    # Save filtered results (original format)
+    filtered_csv_path = output_dir / "senate_3rd_reading_nine_filtered.csv"
+    with open(filtered_csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["billName", "numOfNine", "veto"])
+        writer.writeheader()
+        for row in filtered_results:
+            writer.writerow({
+                "billName": row["billName"],
+                "numOfNine": row["numOfNine"], 
+                "veto": row["veto"]
+            })
+
+    print(f"Results saved to:")
+    print(f"  - All results: {senate_3rd_csv_path}")
+    print(f"  - Filtered (7+ nine): {filtered_csv_path}")
+
+    with open(senate_3rd_csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["billName", "numOfNine", "veto"])
+        writer.writeheader()
+        for row in senate_3rd_results:
+            writer.writerow(row)
+
+    print(f"Senate 3rd reading results for the nine saved to {senate_3rd_csv_path}")
+        
     # Output paths for graphics files
     graphics_json_path = output_dir / "sponsor_stats_graphics.json"
     graphics_csv_path = output_dir / "sponsor_stats_graphics.csv"
@@ -717,6 +909,8 @@ def calculate_sponsor_stats():
     print(f"  - JSON: {graphics_json_path}")
     print(f"  - CSV: {graphics_csv_path}")
     print(f"  - {len(graphics_stats)} legislators included")
+
+    
 
     # Save percentage stats to JSON
     with open(percentage_json_path, "w") as f:
