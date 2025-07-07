@@ -125,29 +125,38 @@ def calculate_sponsor_stats():
             bill_passed = False
             transmitted_to_governor = False
             vetoed = False
-
+            veto_overridden = False
             # navigate through the nested structure to get to bill statuses
             draft_data = bill_data.get("draft", {})
             bill_statuses = draft_data.get("billStatuses", [])
 
             for status in bill_statuses:
                 status_code = status.get("billStatusCode", {})
-                bill_progress = status_code.get(
-                    "billProgressCategory", {}).get("description", "")
+                bill_progress = status_code.get("billProgressCategory", {}).get("description", "")
                 status_name = status_code.get("name", "")
 
-                # check if bill became law
-                if "Became Law" in bill_progress or "Signed by Governor" in status_name or "Chapter Number Assigned" in status_name:
+                # Expanded pass logic
+                if (
+                    "Became Law" in bill_progress
+                    or "Signed by Governor" in status_name
+                    or "Chapter Number Assigned" in status_name
+                    or "Filed with Secretary of State" in status_name
+                    or "Veto Overridden by Legislature" in status_name
+                ):
                     bill_passed = True
-                    break
                 elif "Transmitted to Governor" in status_name or "(H) Transmitted to Governor" in status_name or "(S) Transmitted to Governor" in status_name:
                     transmitted_to_governor = True
                 elif "Vetoed by Governor" in status_name:
                     vetoed = True
+                elif "Veto Overridden by Legislature" in status_name:
+                    veto_overridden = True
 
-            # bill is considered passed if it became law OR was transmitted to governor but not vetoed
+            # bill is considered passed if it matches above OR was transmitted to governor but not vetoed
             if bill_passed or (transmitted_to_governor and not vetoed):
                 bill_passed = True
+            # bill is considered failed if vetoed and not overridden
+            if vetoed and not veto_overridden:
+                bill_passed = False
 
             # update passed or failed count for individual sponsor
             if bill_passed:
@@ -244,8 +253,8 @@ def calculate_sponsor_stats():
     for sponsor_name, stats in sponsor_stats.items():
         # calculate bill pass percentage (HB/SB only)
         if stats["billsSponsored"] > 0:
-            stats["billsPassPercentage"] = round(
-                (stats["billsPassed"] / stats["billsSponsored"]) * 100, 2)
+            val = round((stats["billsPassed"] / stats["billsSponsored"]) * 100, 1)
+            stats["billsPassPercentage"] = int(val) if val == int(val) else val
 
         # calculate all legislation pass percentage
         if stats["legislationSponsored"] > 0:
@@ -682,8 +691,11 @@ def calculate_sponsor_stats():
             
         # Simplify party
         party_short = "R" if stat["party"] == "Republican" else "D" if stat["party"] == "Democrat" else stat["party"]
-        
-        # Create simplified record with separate title field
+        bpp = stat["billsPassPercentage"]
+        if isinstance(bpp, float):
+            bpp = round(bpp, 1)
+            bpp = int(bpp) if bpp == int(bpp) else bpp
+
         graphics_record = {
             "title": title,
             "sponsor": sponsor_name,
@@ -692,7 +704,7 @@ def calculate_sponsor_stats():
             "billsSponsored": stat["billsSponsored"],
             "billsPassed": stat["billsPassed"],
             "billsFailed": stat["billsFailed"],
-            "billsPassPercentage": stat["billsPassPercentage"]
+            "billsPassPercentage": bpp
         }
         
         graphics_stats.append(graphics_record)
@@ -888,6 +900,98 @@ def calculate_sponsor_stats():
             writer.writerow(row)
 
     print(f"Senate 3rd reading results for the nine saved to {senate_3rd_csv_path}")
+
+    passed_bills = []
+    failed_bills = []
+
+    for bill_file in bill_files:
+        try:
+            with open(bill_file, "r") as f:
+                bill_data = json.load(f)
+            bill_number = bill_data.get("billNumber", "Unknown")
+            bill_type = bill_data.get("billType", {}).get("code", "")
+            bill_name = f"{bill_type} {bill_number}"
+
+            draft_data = bill_data.get("draft", {})
+            bill_statuses = draft_data.get("billStatuses", [])
+
+            # Use the same logic as above
+            bill_passed = False
+            transmitted_to_governor = False
+            vetoed = False
+            veto_overridden = False
+
+            for status in bill_statuses:
+                status_code = status.get("billStatusCode", {})
+                bill_progress = status_code.get("billProgressCategory", {}).get("description", "")
+                status_name = status_code.get("name", "")
+
+                if (
+                    "Became Law" in bill_progress
+                    or "Signed by Governor" in status_name
+                    or "Chapter Number Assigned" in status_name
+                    or "Filed with Secretary of State" in status_name
+                    or "Veto Overridden by Legislature" in status_name
+                ):
+                    bill_passed = True
+                elif "Transmitted to Governor" in status_name or "(H) Transmitted to Governor" in status_name or "(S) Transmitted to Governor" in status_name:
+                    transmitted_to_governor = True
+                elif "Vetoed by Governor" in status_name:
+                    vetoed = True
+                elif "Veto Overridden by Legislature" in status_name:
+                    veto_overridden = True
+
+            if bill_passed or (transmitted_to_governor and not vetoed):
+                bill_passed = True
+            if vetoed and not veto_overridden:
+                bill_passed = False
+
+            if bill_passed:
+                passed_bills.append(bill_name)
+            else:
+                failed_bills.append(bill_name)
+        except Exception as e:
+            print(f"Error processing {bill_file} for pass/fail list: {e}")
+
+    def bill_sort_key(bill_name):
+    # bill_name is like "HB 1" or "SB 12"
+        parts = bill_name.split()
+        if len(parts) == 2:
+            bill_type, bill_num = parts
+            try:
+                bill_num = int(bill_num)
+            except ValueError:
+                bill_num = 0
+            return (bill_type, bill_num)
+        return (bill_name, 0)
+
+    # Sort and write the vertical CSV
+    passed_bills_sorted = sorted(passed_bills, key=bill_sort_key)
+    failed_bills_sorted = sorted(failed_bills, key=bill_sort_key)
+
+    vertical_csv_path = output_dir / "all_bills_passed_failed.csv"
+    with open(vertical_csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["billPassed", "billFailed"])
+        writer.writeheader()
+        max_len = max(len(passed_bills_sorted), len(failed_bills_sorted))
+        for i in range(max_len):
+            row = {
+                "billPassed": passed_bills_sorted[i] if i < len(passed_bills_sorted) else "",
+                "billFailed": failed_bills_sorted[i] if i < len(failed_bills_sorted) else ""
+            }
+            writer.writerow(row)
+
+    print(f"Saved vertical list of passed/failed bills to {vertical_csv_path}")
+
+    # Output to files
+    with open(output_dir / "all_passed_bills.txt", "w") as f:
+        for name in passed_bills:
+            f.write(name + "\n")
+    with open(output_dir / "all_failed_bills.txt", "w") as f:
+        for name in failed_bills:
+            f.write(name + "\n")
+
+    print(f"Saved lists of all passed and failed bills.")
         
     # Output paths for graphics files
     graphics_json_path = output_dir / "sponsor_stats_graphics.json"
