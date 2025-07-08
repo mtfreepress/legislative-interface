@@ -5,6 +5,9 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.parse import urlencode
 
+
+## This fetches all bill text versions. May be useful if we want a list of all versions of a bill.
+## using get-latest-bill-text-pdf.py instead will fetch the latest version of the bill text PDF.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 API_BASE_URL = "https://api.legmt.gov"
 DOWNLOAD_DIR = os.path.join(BASE_DIR, "downloads")
