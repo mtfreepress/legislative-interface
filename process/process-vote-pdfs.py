@@ -4,7 +4,7 @@ from pypdf import PdfReader
 import json
 import sys
 
-
+# Only for sessions prior to 2025 where PDF vote sheets are the 
 # TODO: Fix the "A IR" bug
 # TODO: Map "Mr. Speaker" to name of speaker (maybe do that in front end?)
 
