@@ -48,6 +48,9 @@ measure_time python ./interface/get-legal-review-notes.py "$sessionId" "$legisla
 # get fiscal notices
 measure_time python ./interface/get-fiscal-review-notes.py "$sessionId" "$legislatureOrdinal" "$sessionOrdinal"
 
+# get bill text PDFs
+measure_time python interface/get-bill-text-pdf.py $sessionId $legislatureOrdinal $sessionOrdinal
+
 # get ammendments
 measure_time python ./interface/get-amendments.py "$sessionId" "$legislatureOrdinal" "$sessionOrdinal"
 
