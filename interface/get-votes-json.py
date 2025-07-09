@@ -54,9 +54,11 @@ async def fetch_and_save_vote_data(session, bill, download_dir):
         vote_data = await fetch_data(session, vote_data_url)
         if vote_data is not None:
             await save_vote_data(vote_data, bill_type, bill_number, download_dir)
-            print(f"Saved votes for {bill_type}{bill_number}")
+            # too verbose for production
+            # print(f"Saved votes for {bill_type}{bill_number}")
         else:
-            print(f"No vote data for {bill_type}{bill_number}")
+            # too verbose for production
+            # print(f"No vote data for {bill_type}{bill_number}")
             pass
     except Exception as e:
         print(f"Failed to fetch data for {bill_type}{bill_number}: {e}")
