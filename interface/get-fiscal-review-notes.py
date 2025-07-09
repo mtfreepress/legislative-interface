@@ -100,13 +100,18 @@ async def fetch_and_save_fiscal_notes(session, bill, legislature_ordinal, sessio
             else:
                 print(f"Failed to fetch PDF URL for document ID: {document_id}")
         else:
-        # Debug to make sure skipping existing files works correctly — Disable in production
+            # Debug to make sure skipping existing files works correctly — Disable in production
             # print(f"Skipping {bill_type} {bill_number}: {file_name} already exists.")
-            fiscal_notes.append({"billType": bill_type, "billNumber": bill_number, "fileName": file_name})
+            pass
+        fiscal_notes.append({"billType": bill_type, "billNumber": bill_number, "fileName": file_name})
     else:
         # Remove existing files if no fiscal notes are found
         for file in existing_files:
             os.remove(os.path.join(dest_folder, file))
+        # print(f"No fiscal notes found for {bill_type} {bill_number}. Removed existing files.")
+
+def sort_notes(notes):
+    return sorted(notes, key=lambda x: (x["billType"], x["billNumber"], x.get("fileName", "")))
 
 async def main_async(session_id, legislature_ordinal, session_ordinal):
     list_bills_file = os.path.join(BASE_DIR, f"../list-bills-{session_id}.json")
@@ -124,10 +129,14 @@ async def main_async(session_id, legislature_ordinal, session_ordinal):
         ]
         await asyncio.gather(*tasks)
 
-    save_json(fiscal_notes, FISCAL_NOTES_FILE)
+    # Sort before saving for consistency
+    fiscal_notes_sorted = sort_notes(fiscal_notes)
+    fiscal_note_updates_sorted = sort_notes(fiscal_note_updates)
+
+    save_json(fiscal_notes_sorted, FISCAL_NOTES_FILE)
     print(f"Saved fiscal notes to {FISCAL_NOTES_FILE}")
 
-    save_json(fiscal_note_updates, FISCAL_NOTE_UPDATES_FILE)
+    save_json(fiscal_note_updates_sorted, FISCAL_NOTE_UPDATES_FILE)
     print(f"Saved fiscal note updates to {FISCAL_NOTE_UPDATES_FILE}")
 
 def main():
