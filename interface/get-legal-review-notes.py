@@ -134,6 +134,9 @@ async def fetch_and_save_documents(
         for file in existing_veto_files:
             os.remove(os.path.join(veto_letter_folder, file))
 
+def sort_notes(notes):
+    return sorted(notes, key=lambda x: (x["billType"], x["billNumber"], x.get("fileName", "")))
+
 async def main_async(session_id, legislature_ordinal, session_ordinal):
     list_bills_file = os.path.join(BASE_DIR, f"../list-bills-{session_id}.json")
     bills_data = load_json(list_bills_file)
@@ -159,16 +162,22 @@ async def main_async(session_id, legislature_ordinal, session_ordinal):
         ]
         await asyncio.gather(*tasks)
 
-    save_json(legal_notes, LEGAL_NOTES_FILE)
+    # Sort all lists before saving
+    legal_notes_sorted = sort_notes(legal_notes)
+    legal_note_updates_sorted = sort_notes(legal_note_updates)
+    veto_letters_sorted = sort_notes(veto_letters)
+    veto_letter_updates_sorted = sort_notes(veto_letter_updates)
+
+    save_json(legal_notes_sorted, LEGAL_NOTES_FILE)
     print(f"Saved legal notes to {LEGAL_NOTES_FILE}")
 
-    save_json(legal_note_updates, LEGAL_NOTE_UPDATES_FILE)
+    save_json(legal_note_updates_sorted, LEGAL_NOTE_UPDATES_FILE)
     print(f"Saved legal note updates to {LEGAL_NOTE_UPDATES_FILE}")
 
-    save_json(veto_letters, VETO_LETTER_FILE)
+    save_json(veto_letters_sorted, VETO_LETTER_FILE)
     print(f"Saved veto letters to {VETO_LETTER_FILE}")
 
-    save_json(veto_letter_updates, VETO_LETTER_UPDATES_FILE)
+    save_json(veto_letter_updates_sorted, VETO_LETTER_UPDATES_FILE)
     print(f"Saved veto letter updates to {VETO_LETTER_UPDATES_FILE}")
 
 def main():
