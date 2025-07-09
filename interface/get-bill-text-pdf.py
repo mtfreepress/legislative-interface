@@ -89,7 +89,7 @@ async def fetch_and_save_bill_text(session, bill, legislature_ordinal, session_o
         local_file_path = os.path.join(dest_folder, file_name)
 
         if os.path.exists(local_file_path):
-            print(f"File {local_file_path} already exists locally. Skipping download.")
+            # print(f"File {local_file_path} already exists locally. Skipping download.")
             bill_pdfs.append({"billType": bill_type, "billNumber": bill_number, "fileName": file_name})
             return
 
