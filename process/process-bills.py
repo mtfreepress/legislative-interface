@@ -94,6 +94,11 @@ def process_bills(session_id):
         veto_letters_data = json.load(f)
     veto_letters_set = {(note["billType"], note["billNumber"]) for note in veto_letters_data}
 
+    bill_text_pdf_file = os.path.join(script_dir, "../interface/bill_pdfs.json")
+    with open(bill_text_pdf_file, "r") as f:
+        bill_text_pdf_data = json.load(f)
+    bill_text_pdf_set = {(pdf["billType"], pdf["billNumber"]) for pdf in bill_text_pdf_data}
+
     processed_bills = []
     bills = json_data.get("content", [])
 
@@ -224,6 +229,9 @@ def process_bills(session_id):
         has_fiscal_note = (bill_type, bill_number) in fiscal_notes_set
         has_veto_letter = (bill_type, bill_number) in veto_letters_set
 
+        # bill should always have billTextPdf but check just in case
+        has_bill_text_pdf = (bill_type, bill_number) in bill_text_pdf_set
+
         # build bill json
         bill_key = f"{bill_type} {bill_number}" if bill_type and bill_number else f"{draft_number}"
         hypen_bill_key = f"{bill_type.lower()}-{bill_number}" if bill_type and bill_number else f"{draft_number}"
@@ -235,7 +243,8 @@ def process_bills(session_id):
             "session": session_id,
             "billPageUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=sum",
             "billTextUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=bill",
-            "billPdfUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=bill",
+            ## this is used on the front end for the PDF
+            "billPdfUrl": f"/bills/bill-text/{hypen_bill_key}" if has_bill_text_pdf else None,
             "lc": draft_number,
             "title": draft_data.get("shortTitle", "undefined"),
             "sponsor": f"{safe_get(sponsor, ['firstName'])} {safe_get(sponsor, ['lastName'])}",

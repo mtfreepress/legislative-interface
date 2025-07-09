@@ -54,6 +54,9 @@ measure_time python ./interface/get-amendments.py "$sessionId" "$legislatureOrdi
 # compress fiscal notes:
 measure_time python interface/compress-pdfs.py interface/downloads/fiscal-note-pdfs-$sessionId
 
+# compress bill text PDFs:
+measure_time python interface/compress-pdfs.py interface/downloads/bill-text-pdfs-$sessionId
+
 # compress veto-lettrs:
 measure_time python interface/compress-pdfs.py interface/downloads/veto-letter-pdfs-$sessionId
 
