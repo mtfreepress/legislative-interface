@@ -63,7 +63,7 @@ async def main_async(legislative_session, bills_path):
     download_dir = get_download_dir(legislative_session)
     bills = load_bills(bills_path)
     connector = aiohttp.TCPConnector(limit=10)
-    async with aiohttp.ClientSession(connector=connector, headers=headers) as session:
+    async with aiohttp.ClientSession(connector=connector, headers=HEADERS) as session:
         tasks = [
             fetch_and_save_hearings_data(session, bill, download_dir)
             for bill in bills
