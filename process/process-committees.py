@@ -450,6 +450,7 @@ if __name__ == "__main__":
     process_committees(args.session_id)
 
 
+## TODO: Remove this code when done testing filtering and processing
 # import os
 # import json
 # import csv
