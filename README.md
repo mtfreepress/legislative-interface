@@ -1,6 +1,8 @@
 # Montana Legislative Interface
 
-This project is a from-scratch writing of a data pipeline by [Jacob Olness](https://github.com/jolness1) for the new [MT Legislative Bill Explorer](https://bills.legmt.gov/) that scrapes, processes, and organizes data from the Montana Legislature's bill tracker for use in [Montana Free Press](https://montanafreepress.org/)' [Capitol Tracker](https://github.com/mtfreepress/capitol-tracker-2025). It automates downloading, parsing, and transforming legislative data including bills, committees, votes, amendments, and PDFs to work with the Capitol Tracker data expectations formed by the state's decades-old previous bill tracker.
+This project is a from-scratch writing of a data pipeline by [Jacob Olness](https://github.com/jolness1) for the new [MT Legislative Bill Explorer](https://bills.legmt.gov/) that scrapes, processes, and organizes data from the Montana Legislature's bill tracker for use in [Montana Free Press](https://montanafreepress.org/)' [Capitol Tracker](https://github.com/mtfreepress/capitol-tracker-2025). It automates downloading, parsing, and transforming legislative data including bills, committees, votes, amendments, and PDFs to work with the Capitol Tracker data expectations formed by the state's decades-old previous bill tracker. Montana Free press is a 501(c)(3) nonprofit newsroom that aims to provide Montanans with in-depth, nonpartisan news coverage. 
+
+A live version of the 2025 tracker can be found at [https://projects.montanafreepress.org/capitol-tracker-2025/](https://projects.montanafreepress.org/capitol-tracker-2025/)
 
 ---
 ## Considerations:
@@ -15,17 +17,21 @@ Wherever possible caching has been implemented to minimize load on the state's s
 
 ## Quick Start
 
-### 1. Fork repository into 
-``` legislative-interface-{year}```
+### 1. Fork repository something like:
 
-### 2. Clone and Setup
+``` 
+legislative-interface-{year}
+```
+
+### 2. Clone and Setup 
+(modify this to match the forked repo url)
 
 ```bash
-git clone https://github.com/mtfreepress/legislative-interface.git
+git clone https://github.com/mtfreepress/legislative-interface.git 
 cd legislative-interface
 ```
 
-### 3. Create Python Virtual Environment
+### 3. Create Python Virtual Environment & Install Dependencies
 
 ```bash
 python3 -m venv venv
