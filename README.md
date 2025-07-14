@@ -4,6 +4,9 @@ This project is a from-scratch writing of a data pipeline by [Jacob Olness](http
 
 ---
 ## Considerations:
+
+Pipeline runs automatically via GitHub Actions set up in [`.github/workflows/data.yml`](.github/workflows/data.yml). There are cron jobs set up for active hours during the session and a reduced rate of 1x/hr for after Sine Die. Comment one out and uncomment the other to switch between them. 
+
 Wherever possible caching has been implemented to minimize load on the state's servers while helping to provide a service to the public in compliance with [Montana Constitution Article II, § 9's "Right To Know"](https://archive.legmt.gov/bills/mca/title_0000/article_0020/part_0010/section_0090/0000-0020-0010-0090.html) provision. For example — 
 1. PDFs are only downloaded if the latest version isn't stored locally
 2. The GitHub Actions pipeline runs only during the day 
@@ -187,7 +190,7 @@ legislatureOrdinal=69         # Legislature number (2027 will be Montana's 70th 
 
 ## License
 
-MIT License
+MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
@@ -202,4 +205,8 @@ When adding new scripts or modifying existing ones:
 
 ---
 
-**For the next legislative session (2027)**: Update session variables, check API endpoints, and test the whitelist filtering in the committee processing script.
+**For the next legislative session (2027)**: 
+1) __After forking__ delete the old data from last session
+2) Update session variables 
+3) Check API endpoints for functionality
+4) Change the URL for Capitol Tracker's legislators [`interface/get-legislators.py`](interface/get-legislators.py) (There is a TODO right above the line) or change it to manage those annotations in this repo instead. 
