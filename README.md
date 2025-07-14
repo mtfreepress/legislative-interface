@@ -190,7 +190,7 @@ legislatureOrdinal=69         # Legislature number (2027 will be Montana's 70th 
 
 ## License
 
-MIT License. See [LICENSE](LICENSE) for details.
+"New" BSD License (aka "3-clause"). See [LICENSE](LICENSE) for details.
 
 ---
 
