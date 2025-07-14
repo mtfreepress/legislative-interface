@@ -64,9 +64,10 @@ measure_time python interface/compress-pdfs.py interface/downloads/bill-text-pdf
 measure_time python interface/compress-pdfs.py interface/downloads/veto-letter-pdfs-$sessionId
 
 ### These two don't seem worth doing. Take awhile and save less than 3MB
-# compress legal notes:
+
+# 1) compress legal notes:
 measure_time python interface/compress-pdfs.py interface/downloads/legal-note-pdfs-$sessionId
-# compress amendments:
+# 2) compress amendments:
 # measure_time python interface/compress-pdfs.py interface/downloads/amendment-pdfs-$sessionId
 
 # get committee hearings data
@@ -84,6 +85,15 @@ measure_time python ./interface/get-committees.py $sessionId
 # match some votes:
 measure_time python ./interface/match-votes-actions.py $sessionId
 
+
+# Process committees data
+measure_time python ./process/process-committees.py $sessionId
+
+
+# process bill json into format we need
+measure_time python ./process/process-bills.py $sessionId
+
+
 #TODO: logic for `if sessionOrdinal is <20251, use this else use get-votes-json.py`
 # download PDFs - only needed for sessions prior to 2025:
 # measure_time python ./interface/get-pdf-votesheets.py --sessionId "$sessionId" --legislatureOrdinal "$legislatureOrdinal" --sessionOrdinal "$sessionOrdinal"
@@ -94,11 +104,5 @@ measure_time python ./interface/match-votes-actions.py $sessionId
 # merge actions and votes:
 # measure_time python ./process/merge-actions.py $sessionId
 
-# Process committees data
-measure_time python ./process/process-committees.py $sessionId
-
 # parse vote jsons:
 # measure_time python ./process/process-vote-json.py $sessionId
-
-# process bill json into format we need
-measure_time python ./process/process-bills.py $sessionId
