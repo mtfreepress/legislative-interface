@@ -11,7 +11,7 @@ A live version of the 2025 tracker can be found at [https://projects.montanafree
 
 Pipeline runs automatically via GitHub Actions set up in [`.github/workflows/data.yml`](.github/workflows/data.yml). There are cron jobs set up for active hours during the session and a reduced rate of 1x/hr for after Sine Die. Comment one out and uncomment the other to switch between them. 
 
-Wherever possible caching has been implemented to minimize load on the state's servers while helping to provide a service to the public in compliance with [Montana Constitution Article II, § 9's "Right To Know"](https://archive.legmt.gov/bills/mca/title_0000/article_0020/part_0010/section_0090/0000-0020-0010-0090.html) provision. For example — 
+Wherever possible caching has been implemented to minimize load on the state's servers while helping to provide a service to the public in accordance with [Montana Constitution Article II, § 9's "Right To Know"](https://archive.legmt.gov/bills/mca/title_0000/article_0020/part_0010/section_0090/0000-0020-0010-0090.html) provision. For example — 
 1. PDFs are only downloaded if the latest version isn't stored locally
 2. The GitHub Actions pipeline runs only during the day 
 
