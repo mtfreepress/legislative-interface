@@ -7,7 +7,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # load votes and bills
 def load_votes_and_bills(session_id):
     votes_dir = os.path.join(BASE_DIR, f"downloads/raw-{session_id}-votes")
-    list_bills_file = os.path.join(BASE_DIR, "../list-bills-2.json")
+    list_bills_file = os.path.join(BASE_DIR, f"list-bills-{session_id}.json")
     with open(list_bills_file, 'r') as file:
         bills = json.load(file)
     return votes_dir, bills

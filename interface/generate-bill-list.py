@@ -3,9 +3,12 @@ import os
 import sys
 
 # Load JSON file
+
+
 def load_bills(session_id):
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    json_file = os.path.join(script_dir, f"../interface/downloads/raw-{session_id}-bills.json")
+    json_file = os.path.join(
+        script_dir, f"../interface/downloads/raw-{session_id}-bills.json")
     try:
         with open(json_file, "r") as f:
             return json.load(f)
@@ -15,6 +18,7 @@ def load_bills(session_id):
     except json.JSONDecodeError:
         print(f"Failed to decode JSON in file: {json_file}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -36,7 +40,8 @@ if __name__ == "__main__":
         id = bill.get("id", "undefined")
         draft_number = draft.get("draftNumber", "undefined")
         bill_type_data = bill.get("billType", {})
-        bill_type = (bill_type_data.get("code", "") if bill_type_data else "").upper()
+        bill_type = (bill_type_data.get("code", "")
+                     if bill_type_data else "").upper()
 
         bill_number = bill.get("billNumber", "undefined")
 
@@ -52,7 +57,8 @@ if __name__ == "__main__":
                        })
 
     # Save extracted data to output file
-    output_file = f"list-bills-{session_id}.json"
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    output_file = os.path.join(script_dir, f"list-bills-{session_id}.json")
     with open(output_file, "w") as f:
         json.dump(output, f, indent=2)
 

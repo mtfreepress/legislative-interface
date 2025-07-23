@@ -175,8 +175,7 @@ def sort_amendments(amendments_list):
 
 
 async def main_async(session_id, legislature_ordinal, session_ordinal):
-    list_bills_file = os.path.join(
-        BASE_DIR, f"../list-bills-{session_id}.json")
+    list_bills_file = os.path.join(BASE_DIR, f"list-bills-{session_id}.json")
     bills_data = load_json(list_bills_file)
     download_dir = os.path.join(
         BASE_DIR, f"downloads/amendment-pdfs-{session_id}")

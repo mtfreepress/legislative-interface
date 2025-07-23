@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# In theory this can replace a lot of what we do in the capitol-tracker repository. Leaving for now
+# as a reference for how to do this in the future.
 measure_time() {
     local start_time=$(date +%s)
     echo "Running: $@"

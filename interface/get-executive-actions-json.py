@@ -9,13 +9,13 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 def parse_arguments():
     parser = argparse.ArgumentParser(
         description="Fetch and save executive actions data for bills (async).")
-    parser.add_argument('legislative_session', type=str,
+    parser.add_argument('session_id', type=str,
                         help="Legislative session identifier")
     return parser.parse_args()
 
-def get_download_dir(legislative_session):
+def get_download_dir(session_id):
     path = os.path.join(
-        BASE_DIR, f'downloads/raw-{legislative_session}-executive-actions')
+        BASE_DIR, f'downloads/raw-{session_id}-executive-actions')
     os.makedirs(path, exist_ok=True)
     return path
 
@@ -55,8 +55,8 @@ async def fetch_and_save_executive_actions_data(session, bill, download_dir):
     except Exception as e:
         print(f"Failed to fetch data for bill ID {bill_id}: {e}")
 
-async def main_async(legislative_session, bills_path):
-    download_dir = get_download_dir(legislative_session)
+async def main_async(session_id, bills_path):
+    download_dir = get_download_dir(session_id)
     bills = load_bills(bills_path)
     connector = aiohttp.TCPConnector(limit=10)
     headers = {
@@ -71,9 +71,9 @@ async def main_async(legislative_session, bills_path):
 
 def main():
     args = parse_arguments()
-    legislative_session = args.legislative_session
-    bills_path = os.path.join(BASE_DIR, f'../list-bills-{legislative_session}.json')
-    asyncio.run(main_async(legislative_session, bills_path))
+    session_id = args.session_id
+    bills_path = os.path.join(BASE_DIR, f'list-bills-{session_id}.json')
+    asyncio.run(main_async(session_id, bills_path))
 
 if __name__ == "__main__":
     main()
