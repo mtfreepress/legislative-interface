@@ -74,8 +74,7 @@ async def main_async(legislative_session, bills_path):
 def main():
     args = parse_arguments()
     legislative_session = args.legislative_session
-    bills_path = os.path.join(
-        BASE_DIR, f'../list-bills-{legislative_session}.json')
+    bills_path = os.path.join(BASE_DIR, f'list-bills-{legislative_session}.json')
     asyncio.run(main_async(legislative_session, bills_path))
 
 

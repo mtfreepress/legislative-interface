@@ -138,7 +138,7 @@ def sort_notes(notes):
     return sorted(notes, key=lambda x: (x["billType"], x["billNumber"], x.get("fileName", "")))
 
 async def main_async(session_id, legislature_ordinal, session_ordinal):
-    list_bills_file = os.path.join(BASE_DIR, f"../list-bills-{session_id}.json")
+    list_bills_file = os.path.join(BASE_DIR, f"list-bills-{session_id}.json")
     bills_data = load_json(list_bills_file)
 
     legal_note_dir = os.path.join(BASE_DIR, f"downloads/legal-note-pdfs-{session_id}")

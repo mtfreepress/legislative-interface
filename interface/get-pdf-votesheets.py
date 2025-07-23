@@ -16,7 +16,7 @@ def get_script_dir():
 
 def load_bills(session_id):
     # load bill data from the json file
-    json_file_path = os.path.join(get_script_dir(), f"../list-bills-{session_id}.json")
+    json_file_path = os.path.join(get_script_dir(), f"list-bills-{session_id}.json")
     try:
         with open(json_file_path, 'r') as file:
             return json.load(file)

@@ -307,7 +307,7 @@ def load_bill_list(session_id):
     Load the list of bills from a JSON file.
     """
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(script_dir, f"../list-bills-{session_id}.json")
+    file_path = os.path.join(script_dir, f"../interface/list-bills-{session_id}.json")
     try:
         with open(file_path, 'r') as f:
             return json.load(f)

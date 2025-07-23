@@ -3,7 +3,7 @@ import json
 import argparse
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LIST_BILLS_PATH_TEMPLATE = os.path.join(BASE_DIR, '../list-bills-{}.json')
+LIST_BILLS_PATH_TEMPLATE = os.path.join(BASE_DIR, '../interface/list-bills-{}.json')
 MATCHED_ACTIONS_DIR_TEMPLATE = os.path.join(BASE_DIR, '../interface/downloads/matched-{}-votes')
 OUTPUT_DIR_TEMPLATE = os.path.join(BASE_DIR, 'cleaned/merged-actions-{}')
 

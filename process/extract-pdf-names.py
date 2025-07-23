@@ -84,7 +84,7 @@ def load_bill_list(file_path):
 # Standalone usage example:
 if __name__ == "__main__":
     sessionId = 20231
-    bill_list_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../list-bills-{sessionId}.json")  # Absolute path to the bill list file
+    bill_list_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"../interface/list-bills-{sessionId}.json")  # Absolute path to the bill list file
 
     extractor = PDFNameExtractor()
 

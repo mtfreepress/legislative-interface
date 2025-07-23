@@ -104,7 +104,7 @@ async def fetch_and_save_bill_text(session, bill, legislature_ordinal, session_o
         print(f"No valid bill version found for {bill_type} {bill_number}")
 
 async def main_async(session_id, legislature_ordinal, session_ordinal):
-    list_bills_file = os.path.join(BASE_DIR, f"../list-bills-{session_id}.json")
+    list_bills_file = os.path.join(BASE_DIR, f"list-bills-{session_id}.json")
     bills_data = load_json(list_bills_file)
     download_dir = os.path.join(DOWNLOAD_DIR, f"bill-text-pdfs-{session_id}")
 
