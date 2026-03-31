@@ -1,4 +1,4 @@
-name: Run Python Scripts on Schedule
+name: Run data pipeline and deploy assets
 
 on:
   push:
@@ -36,14 +36,32 @@ jobs:
         python-version: '3.x'
 
     # Install dependencies from requirements.txt
-    - name: Install dependencies
+    - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    # Set up Node.js for JS data processing
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
+
+    # Install Node.js dependencies
+    - name: Install Node.js dependencies
+      run: npm install
+
+    # Configure AWS credentials for S3 asset deployment
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
     # Ensure the script is executable
     - name: Make execute.sh executable
-      run: chmod +x ./execute.sh
+      run: chmod +x ./execute.sh ./deploy-assets.sh
 
     # Execute the shell script
     - name: Run the shell script

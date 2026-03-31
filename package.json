@@ -1,0 +1,19 @@
+{
+  "name": "legislative-interface",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "process": "node js-process/main.js",
+    "fetch-coverage": "node js-inputs/coverage/fetch.mjs",
+    "generate-manifest": "node generate-document-manifest.mjs"
+  },
+  "dependencies": {
+    "async-csv": "^2.1.3",
+    "d3-format": "^3.1.0",
+    "d3-scale": "^4.0.2",
+    "d3-time-format": "^4.1.0",
+    "glob": "^13.0.6",
+    "yaml": "^2.8.3"
+  }
+}

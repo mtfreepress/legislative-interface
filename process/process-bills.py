@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 from datetime import datetime
+from urllib.parse import quote
 
 # formatted_date function remains unchanged
 def formatted_date(date_string, default="undefined"):
@@ -78,26 +79,30 @@ def process_bills(session_id):
     with open(json_file, "r") as f:
         json_data = json.load(f)
 
-    # load legal notes json
+    # load legal notes json - map to filenames for direct PDF URLs
     legal_notes_file = os.path.join(script_dir, "../interface/legal_notes.json")
     with open(legal_notes_file, "r") as f:
         legal_notes_data = json.load(f)
     legal_notes_set = {(note["billType"], note["billNumber"]) for note in legal_notes_data}
+    legal_notes_map = {(note["billType"], note["billNumber"]): note["fileName"] for note in legal_notes_data}
 
     fiscal_notes_file = os.path.join(script_dir, "../interface/fiscal_notes.json")
     with open(fiscal_notes_file, "r") as f:
         fiscal_notes_data = json.load(f)
     fiscal_notes_set = {(note["billType"], note["billNumber"]) for note in fiscal_notes_data}
+    fiscal_notes_map = {(note["billType"], note["billNumber"]): note["fileName"] for note in fiscal_notes_data}
 
     veto_letters_file = os.path.join(script_dir, "../interface/veto_letter.json")
     with open(veto_letters_file, "r") as f:
         veto_letters_data = json.load(f)
     veto_letters_set = {(note["billType"], note["billNumber"]) for note in veto_letters_data}
+    veto_letters_map = {(note["billType"], note["billNumber"]): note["fileName"] for note in veto_letters_data}
 
     bill_text_pdf_file = os.path.join(script_dir, "../interface/bill_pdfs.json")
     with open(bill_text_pdf_file, "r") as f:
         bill_text_pdf_data = json.load(f)
     bill_text_pdf_set = {(pdf["billType"], pdf["billNumber"]) for pdf in bill_text_pdf_data}
+    bill_text_pdf_map = {(pdf["billType"], pdf["billNumber"]): pdf["fileName"] for pdf in bill_text_pdf_data}
 
     processed_bills = []
     bills = json_data.get("content", [])
@@ -237,14 +242,20 @@ def process_bills(session_id):
         hypen_bill_key = f"{bill_type.lower()}-{bill_number}" if bill_type and bill_number else f"{draft_number}"
         expanded_name = f"{bill_description} {bill_number}" if bill_description and bill_number else "undefined"
 
+        # Build direct PDF URLs (served from S3, not Next.js pages)
+        bill_pdf_filename = bill_text_pdf_map.get((bill_type, bill_number))
+        fiscal_note_filename = fiscal_notes_map.get((bill_type, bill_number))
+        legal_note_filename = legal_notes_map.get((bill_type, bill_number))
+        veto_letter_filename = veto_letters_map.get((bill_type, bill_number))
+
         processed_bill = {
             "key": bill_key,
             "identifierLong": expanded_name,
             "session": session_id,
             "billPageUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=sum",
             "billTextUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=bill",
-            ## this is used on the front end for the PDF
-            "billPdfUrl": f"/bills/bill-text/{hypen_bill_key}" if has_bill_text_pdf else None,
+            ## Direct PDF URLs (basePath /capitol-tracker-2025 is prepended by Next.js Link)
+            "billPdfUrl": f"/bill-texts/{bill_type}-{bill_number}/{quote(bill_pdf_filename)}" if bill_pdf_filename else None,
             "lc": draft_number,
             "title": draft_data.get("shortTitle", "undefined"),
             "sponsor": f"{safe_get(sponsor, ['firstName'])} {safe_get(sponsor, ['lastName'])}",
@@ -253,9 +264,9 @@ def process_bills(session_id):
             "statusDate": last_action_time,
             "lastAction": last_bill_status.get("name", "undefined"),
             "billStatus": safe_get(last_bill_status, ["billProgressCategory", "description"]),
-            "fiscalNotesListUrl": f"/bills/fiscal-note/{hypen_bill_key}" if has_fiscal_note else None,
-            "legalNoteUrl": f"/bills/legal-note/{hypen_bill_key}" if has_legal_note else None,
-            "governorVetoLetterUrl": f"/bills/veto-letter/{hypen_bill_key}" if has_veto_letter else None,
+            "fiscalNotesListUrl": f"/fiscal-notes/{bill_type}-{bill_number}/{quote(fiscal_note_filename)}" if fiscal_note_filename else None,
+            "legalNoteUrl": f"/legal-notes/{bill_type}-{bill_number}/{quote(legal_note_filename)}" if legal_note_filename else None,
+            "governorVetoLetterUrl": f"/veto-letters/{bill_type}-{bill_number}/{quote(veto_letter_filename)}" if veto_letter_filename else None,
             "amendmentListUrl": f"https://bills.legmt.gov/#/laws/bill/{session_id}/{draft_number}?open_tab=amend",
             "draftRequestor": None,  # TODO: See if we have any of these in the data
             "billRequestor": bill_requester,
