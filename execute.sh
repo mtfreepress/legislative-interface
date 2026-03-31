@@ -106,3 +106,17 @@ measure_time python ./process/process-bills.py $sessionId
 
 # parse vote jsons:
 # measure_time python ./process/process-vote-json.py $sessionId
+O
+# --- JS processing (builds final data files for frontend) ---
+
+# Fetch MTFP coverage articles
+measure_time node ./js-inputs/coverage/fetch.mjs
+
+# Run main data processing (merges bills, actions, annotations, coverage)
+measure_time node ./js-process/main.js
+
+# Generate document index from PDF directories
+measure_time node ./generate-document-manifest.mjs $sessionId
+
+# Deploy PDFs and document index to S3
+measure_time ./deploy-assets.sh $sessionId
