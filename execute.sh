@@ -106,7 +106,7 @@ measure_time python ./process/process-bills.py $sessionId
 
 # parse vote jsons:
 # measure_time python ./process/process-vote-json.py $sessionId
-
+O
 # --- JS processing (builds final data files for frontend) ---
 
 # Fetch MTFP coverage articles
